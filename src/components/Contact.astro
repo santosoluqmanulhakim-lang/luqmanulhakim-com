@@ -1,0 +1,121 @@
+---
+// Ganti dengan data asli
+const kontakData = {
+  wa: '6287770010006',       // format: 62xxx tanpa tanda +
+  waDisplay: '+62 877-7001-0006',
+  email: 'penerbit.luqmanulhakim@gmail.com',
+  rekening: [
+    { bank: 'BSI', no: '36162-57-160' },
+    { bank: 'BCA Syariah', no: '044-2019-436' },
+    { bank: 'Bank Jago Syariah', no: '5034-7631-4526' },
+  ],
+  formPesan: 'https://luqmanulhakim.net/pesanan',            // ganti dengan URL form pemesanan
+  formAgen: 'https://luqmanulhakim.net/reseller',             // ganti dengan URL form agen
+};
+---
+<div class="section" id="kontak">
+  <p class="section-label">Hubungi Kami</p>
+  <h2 class="section-title">Kontak & Pemesanan</h2>
+
+  <div class="kontak-grid">
+
+    <!-- WhatsApp -->
+    <a href={`https://wa.me/${kontakData.wa}?text=Assalamu'alaikum, saya ingin bertanya tentang buku Luqmanulhakim`}
+       target="_blank" rel="noopener" class="kontak-card clickable">
+      <span class="kontak-icon">💬</span>
+      <div class="kontak-label">WhatsApp</div>
+      <div class="kontak-value">{kontakData.waDisplay}</div>
+      <span class="kontak-action">Kirim Pesan →</span>
+    </a>
+
+    <!-- Email -->
+    <a href={`mailto:${kontakData.email}?subject=Pertanyaan tentang Buku Luqmanulhakim`}
+       class="kontak-card clickable">
+      <span class="kontak-icon">📧</span>
+      <div class="kontak-label">Email</div>
+      <div class="kontak-value">{kontakData.email}</div>
+      <span class="kontak-action">Kirim Email →</span>
+    </a>
+
+    <!-- Rekening -->
+    <div class="kontak-card">
+      <span class="kontak-icon">🏦</span>
+      <div class="kontak-label">Rekening Pembayaran</div>
+      {kontakData.rekening.map(r => (
+        <div class="rekening-item">
+          <span class="bank-name">{r.bank}</span>
+          <span class="bank-no">{r.no}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Form Pemesanan -->
+    <a href={kontakData.formPesan} class="kontak-card clickable">
+      <span class="kontak-icon">🛒</span>
+      <div class="kontak-label">Pemesanan Buku</div>
+      <div class="kontak-value">Form Online</div>
+      <span class="kontak-action">Isi Form Sekarang →</span>
+    </a>
+
+    <!-- Gabung Agen -->
+    <a href={kontakData.formAgen} class="kontak-card clickable highlight">
+      <span class="kontak-icon">🤝</span>
+      <div class="kontak-label">Gabung Agen</div>
+      <div class="kontak-value">Daftarkan Wilayahmu</div>
+      <span class="kontak-action">Daftar Sekarang →</span>
+    </a>
+
+  </div>
+</div>
+
+<style>
+  .kontak-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .kontak-card {
+    background: var(--putih);
+    border: 1px solid var(--batas);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .kontak-card.clickable:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+    transform: translateY(-2px);
+  }
+  .kontak-card.highlight {
+    border-color: var(--hijau);
+    background: var(--hijau-muda);
+  }
+  .kontak-icon { font-size: 26px; margin-bottom: 0.25rem; }
+  .kontak-label { font-size: 11px; font-weight: 600; color: var(--text-sekunder); }
+  .kontak-value { font-size: 13px; font-weight: 500; color: var(--hijau); }
+  .kontak-action {
+    margin-top: 0.5rem;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--hijau);
+    border-bottom: 1px solid var(--hijau);
+  }
+  .rekening-item {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    font-size: 12px;
+    color: var(--text-utama);
+  }
+  .bank-name { font-weight: 700; color: var(--hijau); }
+  .bank-no { font-family: monospace; font-size: 13px; }
+  @media (max-width: 480px) {
+    .kontak-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

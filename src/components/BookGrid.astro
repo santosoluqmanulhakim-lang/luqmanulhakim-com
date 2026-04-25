@@ -1,0 +1,181 @@
+---
+const buku = [
+  { icon: '🔬', mapel: 'IPAS', kelas: 'Kelas 1–6 · SD/MI' },
+  { icon: '➗', mapel: 'Matematika', kelas: 'Kelas 1–6 · SD/MI' },
+  { icon: '📖', mapel: 'Bahasa Indonesia', kelas: 'Kelas 1–6 · SD/MI' },
+  { icon: '📚', mapel: 'Tematik - Integrasi', kelas: 'Kelas 1–6 · SD/MI' },
+];
+---
+<div class="section" id="buku">
+  <p class="section-label">Produk Unggulan</p>
+  <h2 class="section-title">Buku Pelajaran Islami</h2>
+  <p class="section-desc">Sesuai Kurikulum terbaru - Kurikulum Merdeka / CP 2025, terintegrasi nilai-nilai Islam yang mulia.</p>
+
+  <!-- SD/MI -->
+  <div class="jenjang-group">
+    <div class="jenjang-header open" data-toggle>
+      <div>
+        <div class="jenjang-title">SD / MI</div>
+        <div class="jenjang-meta">4 mata pelajaran · Kelas 1–6</div>
+      </div>
+      <span class="jenjang-arrow">▲</span>
+    </div>
+    <div class="jenjang-body open">
+      <div class="buku-list">
+        {buku.map(b => (
+          <div class="buku-card">
+            <span class="buku-icon">{b.icon}</span>
+            <div class="buku-mapel">{b.mapel}</div>
+            <div class="buku-kelas">{b.kelas}</div>
+            <div class="buku-badge">Kurikulum Merdeka</div>
+            <div class="buku-actions">
+              <a href={`/buku/${b.mapel.toLowerCase().replace(' ', '-')}`} class="btn-lihat">Lihat Buku</a>
+              <a href="#kontak" class="btn-pesan">Pesan</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- SMP/MTs -->
+  <div class="jenjang-group">
+    <div class="jenjang-header" data-toggle>
+      <div>
+        <div class="jenjang-title">SMP / MTs</div>
+        <div class="jenjang-meta">Coming Soon · InsyaAllah</div>
+      </div>
+      <span class="jenjang-arrow">▼</span>
+    </div>
+    <div class="jenjang-body">
+      <div class="coming-row">Sedang dalam persiapan — insyaAllah segera hadir.</div>
+    </div>
+  </div>
+
+  <!-- SMA/MA -->
+  <div class="jenjang-group">
+    <div class="jenjang-header" data-toggle>
+      <div>
+        <div class="jenjang-title">SMA / MA</div>
+        <div class="jenjang-meta">InsyaAllah</div>
+      </div>
+      <span class="jenjang-arrow">▼</span>
+    </div>
+    <div class="jenjang-body">
+      <div class="coming-row">Dalam perencanaan — doakan agar Allah mudahkan, insyaAllah.</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-desc {
+    font-size: 14px;
+    color: var(--text-sekunder);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .jenjang-group {
+    margin-bottom: 1rem;
+    border: 1px solid var(--batas);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--putih);
+  }
+  .jenjang-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .jenjang-header:hover { background: #f4faf7; }
+  .jenjang-header.open { background: var(--hijau); color: #fff; }
+  .jenjang-title { font-size: 14px; font-weight: 600; }
+  .jenjang-meta { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+  .jenjang-header.open .jenjang-meta { color: rgba(255,255,255,0.7); }
+  .jenjang-arrow { font-size: 12px; }
+  .jenjang-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .jenjang-body.open { max-height: 800px; }
+  .buku-list {
+    padding: 0.75rem 1.25rem 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+  .buku-card {
+    background: #f4faf7;
+    border: 1px solid var(--batas);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .buku-icon { font-size: 20px; margin-bottom: 0.5rem; }
+  .buku-mapel { font-size: 13px; font-weight: 600; color: var(--text-utama); margin-bottom: 0.2rem; }
+  .buku-kelas { font-size: 11px; color: var(--text-sekunder); }
+  .buku-badge {
+    display: inline-block;
+    margin-top: 0.4rem;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--hijau);
+    background: #d4eddf;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    align-self: flex-start;
+  }
+  .buku-actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .btn-lihat, .btn-pesan {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-lihat {
+    background: var(--hijau);
+    color: #fff;
+    flex: 1;
+    text-align: center;
+  }
+  .btn-lihat:hover { background: var(--hijau-mid); }
+  .btn-pesan {
+    background: var(--emas-muda);
+    color: var(--emas);
+    border: 1px solid var(--emas);
+    flex: 1;
+    text-align: center;
+  }
+  .btn-pesan:hover { background: var(--emas); color: #fff; }
+  .coming-row {
+    padding: 1rem 1.25rem;
+    font-size: 13px;
+    color: var(--text-sekunder);
+    font-style: italic;
+    border-top: 1px solid var(--batas);
+  }
+
+  @media (max-width: 500px) {
+    .buku-list { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-toggle]').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = header.nextElementSibling as HTMLElement;
+      const isOpen = header.classList.contains('open');
+      header.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      const arrow = header.querySelector('.jenjang-arrow') as HTMLElement;
+      arrow.textContent = isOpen ? '▼' : '▲';
+    });
+  });
+</script>

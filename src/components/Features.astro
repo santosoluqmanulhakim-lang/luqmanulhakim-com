@@ -1,0 +1,54 @@
+---
+---
+<div class="section">
+  <p class="section-label">Mengapa Kami</p>
+  <h2 class="section-title">Keunggulan & Keistimewaan</h2>
+
+  <div class="unggulan-grid">
+    <div class="unggulan-item">
+      <div class="unggulan-num">01</div>
+      <div class="unggulan-text">Tim yang solid dengan jangkauan distribusi luas</div>
+    </div>
+    <div class="unggulan-item">
+      <div class="unggulan-num">02</div>
+      <div class="unggulan-text">Mendukung visi misi sekolah Islam yang khas</div>
+    </div>
+    <div class="unggulan-item">
+      <div class="unggulan-num">03</div>
+      <div class="unggulan-text">Mengedepankan wawasan Islam yang sempurna dan mulia</div>
+    </div>
+    <div class="unggulan-item">
+      <div class="unggulan-num">04</div>
+      <div class="unggulan-text">Inovatif, aplikatif, dan fleksibel sesuai kebutuhan sekolah</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .unggulan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .unggulan-item {
+    padding: 1.25rem;
+    border-left: 3px solid var(--hijau);
+    background: var(--putih);
+    border-radius: 0 8px 8px 0;
+    transition: box-shadow 0.2s;
+  }
+  .unggulan-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .unggulan-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--hijau);
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+  .unggulan-text {
+    font-size: 13px;
+    color: var(--text-utama);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+</style>

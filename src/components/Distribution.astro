@@ -1,0 +1,189 @@
+---
+const wilayah = [
+  {
+    nama: 'Aceh',
+    detail: 'Aceh',
+    slug: 'aceh',
+  },
+  {
+    nama: 'Sumatera',
+    detail: 'Sumatera Utara, Sumatera Barat, Riau, Jambi, Bengkulu, Sumatera Selatan, Lampung',
+    slug: 'sumatera',
+  },
+  {
+    nama: 'Banten & Jabodetabek',
+    detail: 'Banten, Jakarta, Bogor, Depok, Tangerang, Bekasi',
+    slug: 'banten-jabodetabek',
+  },
+  {
+    nama: 'Jawa Barat',
+    detail: 'Seluruh wilayah Jawa Barat di luar Jabodetabek',
+    slug: 'jawa-barat',
+  },
+  {
+    nama: 'Jawa Tengah',
+    detail: 'Seluruh wilayah Jawa Tengah termasuk DI Yogyakarta',
+    slug: 'jawa-tengah',
+  },
+  {
+    nama: 'Jawa Timur',
+    detail: 'Seluruh wilayah Jawa Timur',
+    slug: 'jawa-timur',
+  },
+  {
+    nama: 'Kalimantan',
+    detail: 'Kalimantan Barat, Tengah, Selatan, Timur, Utara',
+    slug: 'kalimantan',
+  },
+  {
+    nama: 'Sulawesi',
+    detail: 'Sulawesi Tengah, Sulawesi Barat, Sulawesi Tenggara, Sulawesi Selatan, Sulawesi Utara',
+    slug: 'sulawesi',
+  },
+  {
+    nama: 'NTT & NTB',
+    detail: 'Nusa Tenggara Timur dan Nusa Tenggara Barat',
+    slug: 'nusa-tenggara',
+  },
+];
+---
+<div class="section" id="reseller">
+  <p class="section-label">Distribusi</p>
+  <h2 class="section-title">Agen & Reseller</h2>
+
+  <div class="wilayah-wrap">
+    <div class="warning-box">
+      <span class="warn-icon">⚠️</span>
+      <span>
+        <strong>Penting:</strong> Agen hanya berperan sebagai customer service area.
+        Pembayaran tetap langsung ke rekening pusat.
+      </span>
+    </div>
+    <p class="wilayah-intro">Klik wilayah untuk melihat rincian cakupan area:</p>
+    <div class="wilayah-list">
+      {wilayah.map(w => (
+        <button
+          class="wilayah-pill"
+          data-detail={w.detail}
+          aria-label={`Rincian wilayah ${w.nama}`}
+        >
+          {w.nama}
+        </button>
+      ))}
+    </div>
+    <div class="wilayah-detail" id="wilayahDetail" hidden>
+      <span class="detail-icon">📍</span>
+      <span id="wilayahDetailText"></span>
+    </div>
+  </div>
+
+  <div class="gabung-wrap">
+    <p class="gabung-text">Tertarik menjadi agen di wilayahmu?</p>
+    <a href="#kontak" class="btn-gabung">Hubungi Kami untuk Bergabung →</a>
+  </div>
+</div>
+
+<style>
+  .wilayah-wrap {
+    background: var(--putih);
+    border: 1px solid var(--batas);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .warning-box {
+    background: #fff8e7;
+    border: 1px solid #e8d080;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 12px;
+    color: #7a6000;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .warn-icon { flex-shrink: 0; }
+  .wilayah-intro {
+    font-size: 12px;
+    color: var(--text-sekunder);
+    margin-bottom: 0.75rem;
+  }
+  .wilayah-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .wilayah-pill {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--hijau);
+    background: var(--hijau-muda);
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .wilayah-pill:hover, .wilayah-pill.active {
+    background: var(--hijau);
+    color: #fff;
+    border-color: var(--hijau);
+  }
+  .wilayah-detail {
+    background: var(--hijau-muda);
+    border: 1px solid var(--batas);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 13px;
+    color: var(--text-utama);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+  }
+  .gabung-wrap {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  .gabung-text {
+    font-size: 13px;
+    color: var(--text-sekunder);
+    margin-bottom: 0.75rem;
+  }
+  .btn-gabung {
+    display: inline-block;
+    background: var(--hijau);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-gabung:hover { background: var(--hijau-mid); }
+</style>
+
+<script>
+  const pills = document.querySelectorAll('.wilayah-pill');
+  const detailBox = document.getElementById('wilayahDetail') as HTMLElement;
+  const detailText = document.getElementById('wilayahDetailText') as HTMLElement;
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const detail = pill.getAttribute('data-detail') || '';
+      const isActive = pill.classList.contains('active');
+
+      pills.forEach(p => p.classList.remove('active'));
+
+      if (isActive) {
+        detailBox.hidden = true;
+      } else {
+        pill.classList.add('active');
+        detailText.textContent = detail;
+        detailBox.hidden = false;
+      }
+    });
+  });
+</script>

@@ -1,0 +1,119 @@
+---
+const apps = [
+  {
+    icon: '✏️',
+    dot: 'hijau',
+    name: 'Latihan Interaktif',
+    desc: 'Soal dari buku, pendamping latihan di rumah',
+    link: 'https://luqmanulhakim.net/latihan',
+    linkLabel: 'Coba Demo',
+  },
+  {
+    icon: '📋',
+    dot: 'emas',
+    name: 'PPDB Online',
+    desc: 'Sistem penerimaan murid baru online',
+    link: 'https://luqmanulhakim.net/ppdb',
+    linkLabel: 'Lihat Demo',
+  },
+  {
+    icon: '📕',
+    dot: 'hijau',
+    name: 'Ebook',
+    desc: 'Akses digital buku dengan viewer aman',
+    link: 'https://luqmanulhakim.net/digital',
+    linkLabel: 'Buka Ebook',
+  },
+  {
+    icon: '🤖',
+    dot: 'emas',
+    name: 'Asisten Pendidik',
+    desc: 'Asisten khusu guru berbasis AI',
+    link: 'https://luqmanulhakim.net/pendidik',
+    linkLabel: 'Coba Sekarang',
+  },
+];
+---
+<div class="section" id="aplikasi">
+  <p class="section-label">Digital</p>
+  <h2 class="section-title">Aplikasi Pendukung Buku</h2>
+  <p class="section-desc">Gratis untuk web sekolah yang menggunakan buku Luqmanulhakim.</p>
+
+  <div class="app-grid">
+    {apps.map(app => (
+      <div class="app-card">
+        <div class={`app-dot ${app.dot}`}>{app.icon}</div>
+        <div class="app-body">
+          <div class="app-name">{app.name}</div>
+          <div class="app-desc">{app.desc}</div>
+          <div class="app-footer">
+            <span class="gratis-badge">GRATIS</span>
+            <a href={app.link} target="_blank" rel="noopener" class="btn-demo">{app.linkLabel} →</a>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .section-desc {
+    font-size: 14px;
+    color: var(--text-sekunder);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+  }
+  .app-card {
+    background: var(--putih);
+    border: 1px solid var(--batas);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition: box-shadow 0.2s;
+  }
+  .app-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+  .app-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .app-dot.hijau { background: var(--hijau-muda); }
+  .app-dot.emas { background: var(--emas-muda); }
+  .app-body { flex: 1; }
+  .app-name { font-size: 13px; font-weight: 600; margin-bottom: 0.2rem; }
+  .app-desc { font-size: 12px; color: var(--text-sekunder); line-height: 1.5; margin-bottom: 0.6rem; }
+  .app-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem; }
+  .gratis-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--hijau);
+    background: var(--hijau-muda);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+  }
+  .btn-demo {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--hijau);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hijau);
+    transition: opacity 0.2s;
+  }
+  .btn-demo:hover { opacity: 0.7; }
+
+  @media (max-width: 480px) {
+    .app-grid { grid-template-columns: 1fr; }
+  }
+</style>

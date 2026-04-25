@@ -1,0 +1,70 @@
+---
+// src/layouts/Layout.astro
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Penerbit Luqmanulhakim - Buku & Aplikasi Pendidikan Islam" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --hijau: #0d4a2a;
+    --hijau-mid: #155c35;
+    --hijau-muda: #E8F5EE;
+    --emas: #c9a84c;
+    --emas-muda: #FFF8E7;
+    --text-utama: #1a2a1e;
+    --text-sekunder: #4a5e52;
+    --batas: #d4e6da;
+    --putih: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-utama);
+    background: #f9fbf9;
+    line-height: 1.6;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  .section {
+    padding: 4rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--emas);
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  .section-title {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-utama);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  /* Divider otomatis antar section di dalam main */
+  main > div + div {
+    border-top: 1px solid var(--batas);
+  }
+</style>
