@@ -75,8 +75,8 @@
   /* Scroll to top button */
   .back-to-top {
     position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    bottom: 1.25rem;
+    right: 1rem;
     width: 40px;
     height: 40px;
     background: var(--hijau);
@@ -85,17 +85,27 @@
     border-radius: 50%;
     font-size: 18px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s, transform 0.3s;
     z-index: 200;
+    margin-right: env(safe-area-inset-right, 0px);
   }
   .back-to-top.visible {
     opacity: 1;
     transform: translateY(0);
   }
   .back-to-top:hover { background: var(--hijau-mid); }
+  @media (max-width: 480px) {
+    .back-to-top {
+      bottom: 1rem;
+      right: 0.75rem;
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }
+  }
 
   @media (max-width: 600px) {
     header { padding: 0.5rem 1rem; }
