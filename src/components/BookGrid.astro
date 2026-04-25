@@ -1,11 +1,3 @@
----
-const buku = [
-  { icon: '🔬', mapel: 'IPAS', kelas: 'Kelas 1–6 · SD/MI' },
-  { icon: '➗', mapel: 'Matematika', kelas: 'Kelas 1–6 · SD/MI' },
-  { icon: '📖', mapel: 'Bahasa Indonesia', kelas: 'Kelas 1–6 · SD/MI' },
-  { icon: '📚', mapel: 'Tematik - Integrasi', kelas: 'Kelas 1–6 · SD/MI' },
-];
----
 <div class="section" id="buku">
   <p class="section-label">Produk Unggulan</p>
   <h2 class="section-title">Buku Pelajaran Islami</h2>
@@ -16,7 +8,7 @@ const buku = [
     <div class="jenjang-header open" data-toggle>
       <div>
         <div class="jenjang-title">SD / MI</div>
-        <div class="jenjang-meta">4 mata pelajaran · Kelas 1–6</div>
+        <div class="jenjang-meta">3 mapel utama · Kelas 1–6</div>
       </div>
       <span class="jenjang-arrow">▲</span>
     </div>
@@ -29,8 +21,8 @@ const buku = [
             <div class="buku-kelas">{b.kelas}</div>
             <div class="buku-badge">Kurikulum Merdeka</div>
             <div class="buku-actions">
-              <a href="https://luqmanulhakim.net/digital" class="btn-lihat">Lihat</a>
-              <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan">Pesan</a>
+              <a href="https://luqmanulhakim.net/digital" class="btn-lihat" target="_blank" rel="noopener">Lihat</a>
+              <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan" target="_blank" rel="noopener">Pesan</a>
             </div>
           </div>
         ))}
