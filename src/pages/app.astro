@@ -1,0 +1,391 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BackToHome from '../components/BackToHome.astro';
+
+const apps = [
+  {
+    id: 'latihan',
+    icon: '✏️',
+    nama: 'Latihan Interaktif',
+    tagline: 'Belajar lebih menyenangkan dengan soal berbasis buku',
+    desc: 'Soal latihan digital yang terintegrasi langsung dengan bab-bab di buku teks. Siswa bisa mengerjakan soal, melihat skor, dan mengulang latihan kapan saja.',
+    fitur: ['Soal per bab & per kelas', 'Langsung dari materi buku', 'Skor & pembahasan otomatis', 'Akses via browser, tanpa install'],
+    status: 'live',
+    url: 'https://luqmanulhakim.net/latihan',
+    warna: 'hijau',
+    screenshot: '/screenshots/latihan.png',
+  },
+  {
+    id: 'ppdb',
+    icon: '📋',
+    nama: 'PPDB/SPMB Online',
+    tagline: 'Penerimaan peserta didik baru yang mudah dan modern',
+    desc: 'Sistem PPDB digital untuk sekolah Islam. Orang tua bisa mendaftar online, upload berkas, dan memantau status pendaftaran secara real-time.',
+    fitur: ['Formulir pendaftaran online', 'Upload dokumen digital', 'Notifikasi status pendaftaran', 'Dashboard admin sekolah'],
+    status: 'live',
+    url: 'https://luqmanulhakim.net/ppdb',
+    warna: 'emas',
+    screenshot: '/screenshots/ppdb.png',
+  },
+  {
+    id: 'ebook',
+    icon: '📕',
+    nama: 'Ebook Interaktif',
+    tagline: 'Akses digital buku dengan viewer yang aman',
+    desc: 'Baca buku teks secara digital dengan tampilan yang nyaman. Dilengkapi proteksi konten agar hak cipta terjaga, namun tetap mudah diakses oleh siswa dan guru.',
+    fitur: ['Viewer PDF aman & cepat', 'Watermark otomatis', 'Akses per buku yang dibeli', 'Tampilan mobile-friendly'],
+    status: 'live',
+    url: 'https://luqmanulhakim.net/digital',
+    warna: 'hijau',
+    screenshot: '/screenshots/ebook.png',
+  },
+  {
+    id: 'asisten',
+    icon: '🤖',
+    nama: 'Asisten Pendidik',
+    tagline: 'Tanya jawab seputar produk berbasis AI, siap 24 jam',
+    desc: 'Chatbot AI yang membantu guru dan tenaga pendidik mendapatkan informasi seputar buku, kurikulum, dan pemesanan — tanpa harus menunggu jam kerja.',
+    fitur: ['Berbasis AI (Gemini)', 'Tanya soal produk & kurikulum', 'Tersedia 24 jam', 'Terintegrasi data buku terbaru'],
+    status: 'live',
+    url: 'https://luqmanulhakim.net/pendidik',
+    warna: 'emas',
+    screenshot: '/screenshots/asisten.png',
+  },
+];
+---
+
+<Layout title="Aplikasi Pendukung — Penerbit Luqmanulhakim">
+  <Header />
+  <main>
+  <BackToHome />
+
+    <!-- Hero -->
+    <div class="hero-strip">
+      <div class="hero-inner">
+        <p class="hero-label">Ekosistem Digital</p>
+        <h1>Aplikasi Pendukung Buku</h1>
+        <p class="hero-sub">
+          Gratis untuk sekolah yang menggunakan buku Luqmanulhakim.
+          Dirancang untuk mempermudah proses belajar-mengajar di era digital.
+        </p>
+      </div>
+    </div>
+
+    <!-- Daftar aplikasi -->
+    <div class="apps-wrap">
+      {apps.map((app, i) => (
+        <div class={`app-row ${i % 2 === 1 ? 'reverse' : ''}`} id={app.id}>
+
+          <!-- Screenshot -->
+          <div class="app-visual">
+            <div class="screen-frame">
+              <div class="screen-bar">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="screen-body">
+                <img
+                  src={app.screenshot}
+                  alt={`Screenshot ${app.nama}`}
+                  class="screen-img"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+                <div class="screen-placeholder">
+                  <div class="ph-icon">{app.icon}</div>
+                  <div class="ph-text">Screenshot segera hadir</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="app-info">
+            <div class={`app-badge ${app.warna}`}>
+              {app.status === 'live' ? '🟢 Sudah Tersedia' : '🔧 Segera Hadir'}
+            </div>
+            <div class="app-icon-nama">
+              <span class="app-icon">{app.icon}</span>
+              <h2>{app.nama}</h2>
+            </div>
+            <p class="app-tagline">{app.tagline}</p>
+            <p class="app-desc">{app.desc}</p>
+
+            <ul class="fitur-list">
+              {app.fitur.map(f => <li>{f}</li>)}
+            </ul>
+
+            <div class="app-actions">
+              {app.status === 'live' ? (
+                <a href={app.url} target="_blank" rel="noopener" class="btn-buka">
+                  Buka Aplikasi →
+                </a>
+              ) : (
+                <span class="btn-coming">InsyaAllah Segera Hadir</span>
+              )}
+              <span class="gratis-tag">GRATIS untuk Sekolah</span>
+            </div>
+          </div>
+
+        </div>
+      ))}
+    </div>
+
+    <!-- CTA bawah -->
+    <div class="cta-strip">
+      <div class="cta-inner">
+        <h3>Tertarik menggunakan aplikasi ini untuk sekolah?</h3>
+        <p>Hubungi kami untuk informasi lebih lanjut tentang akses dan integrasi aplikasi.</p>
+        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn-wa">
+          💬 Hubungi via WhatsApp
+        </a>
+      </div>
+    </div>
+
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  /* Hero */
+  .hero-strip {
+    background: linear-gradient(160deg, #061f10 0%, #0d4a2a 60%, #155c35 100%);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    color: #fff;
+  }
+  .hero-inner { max-width: 640px; margin: 0 auto; }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--emas);
+    margin-bottom: 0.75rem;
+  }
+  .hero-strip h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: #f0e8c8;
+    margin-bottom: 1rem;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Apps list */
+  .apps-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .app-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .app-row.reverse { direction: rtl; }
+  .app-row.reverse > * { direction: ltr; }
+
+  /* Screenshot frame */
+  .screen-frame {
+    background: #1a2a1e;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  }
+  .screen-bar {
+    background: #2a3e2e;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .screen-bar span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: block;
+  }
+  .screen-body {
+    aspect-ratio: 16/10;
+    position: relative;
+    background: #f0f4f1;
+  }
+  .screen-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .screen-placeholder {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #e8f5ee;
+  }
+  /* Tampilkan placeholder saat gambar tidak ada */
+  .screen-body:not(:has(img[src])) .screen-placeholder,
+  .screen-placeholder { display: flex; }
+  .screen-img { display: none; }
+
+  .ph-icon { font-size: 3rem; }
+  .ph-text { font-size: 12px; color: var(--text-sekunder); }
+
+  /* App info */
+  .app-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+  .app-badge.hijau { background: var(--hijau-muda); color: var(--hijau); }
+  .app-badge.emas { background: var(--emas-muda); color: #7a5f00; }
+
+  .app-icon-nama {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .app-icon { font-size: 1.75rem; }
+  .app-icon-nama h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-utama);
+  }
+  .app-tagline {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--hijau);
+    margin-bottom: 0.5rem;
+  }
+  .app-desc {
+    font-size: 13px;
+    color: var(--text-sekunder);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .fitur-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+  .fitur-list li {
+    font-size: 13px;
+    color: var(--text-utama);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .fitur-list li::before {
+    content: '✓';
+    color: var(--hijau);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .app-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn-buka {
+    background: var(--hijau);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-buka:hover { background: var(--hijau-mid); }
+  .btn-coming {
+    background: #f0f0f0;
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    cursor: not-allowed;
+  }
+  .gratis-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--hijau);
+    background: var(--hijau-muda);
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+  }
+
+  /* Divider antar app */
+  .app-row + .app-row {
+    padding-top: 4rem;
+    border-top: 1px solid var(--batas);
+  }
+
+  /* CTA bawah */
+  .cta-strip {
+    background: var(--hijau-muda);
+    border-top: 1px solid var(--batas);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .cta-inner { max-width: 520px; margin: 0 auto; }
+  .cta-inner h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-utama);
+    margin-bottom: 0.5rem;
+  }
+  .cta-inner p {
+    font-size: 13px;
+    color: var(--text-sekunder);
+    margin-bottom: 1.25rem;
+  }
+  .btn-wa {
+    display: inline-block;
+    background: #25D366;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .btn-wa:hover { opacity: 0.88; }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .app-row {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .app-row.reverse { direction: ltr; }
+    .apps-wrap { gap: 3rem; padding: 2rem 1rem; }
+  }
+</style>

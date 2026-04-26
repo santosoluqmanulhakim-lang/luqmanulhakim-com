@@ -1,0 +1,667 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BackToHome from '../components/BackToHome.astro';
+
+const mapelSD = [
+  {
+    kode: 'ipas',
+    nama: 'Anak Islam Belajar IPAS',
+    icon: '🔬',
+    warna: 'hijau',
+    desc: 'Ilmu Pengetahuan Alam dan Sosial terintegrasi nilai Islam dan wawasan tauhidik.',
+  },
+  {
+    kode: 'mtk',
+    nama: 'Anak Islam Belajar Matematika',
+    icon: '➗',
+    warna: 'emas',
+    desc: 'Matematika kontekstual dengan pendekatan islami dan latihan bertahap.',
+  },
+  {
+    kode: 'bind',
+    nama: 'Anak Islam Belajar Bahasa Indonesia',
+    icon: '📖',
+    warna: 'hijau',
+    desc: 'Literasi bahasa dengan teks-teks bernilai islami dan kearifan lokal.',
+  },
+];
+
+const kelasSD = [1, 2, 3, 4, 5, 6];
+const kelasTematik = [1, 2, 3, 4, 5, 6];
+---
+
+<Layout title="Katalog Buku — Penerbit Luqmanulhakim">
+  <Header />
+  <main>
+  <BackToHome />
+
+    <!-- Hero -->
+    <div class="hero-strip">
+      <div class="hero-inner">
+        <p class="hero-label">Produk Kami</p>
+        <h1>Katalog Buku Pelajaran</h1>
+        <p class="hero-sub">
+          Buku teks Kurikulum Merdeka untuk SD/MI yang terintegrasi dengan nilai-nilai islami (aqidah shahihah dan akhlakul karimah).
+        </p>
+      </div>
+    </div>
+
+    <div class="katalog-wrap">
+
+      <!-- ====== SERI SD/MI ====== -->
+      <div class="seri-section">
+        <div class="seri-header">
+          <div class="seri-label">Seri Utama</div>
+          <h2 class="seri-title">SD / MI — Kurikulum Merdeka</h2>
+          <p class="seri-desc">IPAS, Matematika, dan Bahasa Indonesia untuk Kelas 1–6. Tersedia semester 1 dan semester 2.</p>
+        </div>
+
+        {kelasSD.map((kelas) => (
+          <div class="kelas-group" id={`sd-kelas-${kelas}`}>
+            <div class="kelas-header" data-toggle>
+              <div class="kelas-title-wrap">
+                <span class="kelas-badge">Kelas {kelas}</span>
+                <span class="kelas-sub">3 mata pelajaran · Semester 1 & 2</span>
+              </div>
+              <span class="kelas-arrow">▼</span>
+            </div>
+
+            <div class="kelas-body">
+              <!-- Semester 1 -->
+              <div class="sem-label">Semester 1</div>
+              <div class="buku-row">
+                {mapelSD.map((mp) => (
+                  <div class="buku-card">
+                    <div class="buku-ss">
+                      <img
+                        src={`/covers/${mp.kode}-${kelas}-1.jpg`}
+                        alt={`${mp.nama} Kelas ${kelas} Sem 1`}
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                      />
+                      <div class="ss-placeholder">
+                        <span>{mp.icon}</span>
+                      </div>
+                    </div>
+                    <div class="buku-info">
+                      <div class={`mapel-tag ${mp.warna}`}>{mp.nama}</div>
+                      <div class="buku-judul"> {mp.nama} {kelas}A</div>
+                      <div class="buku-meta">Kelas {kelas} · Semester 1</div>
+                      <button class="btn-detail"
+                        data-judul={` ${mp.nama} ${kelas}A`}
+                        data-mapel={mp.nama}
+                        data-kelas={`Kelas ${kelas}`}
+                        data-sem="Semester 1"
+                        data-desc={mp.desc}
+                        data-icon={mp.icon}>
+                        Lihat Detail →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <!-- Semester 2 -->
+              <div class="sem-label">Semester 2</div>
+              <div class="buku-row">
+                {mapelSD.map((mp) => (
+                  <div class="buku-card">
+                    <div class="buku-ss">
+                      <img
+                        src={`/covers/${mp.kode}-${kelas}-2.jpg`}
+                        alt={`${mp.nama} Kelas ${kelas} Sem 2`}
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                      />
+                      <div class="ss-placeholder">
+                        <span>{mp.icon}</span>
+                      </div>
+                    </div>
+                    <div class="buku-info">
+                      <div class={`mapel-tag ${mp.warna}`}>{mp.nama}</div>
+                      <div class="buku-judul"> {mp.nama} {kelas}B</div>
+                      <div class="buku-meta">Kelas {kelas} · Semester 2</div>
+                      <button class="btn-detail"
+                        data-judul={` ${mp.nama} ${kelas}B`}
+                        data-mapel={mp.nama}
+                        data-kelas={`Kelas ${kelas}`}
+                        data-sem="Semester 2"
+                        data-desc={mp.desc}
+                        data-icon={mp.icon}>
+                        Lihat Detail →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="seri-divider"></div>
+
+      <!-- ====== SERI TEMATIK ====== -->
+      <div class="seri-section">
+        <div class="seri-header">
+          <div class="seri-label">Seri Tematik</div>
+          <h2 class="seri-title">Tematik — Versi Kurikulum Merdeka</h2>
+          <p class="seri-desc">Buku tematik islami untuk Kelas 1–6, semester 1 dan 2.</p>
+        </div>
+
+        {kelasTematik.map((kelas) => (
+          <div class="kelas-group" id={`tematik-kelas-${kelas}`}>
+            <div class="kelas-header" data-toggle>
+              <div class="kelas-title-wrap">
+                <span class="kelas-badge tematik">Kelas {kelas}</span>
+                <span class="kelas-sub">Tematik · Semester 1 & 2</span>
+              </div>
+              <span class="kelas-arrow">▼</span>
+            </div>
+
+            <div class="kelas-body">
+              <!-- Semester 1 -->
+              <div class="sem-label">Semester 1</div>
+              <div class="buku-row single">
+                <div class="buku-card wide">
+                  <div class="buku-ss">
+                    <img
+                      src={`/covers/tematik-${kelas}-1.jpg`}
+                      alt={`Tematik Kelas ${kelas} Sem 1`}
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                    />
+                    <div class="ss-placeholder">
+                      <span>📚</span>
+                    </div>
+                  </div>
+                  <div class="buku-info">
+                    <div class="mapel-tag tematik">Tematik</div>
+                    <div class="buku-judul">Anak Islam Belajar Tematik {kelas}A</div>
+                    <div class="buku-meta">Kelas {kelas} · Semester 1</div>
+                    <div class="buku-desc">Buku tematik islami terintegrasi untuk pembelajaran holistik berbasis nilai-nilai Islam.</div>
+                    <button class="btn-detail"
+                      data-judul={`Anak Islam Belajar Tematik ${kelas}A`}
+                      data-mapel="Tematik"
+                      data-kelas={`Kelas ${kelas}`}
+                      data-sem="Semester 1"
+                      data-desc="Buku tematik islami terintegrasi untuk pembelajaran holistik berbasis nilai-nilai Islam."
+                      data-icon="📚">
+                      Lihat Detail →
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Semester 2 -->
+              <div class="sem-label">Semester 2</div>
+              <div class="buku-row single">
+                <div class="buku-card wide">
+                  <div class="buku-ss">
+                    <img
+                      src={`/covers/tematik-${kelas}-2.jpg`}
+                      alt={`Tematik Kelas ${kelas} Sem 2`}
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                    />
+                    <div class="ss-placeholder">
+                      <span>📚</span>
+                    </div>
+                  </div>
+                  <div class="buku-info">
+                    <div class="mapel-tag tematik">Tematik</div>
+                    <div class="buku-judul">Anak Islam Belajar Tematik {kelas}B</div>
+                    <div class="buku-meta">Kelas {kelas} · Semester 2</div>
+                    <div class="buku-desc">Buku tematik islami terintegrasi untuk pembelajaran holistik berbasis nilai-nilai Islam.</div>
+                    <button class="btn-detail"
+                      data-judul={`Anak Islam Belajar Tematik ${kelas}B`}
+                      data-mapel="Tematik"
+                      data-kelas={`Kelas ${kelas}`}
+                      data-sem="Semester 2"
+                      data-desc="Buku tematik islami terintegrasi untuk pembelajaran holistik berbasis nilai-nilai Islam."
+                      data-icon="📚">
+                      Lihat Detail →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div><!-- /katalog-wrap -->
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-inner">
+        <h3>Ingin memesan atau bertanya tentang buku?</h3>
+        <p>Hubungi kami langsung via WhatsApp untuk informasi harga dan pemesanan.</p>
+        <a href="https://wa.me/6287770010006" target="_blank" rel="noopener" class="btn-wa">
+          💬 Pesan via WhatsApp
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal detail buku -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-icon" id="modalIcon"></div>
+      <div class="modal-mapel" id="modalMapel"></div>
+      <h3 class="modal-judul" id="modalJudul"></h3>
+      <div class="modal-meta" id="modalMeta"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-placeholder">
+        <span>📋</span>
+        <span>Deskripsi lengkap segera hadir</span>
+      </div>
+      <div class="modal-actions">
+        <a href="https://luqmanulhakim.net/digital" target="_blank" rel="noopener" class="modal-btn-pesan">
+          📖 Lihat e book
+        </a>
+        <button class="modal-btn-tutup" id="modalTutup">Tutup</button>
+      </div>
+    </div>
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  /* Hero */
+  .hero-strip {
+    background: linear-gradient(160deg, #061f10 0%, #0d4a2a 60%, #155c35 100%);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    color: #fff;
+  }
+  .hero-inner { max-width: 640px; margin: 0 auto; }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--emas);
+    margin-bottom: 0.75rem;
+  }
+  .hero-strip h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: #f0e8c8;
+    margin-bottom: 1rem;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+  }
+
+  /* Katalog wrap */
+  .katalog-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 2rem;
+  }
+
+  /* Seri section */
+  .seri-section { margin-bottom: 1rem; }
+  .seri-header { margin-bottom: 1.5rem; }
+  .seri-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--emas);
+    margin-bottom: 0.5rem;
+  }
+  .seri-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-utama);
+    margin-bottom: 0.4rem;
+  }
+  .seri-desc { font-size: 13px; color: var(--text-sekunder); }
+  .seri-divider {
+    border-top: 2px solid var(--batas);
+    margin: 3rem 0;
+  }
+
+  /* Accordion kelas */
+  .kelas-group {
+    border: 1px solid var(--batas);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--putih);
+    margin-bottom: 0.75rem;
+  }
+  .kelas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    background: #f9fbf9;
+  }
+  .kelas-header:hover { background: #f0faf4; }
+  .kelas-header.open { background: var(--hijau); color: #fff; }
+  .kelas-header.open .kelas-sub { color: rgba(255,255,255,0.65); }
+  .kelas-title-wrap { display: flex; align-items: center; gap: 1rem; }
+  .kelas-badge {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--hijau);
+    background: var(--hijau-muda);
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+  }
+  .kelas-badge.tematik {
+    color: #7a5f00;
+    background: var(--emas-muda);
+  }
+  .kelas-header.open .kelas-badge {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  .kelas-sub { font-size: 12px; color: var(--text-sekunder); }
+  .kelas-arrow { font-size: 12px; transition: transform 0.25s; }
+  .kelas-header.open .kelas-arrow { transform: rotate(180deg); }
+
+  .kelas-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding: 0;
+  }
+  .kelas-body.open { max-height: 2000px; padding: 1.25rem; }
+
+  /* Semester label */
+  .sem-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sekunder);
+    margin: 1rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--batas);
+  }
+  .sem-label:first-of-type { margin-top: 0; }
+
+  /* Buku row */
+  .buku-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .buku-row.single { grid-template-columns: 1fr; max-width: 360px; }
+
+  /* Buku card */
+  .buku-card {
+    background: #f7fbf8;
+    border: 1px solid var(--batas);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .buku-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .buku-card.wide { flex-direction: row; }
+
+  /* Screenshot cover */
+  .buku-ss {
+    aspect-ratio: 3/4;
+    position: relative;
+    background: #e8f5ee;
+    flex-shrink: 0;
+  }
+  .buku-card.wide .buku-ss {
+    width: 100px;
+    aspect-ratio: auto;
+    min-height: 130px;
+  }
+  .buku-ss img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+  .ss-placeholder {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background: #e8f5ee;
+    z-index: 0;
+  }
+
+  /* Buku info */
+  .buku-info {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+  }
+  .mapel-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 0.2rem;
+  }
+  .mapel-tag.hijau { background: #d4eddf; color: var(--hijau); }
+  .mapel-tag.emas { background: var(--emas-muda); color: #7a5f00; }
+  .mapel-tag.tematik { background: #e8e0ff; color: #4a2d8a; }
+  .buku-judul { font-size: 13px; font-weight: 700; color: var(--text-utama); }
+  .buku-meta { font-size: 11px; color: var(--text-sekunder); }
+  .buku-desc { font-size: 11px; color: var(--text-sekunder); line-height: 1.5; margin-top: 0.25rem; }
+  /* btn-detail sebagai button */
+  .btn-detail {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--hijau);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--hijau);
+    padding: 0;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: opacity 0.2s;
+    font-family: inherit;
+  }
+  .btn-detail:hover { opacity: 0.7; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--putih);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: none;
+  }
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: #f0f0f0;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-sekunder);
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: #e0e0e0; }
+  .modal-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .modal-mapel {
+    font-size: 11px; font-weight: 700;
+    color: var(--hijau); background: var(--hijau-muda);
+    padding: 0.2rem 0.6rem; border-radius: 4px;
+    display: inline-block; margin-bottom: 0.5rem;
+  }
+  .modal-judul {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text-utama); margin-bottom: 0.3rem;
+    line-height: 1.35;
+  }
+  .modal-meta { font-size: 12px; color: var(--text-sekunder); margin-bottom: 0.75rem; }
+  .modal-desc { font-size: 13px; color: var(--text-sekunder); line-height: 1.6; margin-bottom: 0.75rem; }
+  .modal-placeholder {
+    background: var(--hijau-muda);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    color: var(--text-sekunder);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .modal-btn-pesan {
+    flex: 1;
+    background: #25D366;
+    color: #fff;
+    font-size: 13px; font-weight: 600;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+  .modal-btn-pesan:hover { opacity: 0.88; }
+  .modal-btn-tutup {
+    background: #f0f0f0;
+    color: var(--text-sekunder);
+    font-size: 13px; font-weight: 600;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .modal-btn-tutup:hover { background: #e0e0e0; }
+
+  @media (max-width: 480px) {
+    .modal-box { padding: 1.5rem; }
+    .modal-actions { flex-direction: column; }
+  }
+  .cta-strip {
+    background: var(--hijau-muda);
+    border-top: 1px solid var(--batas);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .cta-inner { max-width: 520px; margin: 0 auto; }
+  .cta-inner h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-utama);
+    margin-bottom: 0.5rem;
+  }
+  .cta-inner p {
+    font-size: 13px;
+    color: var(--text-sekunder);
+    margin-bottom: 1.25rem;
+  }
+  .btn-wa {
+    display: inline-block;
+    background: #25D366;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .btn-wa:hover { opacity: 0.88; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .buku-row { grid-template-columns: repeat(2, 1fr); }
+    .buku-row.single { max-width: 100%; }
+    .katalog-wrap { padding: 2rem 1rem; }
+  }
+  @media (max-width: 400px) {
+    .buku-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .kelas-title-wrap { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+  }
+</style>
+
+<script>
+  // Accordion
+  document.querySelectorAll('[data-toggle]').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = header.nextElementSibling as HTMLElement;
+      const isOpen = header.classList.contains('open');
+      header.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      const arrow = header.querySelector('.kelas-arrow') as HTMLElement;
+      if (arrow) arrow.textContent = isOpen ? '▼' : '▲';
+    });
+  });
+
+  // Modal
+  const overlay  = document.getElementById('modalOverlay')!;
+  const modalClose = document.getElementById('modalClose')!;
+  const modalTutup = document.getElementById('modalTutup')!;
+
+  function openModal(btn: HTMLElement) {
+    (document.getElementById('modalIcon') as HTMLElement).textContent  = btn.dataset.icon || '';
+    (document.getElementById('modalMapel') as HTMLElement).textContent = btn.dataset.mapel || '';
+    (document.getElementById('modalJudul') as HTMLElement).textContent = btn.dataset.judul || '';
+    (document.getElementById('modalMeta') as HTMLElement).textContent  =
+      `${btn.dataset.kelas} · ${btn.dataset.sem}`;
+    (document.getElementById('modalDesc') as HTMLElement).textContent  = btn.dataset.desc || '';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.btn-detail').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn as HTMLElement));
+  });
+  modalClose.addEventListener('click', closeModal);
+  modalTutup.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>

@@ -39,8 +39,7 @@ const kontakData = {
 
     <!-- Rekening -->
     <div class="kontak-card">
-      <span class="kontak-icon">🏦</span>
-      <div class="kontak-label">Rekening Pembayaran</div>
+      <span class="kontak-icon">🏧</span>
       {kontakData.rekening.map(r => (
         <div class="rekening-item">
           <span class="bank-name">{r.bank}</span>
@@ -58,7 +57,7 @@ const kontakData = {
     </a>
 
     <!-- Gabung Agen -->
-    <a href={kontakData.formAgen} class="kontak-card clickable highlight">
+    <a href="/reseller" class="kontak-card clickable highlight">
       <span class="kontak-icon">🤝</span>
       <div class="kontak-label">Gabung Agen</div>
       <div class="kontak-value">Daftarkan Wilayahmu</div>

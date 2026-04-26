@@ -1,0 +1,30 @@
+---
+interface Props {
+  label?: string;
+}
+const { label = 'Kembali ke Beranda' } = Astro.props;
+---
+<div class="back-home-wrap">
+  <a href="/" class="back-home">
+    ← {label}
+  </a>
+</div>
+
+<style>
+  .back-home-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 0;
+  }
+  .back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-sekunder);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-home:hover { color: var(--hijau); }
+</style>

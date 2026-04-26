@@ -1,59 +1,39 @@
+---
+const buku = [
+  { icon: '🔬', nama: 'Anak Islam Belajar IPAS', kelas: 'Kelas 1–6 · SD/MI' },
+  { icon: '➗', nama: 'Anak Islam Belajar Matematika', kelas: 'Kelas 1–6 · SD/MI' },
+  { icon: '📖', nama: 'Anak Islam Belajar Bahasa Indonesia', kelas: 'Kelas 1–6 · SD/MI' },
+  { icon: '📚', nama: 'Anak Islam Belajar Tematik', kelas: 'Kelas 1–6 · SD/MI' },
+];
+---
 <div class="section" id="buku">
   <p class="section-label">Produk Unggulan</p>
   <h2 class="section-title">Buku Pelajaran Islami</h2>
-  <p class="section-desc">Sesuai Kurikulum terbaru - Kurikulum Merdeka / CP 2025, terintegrasi nilai-nilai Islam yang mulia.</p>
+  <p class="section-desc">Sesuai Kurikulum Merdeka - CP 2025, terintegrasi nilai-nilai Islam yang mulia.</p>
 
   <!-- SD/MI -->
   <div class="jenjang-group">
     <div class="jenjang-header open" data-toggle>
       <div>
         <div class="jenjang-title">SD / MI</div>
-        <div class="jenjang-meta">3 mapel utama · Kelas 1–6</div>
+        <div class="jenjang-meta">3 mapel utama · Kelas 1–6 · Semester 1 & 2</div>
       </div>
       <span class="jenjang-arrow">▲</span>
     </div>
     <div class="jenjang-body open">
       <div class="buku-list">
-        <div class="buku-card">
-          <span class="buku-icon">🔬</span>
-          <div class="buku-mapel">IPAS</div>
-          <div class="buku-kelas">Kelas 1–6 · SD/MI</div>
-          <div class="buku-badge">Kurikulum Merdeka</div>
-          <div class="buku-actions">
-            <a href="https://luqmanulhakim.net/digital" class="btn-lihat" target="_blank" rel="noopener">Lihat</a>
-            <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan" target="_blank" rel="noopener">Pesan</a>
+        {buku.map(b => (
+          <div class="buku-card">
+            <span class="buku-icon">{b.icon}</span>
+            <div class="buku-nama">{b.nama}</div>
+            <div class="buku-kelas">{b.kelas}</div>
+            <div class="buku-badge">Kurikulum Merdeka</div>
           </div>
-        </div>
-        <div class="buku-card">
-          <span class="buku-icon">➗</span>
-          <div class="buku-mapel">Matematika</div>
-          <div class="buku-kelas">Kelas 1–6 · SD/MI</div>
-          <div class="buku-badge">Kurikulum Merdeka</div>
-          <div class="buku-actions">
-            <a href="https://luqmanulhakim.net/digital" class="btn-lihat" target="_blank" rel="noopener">Lihat</a>
-            <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan" target="_blank" rel="noopener">Pesan</a>
-          </div>
-        </div>
-        <div class="buku-card">
-          <span class="buku-icon">📖</span>
-          <div class="buku-mapel">Bahasa Indonesia</div>
-          <div class="buku-kelas">Kelas 1–6 · SD/MI</div>
-          <div class="buku-badge">Kurikulum Merdeka</div>
-          <div class="buku-actions">
-            <a href="https://luqmanulhakim.net/digital" class="btn-lihat" target="_blank" rel="noopener">Lihat</a>
-            <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan" target="_blank" rel="noopener">Pesan</a>
-          </div>
-        </div>
-        <div class="buku-card">
-          <span class="buku-icon">📚</span>
-          <div class="buku-mapel">Tematik - Integrasi</div>
-          <div class="buku-kelas">Kelas 1–6 · SD/MI</div>
-          <div class="buku-badge">Kurikulum Merdeka</div>
-          <div class="buku-actions">
-            <a href="https://luqmanulhakim.net/digital" class="btn-lihat" target="_blank" rel="noopener">Lihat</a>
-            <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan" target="_blank" rel="noopener">Pesan</a>
-          </div>
-        </div>
+        ))}
+      </div>
+      <div class="jenjang-actions">
+        <a href="/katalog" class="btn-katalog">📚 Lihat Katalog Lengkap</a>
+        <a href="https://luqmanulhakim.net/pesanan" class="btn-pesan">🛒 Pesan Sekarang</a>
       </div>
     </div>
   </div>
@@ -88,28 +68,9 @@
 </div>
 
 <style>
-  .section-desc {
-    font-size: 14px;
-    color: var(--text-sekunder);
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-  .jenjang-group {
-    margin-bottom: 1rem;
-    border: 1px solid var(--batas);
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--putih);
-  }
-  .jenjang-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.2s;
-  }
+  .section-desc { font-size: 14px; color: var(--text-sekunder); margin-bottom: 2rem; text-align: center; }
+  .jenjang-group { margin-bottom: 1rem; border: 1px solid var(--batas); border-radius: 12px; overflow: hidden; background: var(--putih); }
+  .jenjang-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; user-select: none; transition: background 0.2s; }
   .jenjang-header:hover { background: #f4faf7; }
   .jenjang-header.open { background: var(--hijau); color: #fff; }
   .jenjang-title { font-size: 14px; font-weight: 600; }
@@ -117,73 +78,24 @@
   .jenjang-header.open .jenjang-meta { color: rgba(255,255,255,0.7); }
   .jenjang-arrow { font-size: 12px; }
   .jenjang-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-  .jenjang-body.open { max-height: 800px; }
-  .buku-list {
-    padding: 0.75rem 1.25rem 1.25rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 0.75rem;
-  }
-  .buku-card {
-    background: #f4faf7;
-    border: 1px solid var(--batas);
-    border-radius: 8px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
+  .jenjang-body.open { max-height: 600px; }
+  .buku-list { padding: 0.75rem 1.25rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
+  .buku-card { background: #f4faf7; border: 1px solid var(--batas); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; }
   .buku-icon { font-size: 20px; margin-bottom: 0.5rem; }
-  .buku-mapel { font-size: 13px; font-weight: 600; color: var(--text-utama); margin-bottom: 0.2rem; }
+  .buku-nama { font-size: 12px; font-weight: 600; color: var(--text-utama); margin-bottom: 0.2rem; line-height: 1.4; }
   .buku-kelas { font-size: 11px; color: var(--text-sekunder); }
-  .buku-badge {
-    display: inline-block;
-    margin-top: 0.4rem;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--hijau);
-    background: #d4eddf;
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    align-self: flex-start;
-  }
-  .buku-actions {
-    display: flex;
-    gap: 0.4rem;
-    margin-top: 0.75rem;
-  }
-  .btn-lihat, .btn-pesan {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 0.35rem 0.65rem;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  .btn-lihat {
-    background: var(--hijau);
-    color: #fff;
-    flex: 1;
-    text-align: center;
-  }
-  .btn-lihat:hover { background: var(--hijau-mid); }
-  .btn-pesan {
-    background: var(--emas-muda);
-    color: var(--emas);
-    border: 1px solid var(--emas);
-    flex: 1;
-    text-align: center;
-  }
+  .buku-badge { display: inline-block; margin-top: 0.4rem; font-size: 10px; font-weight: 600; color: var(--hijau); background: #d4eddf; padding: 0.2rem 0.6rem; border-radius: 4px; align-self: flex-start; }
+  .jenjang-actions { display: flex; gap: 0.75rem; padding: 1rem 1.25rem 1.25rem; flex-wrap: wrap; }
+  .btn-katalog, .btn-pesan { font-size: 12px; font-weight: 600; padding: 0.55rem 1.1rem; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
+  .btn-katalog { background: var(--hijau); color: #fff; }
+  .btn-katalog:hover { background: var(--hijau-mid); }
+  .btn-pesan { background: var(--emas-muda); color: #7a5f00; border: 1px solid var(--emas); }
   .btn-pesan:hover { background: var(--emas); color: #fff; }
-  .coming-row {
-    padding: 1rem 1.25rem;
-    font-size: 13px;
-    color: var(--text-sekunder);
-    font-style: italic;
-    border-top: 1px solid var(--batas);
-  }
-
+  .coming-row { padding: 1rem 1.25rem; font-size: 13px; color: var(--text-sekunder); font-style: italic; border-top: 1px solid var(--batas); }
   @media (max-width: 500px) {
     .buku-list { grid-template-columns: 1fr 1fr; }
+    .jenjang-actions { flex-direction: column; }
+    .btn-katalog, .btn-pesan { text-align: center; }
   }
 </style>
 

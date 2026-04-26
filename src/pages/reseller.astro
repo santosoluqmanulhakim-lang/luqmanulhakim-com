@@ -1,0 +1,336 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BackToHome from '../components/BackToHome.astro';
+---
+
+<Layout title="Gabung Reseller & Agen — Penerbit Luqmanulhakim">
+  <Header />
+  <main>
+  <BackToHome />
+    <div class="hero-strip">
+      <div class="hero-inner">
+        <div class="badge">Segera Hadir</div>
+        <h1>Bergabung sebagai<br/>Agen & Reseller</h1>
+        <p class="hero-sub">Bersama kami membangun jaringan distribusi buku pendidikan Islam di seluruh Indonesia</p>
+      </div>
+    </div>
+
+    <div class="page-wrap">
+
+      <!-- Notifikasi utama -->
+      <div class="notice-card">
+        <div class="notice-icon">📅</div>
+        <div class="notice-body">
+          <div class="notice-title">InsyaAllah Pendaftaran Dibuka Awal 2027</div>
+          <div class="notice-text">
+            Sistem pendaftaran agen dan reseller sedang kami siapkan dengan sebaik-baiknya.
+            InsyaAllah akan dibuka pada awal tahun 2027. Isi formulir di bawah untuk
+            mendapatkan notifikasi pertama saat pendaftaran resmi dibuka.
+          </div>
+        </div>
+      </div>
+
+      <!-- Form pra-registrasi -->
+      <div class="form-section">
+        <div class="form-header">
+          <h2>Formulir Pra-Registrasi</h2>
+          <p>Data ini hanya untuk keperluan notifikasi — belum merupakan pendaftaran resmi.</p>
+        </div>
+
+        <div class="form-card">
+          <div class="form-group">
+            <label for="nama">Nama Lengkap <span class="req">*</span></label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap" disabled />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Alamat Email <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="contoh@email.com" disabled />
+          </div>
+
+          <div class="form-group">
+            <label for="wa">Nomor WhatsApp <span class="req">*</span></label>
+            <div class="input-prefix-wrap">
+              <span class="input-prefix">+62</span>
+              <input type="tel" id="wa" placeholder="812-3456-7890" disabled />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="alamat">Alamat / Kota <span class="req">*</span></label>
+            <textarea id="alamat" rows="2" placeholder="Kota dan provinsi domisili" disabled></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="wilayah">Pilihan Wilayah Agen <span class="req">*</span></label>
+            <select id="wilayah" disabled>
+              <option value="">— Pilih wilayah —</option>
+              <optgroup label="Sumatera">
+                <option>Aceh</option>
+                <option>Sumatera Utara</option>
+                <option>Sumatera Barat</option>
+                <option>Riau</option>
+                <option>Jambi</option>
+                <option>Bengkulu</option>
+                <option>Sumatera Selatan</option>
+                <option>Lampung</option>
+              </optgroup>
+              <optgroup label="Jawa & Bali">
+                <option>Banten</option>
+                <option>Jabodetabek</option>
+                <option>Jawa Barat</option>
+                <option>Jawa Tengah</option>
+                <option>DI Yogyakarta</option>
+                <option>Jawa Timur</option>
+                <option>Bali</option>
+              </optgroup>
+              <optgroup label="Kalimantan">
+                <option>Kalimantan Barat</option>
+                <option>Kalimantan Tengah</option>
+                <option>Kalimantan Selatan</option>
+                <option>Kalimantan Timur</option>
+                <option>Kalimantan Utara</option>
+              </optgroup>
+              <optgroup label="Sulawesi">
+                <option>Sulawesi Selatan</option>
+                <option>Sulawesi Tengah</option>
+                <option>Sulawesi Barat</option>
+                <option>Sulawesi Tenggara</option>
+                <option>Sulawesi Utara</option>
+              </optgroup>
+              <optgroup label="Timur Indonesia">
+                <option>Nusa Tenggara Barat</option>
+                <option>Nusa Tenggara Timur</option>
+                <option>Maluku</option>
+                <option>Papua</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="catatan">Catatan (opsional)</label>
+            <textarea id="catatan" rows="2" placeholder="Pengalaman distribusi, instansi, dll." disabled></textarea>
+          </div>
+
+          <!-- Tombol nonaktif dengan penjelasan -->
+          <div class="submit-wrap">
+            <button class="btn-submit" disabled>
+              Kirim Pra-Registrasi
+            </button>
+            <div class="submit-note">
+              ⏳ Formulir akan aktif saat pendaftaran resmi dibuka — insyaAllah awal 2027
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info keagenan -->
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon">📦</div>
+          <div class="info-title">Peran Agen</div>
+          <div class="info-desc">Agen bertugas sebagai customer service di wilayah masing-masing. Pembayaran tetap langsung ke rekening pusat.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🗺️</div>
+          <div class="info-title">Satu Agen per Wilayah</div>
+          <div class="info-desc">Setiap wilayah akan memiliki satu agen resmi yang bertanggung jawab atas area tersebut.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📞</div>
+          <div class="info-title">Ada Pertanyaan?</div>
+          <div class="info-desc">
+            Hubungi kami via WhatsApp untuk informasi lebih lanjut seputar program keagenan.
+            <a href="https://wa.me/6287770010006" target="_blank" class="wa-link">Chat WhatsApp →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-wrap -->
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  /* Hero strip */
+  .hero-strip {
+    background: linear-gradient(160deg, #061f10 0%, #0d4a2a 60%, #155c35 100%);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    color: #fff;
+  }
+  .hero-inner { max-width: 600px; margin: 0 auto; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+  }
+  .hero-strip h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 600;
+    color: #f0e8c8;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+  }
+
+  /* Page wrap */
+  .page-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* Notice */
+  .notice-card {
+    background: #fffbe6;
+    border: 1.5px solid #e8d080;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+  }
+  .notice-icon { font-size: 28px; flex-shrink: 0; }
+  .notice-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #7a5f00;
+    margin-bottom: 0.4rem;
+  }
+  .notice-text { font-size: 13px; color: #7a6000; line-height: 1.6; }
+
+  /* Form section */
+  .form-header { margin-bottom: 1.25rem; }
+  .form-header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-utama);
+    margin-bottom: 0.25rem;
+  }
+  .form-header p { font-size: 13px; color: var(--text-sekunder); }
+
+  .form-card {
+    background: var(--putih);
+    border: 1px solid var(--batas);
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+  }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-utama);
+    margin-bottom: 0.4rem;
+  }
+  .req { color: #c0392b; }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid var(--batas);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-utama);
+    background: #f7faf8;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+  .form-group input:disabled,
+  .form-group textarea:disabled,
+  .form-group select:disabled {
+    background: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    border-color: #e0e0e0;
+  }
+  .input-prefix-wrap {
+    display: flex;
+    align-items: stretch;
+  }
+  .input-prefix {
+    background: #e8f5ee;
+    border: 1.5px solid var(--batas);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    padding: 0 0.75rem;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--hijau);
+    display: flex;
+    align-items: center;
+  }
+  .input-prefix-wrap input {
+    border-radius: 0 8px 8px 0;
+    flex: 1;
+  }
+
+  /* Submit */
+  .submit-wrap { text-align: center; margin-top: 1.75rem; }
+  .btn-submit {
+    background: #b0b0b0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0.85rem 2.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: not-allowed;
+    width: 100%;
+    max-width: 320px;
+  }
+  .submit-note {
+    margin-top: 0.75rem;
+    font-size: 12px;
+    color: var(--text-sekunder);
+  }
+
+  /* Info grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .info-card {
+    background: var(--putih);
+    border: 1px solid var(--batas);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .info-icon { font-size: 24px; margin-bottom: 0.5rem; }
+  .info-title { font-size: 13px; font-weight: 700; color: var(--text-utama); margin-bottom: 0.4rem; }
+  .info-desc { font-size: 12px; color: var(--text-sekunder); line-height: 1.6; }
+  .wa-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--hijau);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hijau);
+  }
+
+  @media (max-width: 480px) {
+    .form-card { padding: 1.25rem; }
+    .notice-card { flex-direction: column; gap: 0.5rem; }
+  }
+</style>
