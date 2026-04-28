@@ -89,9 +89,11 @@ const apps = [
                   src={app.screenshot}
                   alt={`Screenshot ${app.nama}`}
                   class="screen-img"
+                  style="display:none;"
+                  onload="this.style.display='block'; this.nextElementSibling.style.display='none';"
                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                 />
-                <div class="screen-placeholder">
+                <div class="screen-placeholder" style="display:flex;">
                   <div class="ph-icon">{app.icon}</div>
                   <div class="ph-text">Screenshot segera hadir</div>
                 </div>
@@ -240,10 +242,7 @@ const apps = [
     gap: 0.5rem;
     background: #e8f5ee;
   }
-  /* Tampilkan placeholder saat gambar tidak ada */
-  .screen-body:not(:has(img[src])) .screen-placeholder,
-  .screen-placeholder { display: flex; }
-  .screen-img { display: none; }
+
 
   .ph-icon { font-size: 3rem; }
   .ph-text { font-size: 12px; color: var(--text-sekunder); }
