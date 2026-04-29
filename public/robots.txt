@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://luqmanulhakim.com/sitemap-index.xml
