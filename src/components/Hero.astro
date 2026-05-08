@@ -1,48 +1,59 @@
 ---
 ---
 <section class="hero">
-  <div class="hero-sub">Bismillahirrahmanirrahim</div>
-  <h1>Visi 2027/2028: Membangun Generasi Muslim Indonesia yang Kuat dalam Ilmu, Aqidah & Akhlak</h1>
-  <div class="visi-box">
-    Bersama lembaga pendidikan dan para pendidik, membangun generasi muslim Indonesia yang kuat dalam ilmu dan
-    Aqidah Islamiyah, berwawasan global, dan berakhlakul karimah — bi idznillah.
-  </div>
-  <div class="hero-cta">
-    <a href="#buku" class="btn-utama">Lihat Katalog Buku</a>
-    <a href="#reseller" class="btn-sekunder">Gabung Reseller</a>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-sub">Bismillahirrahmanirrahim</div>
+    <h1>Visi 2027/2028: Membangun Generasi Muslim Indonesia yang Kuat dalam Ilmu, Aqidah & Akhlak</h1>
+    <div class="visi-box">
+      Bersama lembaga pendidikan dan para pendidik, membangun generasi muslim Indonesia yang kuat dalam ilmu dan
+      Aqidah Islamiyah, berwawasan global, dan berakhlakul karimah — bi idznillah.
+    </div>
+    <div class="hero-cta">
+      <a href="#buku" class="btn-utama">Lihat Katalog Buku</a>
+      <a href="#reseller" class="btn-sekunder">Gabung Reseller</a>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    background: linear-gradient(160deg, #061f10 0%, #0d4a2a 55%, #155c35 100%);
-    color: #fff;
-    padding: 3rem 1.5rem 3rem;
-    text-align: center;
     position: relative;
+    color: #fff;
+    padding: 2.5rem 1rem;
+    text-align: center;
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
+
+  /* layer 1: foto background */
+  .hero-bg {
     position: absolute;
-    top: -60px; right: -60px;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.03);
-    pointer-events: none;
+    inset: 0;
+    background-image: url('/images/img-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.35) saturate(0.8);
+    z-index: 0;
   }
+
+  /* layer 2: gradient gelap di atas foto agar teks terbaca */
   .hero::after {
     content: '';
     position: absolute;
-    bottom: -40px; left: -40px;
-    width: 200px; height: 200px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.025);
+    inset: 0;
+    background: linear-gradient(160deg, rgba(6,31,16,0.7) 0%, rgba(13,74,42,0.55) 100%);
+    z-index: 1;
     pointer-events: none;
   }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
   .hero-sub {
     font-size: 11px;
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.5);
     margin-bottom: 2rem;
     font-style: italic;
   }
@@ -64,14 +75,7 @@
     font-size: 14px;
     color: rgba(255,255,255,0.88);
     line-height: 1.7;
-  }
-  .visi-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.45);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    backdrop-filter: blur(4px);
   }
   .hero-cta {
     display: flex;
@@ -89,6 +93,7 @@
     border: 1.5px solid rgba(255,255,255,0.4);
     text-decoration: none;
     transition: background 0.2s;
+    backdrop-filter: blur(4px);
   }
   .btn-utama:hover { background: rgba(255,255,255,0.26); }
   .btn-sekunder {
