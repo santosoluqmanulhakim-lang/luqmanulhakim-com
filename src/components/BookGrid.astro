@@ -8,15 +8,17 @@ const buku = [
 ---
 <div class="section" id="buku">
   <p class="section-label">Produk Unggulan</p>
-  <h2 class="section-title">Buku Pelajaran Islami</h2>
-  <p class="section-desc">Sesuai Kurikulum Merdeka - CP 2025, terintegrasi nilai-nilai Islam yang mulia.</p>
+  <h2 class="section-title">Buku Pelajaran untuk Sekolah Islam</h2>
+  <p class="section-desc">Sesuai Kurikulum Merdeka - CP 2025, terintegrasi nilai-nilai Islam yang mulia.<br/>
+      Seri <strong>Anak Islam Belajar</strong> adalah buku kurikulum merdeka untuk sekolah Islam, SD/MI, SDIT, dan PKBM Islam.
+  </p>
 
   <!-- SD/MI -->
   <div class="jenjang-group">
     <div class="jenjang-header open" data-toggle>
       <div>
-        <div class="jenjang-title">SD / MI</div>
-        <div class="jenjang-meta">3 mapel utama · Kelas 1–6 · Semester 1 & 2</div>
+        <div class="jenjang-title">SD, MI, SDIT, PKBM Islam</div>
+        <div class="jenjang-meta">IPAS, MTK, Bahasa Indonesia · Kelas 1–6 · Semester 1 & 2</div>
       </div>
       <span class="jenjang-arrow">▲</span>
     </div>
@@ -44,7 +46,7 @@ const buku = [
   <div class="jenjang-group">
     <div class="jenjang-header" data-toggle>
       <div>
-        <div class="jenjang-title">SMP / MTs</div>
+        <div class="jenjang-title">SMP, MTs, SMPIT.</div>
         <div class="jenjang-meta">Coming Soon · InsyaAllah</div>
       </div>
       <span class="jenjang-arrow">▼</span>
@@ -58,7 +60,7 @@ const buku = [
   <div class="jenjang-group">
     <div class="jenjang-header" data-toggle>
       <div>
-        <div class="jenjang-title">SMA / MA</div>
+        <div class="jenjang-title">SMA, MA, SMAIT</div>
         <div class="jenjang-meta">InsyaAllah</div>
       </div>
       <span class="jenjang-arrow">▼</span>
@@ -71,6 +73,10 @@ const buku = [
 
 <style>
   .section-desc { font-size: 14px; color: var(--text-sekunder); margin-bottom: 2rem; text-align: center; }
+  .section-desc strong {
+  color: var(--text-utama);
+  font-weight: 600;
+  }
   .jenjang-group { margin-bottom: 1rem; border: 1px solid var(--batas); border-radius: 12px; overflow: hidden; background: var(--putih); }
   .jenjang-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; user-select: none; transition: background 0.2s; }
   .jenjang-header:hover { background: #f4faf7; }
