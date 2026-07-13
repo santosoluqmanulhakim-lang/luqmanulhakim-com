@@ -1,0 +1,260 @@
+---
+// src/pages/tools/index.astro
+import Layout from '../../layouts/Layout.astro';
+
+const title = "Tools Gratis";
+const description = "Kumpulan tools gratis dari Penerbit Luqmanulhakim. Edit PDF, kompres gambar, dan berbagai utilitas lainnya — semua berjalan di browser, tanpa upload ke server.";
+
+const tools = [
+  {
+    slug: "/tools/pdf-editor",
+    icon: "📄",
+    label: "PDF Native",
+    labelColor: "green",
+    title: "PDF Editor",
+    desc: "Sisipkan halaman kosong atau dari PDF lain, hapus halaman tertentu. Teks & vektor tetap utuh — bisa diedit di CorelDRAW.",
+    tags: ["Sisipkan", "Hapus Halaman", "Native PDF"],
+    status: "ready",
+  },
+  {
+    slug: "/tools/pdf-toolkit",
+    icon: "🛠",
+    label: "PDF Suite",
+    labelColor: "gold",
+    title: "PowerPDF Toolkit",
+    desc: "Split, join, kompres, watermark, rotate, PDF ke gambar, gambar ke PDF — semua dalam satu halaman.",
+    tags: ["Split", "Join", "Kompres", "Watermark", "+5 lagi"],
+    status: "ready",
+  },
+  {
+    slug: "#",
+    icon: "✍️",
+    label: "Segera Hadir",
+    labelColor: "dim",
+    title: "Word Counter",
+    desc: "Hitung kata, karakter, dan paragraf pada teks. Cocok untuk penulisan naskah buku dan artikel.",
+    tags: ["Kata", "Karakter", "Paragraf"],
+    status: "soon",
+  },
+  {
+    slug: "#",
+    icon: "🖼",
+    label: "Segera Hadir",
+    labelColor: "dim",
+    title: "Resize Gambar",
+    desc: "Ubah ukuran gambar secara batch. Output JPEG, PNG, atau WebP dengan kualitas yang bisa diatur.",
+    tags: ["Batch", "JPEG", "PNG", "WebP"],
+    status: "soon",
+  },
+];
+---
+
+<Layout title={title} description={description}>
+
+  <!-- NAVBAR -->
+  <header class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <span class="nav-logo">📚</span>
+        <div>
+          <div class="nav-name">Luqmanulhakim</div>
+          <div class="nav-tagline">Penerbit Pendidikan Islam</div>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="/katalog">Katalog</a>
+        <a href="/tools" class="nav-active">Tools</a>
+        <a href="/kontak">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb-bar">
+    <div class="bc-inner">
+      <a href="/">Beranda</a>
+      <span class="bc-sep">›</span>
+      <span>Tools</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="hero-inner">
+      <div class="hero-label">Utilitas Gratis</div>
+      <h1 class="hero-title">Tools <span>Gratis</span></h1>
+      <p class="hero-desc">
+        Kumpulan tools yang kami gunakan sehari-hari dalam produksi buku —
+        kini tersedia untuk umum. Semua berjalan di browser,
+        <strong>tidak ada file yang dikirim ke server</strong>.
+      </p>
+      <div class="hero-stats">
+        <div class="hs-item"><strong>{tools.filter(t=>t.status==='ready').length}</strong> Tools Siap</div>
+        <div class="hs-div"></div>
+        <div class="hs-item"><strong>100%</strong> Gratis</div>
+        <div class="hs-div"></div>
+        <div class="hs-item"><strong>🔒</strong> Lokal · Privat</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS GRID -->
+  <main class="tools-shell">
+
+    <div class="section-hdr">
+      <div class="sh-title">Semua Tools</div>
+      <div class="sh-sub">Klik kartu untuk membuka tool</div>
+    </div>
+
+    <div class="tools-grid">
+      {tools.map(tool => (
+        <a
+          href={tool.slug}
+          class={`tool-card ${tool.status === 'soon' ? 'tool-card--soon' : ''}`}
+          aria-disabled={tool.status === 'soon'}
+        >
+          <div class="tc-top">
+            <div class="tc-icon">{tool.icon}</div>
+            <span class={`tc-label tc-label--${tool.labelColor}`}>{tool.label}</span>
+          </div>
+          <div class="tc-title">{tool.title}</div>
+          <div class="tc-desc">{tool.desc}</div>
+          <div class="tc-tags">
+            {tool.tags.map(tag => <span class="tc-tag">{tag}</span>)}
+          </div>
+          {tool.status === 'ready' && (
+            <div class="tc-cta">Buka Tool →</div>
+          )}
+          {tool.status === 'soon' && (
+            <div class="tc-soon">Segera hadir</div>
+          )}
+        </a>
+      ))}
+    </div>
+
+    <!-- Privacy note -->
+    <div class="privacy-note">
+      <div class="pn-icon">🔒</div>
+      <div>
+        <div class="pn-title">Privasi Anda Terjaga</div>
+        <div class="pn-desc">Semua proses terjadi sepenuhnya di browser Anda menggunakan JavaScript. File tidak pernah diunggah ke server kami maupun pihak ketiga. Koneksi internet hanya dibutuhkan untuk memuat halaman pertama kali.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span>📚</span>
+        <div>
+          <div class="fb-name">Penerbit Luqmanulhakim</div>
+          <div class="fb-sub">Buku &amp; Aplikasi Pendidikan Islam — Kurikulum Merdeka</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="/katalog">Katalog Buku</a>
+        <a href="/tools">Tools</a>
+        <a href="/tentang">Tentang</a>
+        <a href="/kontak">Kontak</a>
+      </div>
+      <div class="footer-copy">© 2025 Penerbit Luqmanulhakim · luqmanulhakim.com</div>
+    </div>
+  </footer>
+
+</Layout>
+
+<style>
+:root{--hijau:#0d4a2a;--hijau-mid:#155c35;--hijau-muda:#E8F5EE;--emas:#c9a84c;--emas-muda:#FFF8E7;--text-utama:#1a2a1e;--text-sekunder:#4a5e52;--batas:#d4e6da;}
+
+/* NAV */
+.site-nav{background:var(--hijau);border-bottom:3px solid var(--emas);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;color:white;text-decoration:none}
+.nav-logo{font-size:24px}
+.nav-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:white;letter-spacing:-.01em}
+.nav-tagline{font-size:10px;color:rgba(255,255,255,.6)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:rgba(255,255,255,.75);transition:all .18s;text-decoration:none}
+.nav-links a:hover{color:white;background:rgba(255,255,255,.1)}
+.nav-links .nav-active{background:var(--emas);color:var(--hijau);font-weight:700}
+
+/* BREADCRUMB */
+.breadcrumb-bar{background:var(--hijau-muda);border-bottom:1px solid var(--batas)}
+.bc-inner{max-width:1100px;margin:0 auto;padding:8px 1.5rem;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-sekunder)}
+.bc-inner a{color:var(--hijau-mid);text-decoration:none}
+.bc-inner a:hover{color:var(--hijau)}
+.bc-sep{color:var(--batas)}
+
+/* HERO */
+.page-hero{background:linear-gradient(135deg,var(--hijau) 0%,var(--hijau-mid) 100%);padding:52px 1.5rem 44px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border-radius:50%;background:rgba(201,168,76,.1)}
+.page-hero::after{content:'';position:absolute;bottom:-60px;left:-20px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04)}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--emas);background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 12px;display:inline-block;margin-bottom:14px}
+.hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:800;color:white;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px}
+.hero-title span{color:var(--emas);font-weight:600}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.8);max-width:560px;line-height:1.75;margin-bottom:24px}
+.hero-desc strong{color:white}
+.hero-stats{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hs-item{font-size:13px;color:rgba(255,255,255,.85);font-weight:500}
+.hs-item strong{color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;margin-right:4px}
+.hs-div{width:1px;height:20px;background:rgba(255,255,255,.2)}
+
+/* TOOLS SHELL */
+.tools-shell{max-width:1100px;margin:0 auto;padding:32px 1.5rem 60px}
+.section-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.sh-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--text-utama);letter-spacing:-.02em}
+.sh-sub{font-size:12px;color:var(--text-sekunder)}
+
+/* TOOLS GRID */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:32px}
+
+.tool-card{background:white;border:1.5px solid var(--batas);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:all .22s;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--hijau),var(--hijau-mid));opacity:0;transition:opacity .22s}
+.tool-card:hover{border-color:var(--hijau-mid);box-shadow:0 8px 28px rgba(13,74,42,.12);transform:translateY(-2px)}
+.tool-card:hover::before{opacity:1}
+.tool-card--soon{opacity:.6;cursor:default;pointer-events:none}
+.tool-card--soon:hover{transform:none;box-shadow:none;border-color:var(--batas)}
+.tool-card--soon::before{display:none}
+
+.tc-top{display:flex;align-items:center;justify-content:space-between}
+.tc-icon{font-size:28px;line-height:1}
+.tc-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px}
+.tc-label--green{background:rgba(61,186,120,.1);color:#1a8a50;border:1px solid rgba(61,186,120,.25)}
+.tc-label--gold{background:var(--emas-muda);color:#8a6a1a;border:1px solid rgba(201,168,76,.3)}
+.tc-label--dim{background:#f3f4f6;color:#9ca3af;border:1px solid #e5e7eb}
+
+.tc-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--text-utama);letter-spacing:-.02em;line-height:1.2}
+.tc-desc{font-size:12.5px;color:var(--text-sekunder);line-height:1.7;flex:1}
+.tc-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tc-tag{background:var(--hijau-muda);color:var(--hijau-mid);border:1px solid var(--batas);border-radius:20px;font-size:10px;font-weight:600;padding:2px 8px}
+.tc-cta{font-size:12px;font-weight:700;color:var(--hijau-mid);margin-top:4px;transition:color .18s}
+.tool-card:hover .tc-cta{color:var(--hijau)}
+.tc-soon{font-size:11px;font-weight:600;color:#9ca3af;margin-top:4px;font-style:italic}
+
+/* PRIVACY NOTE */
+.privacy-note{display:flex;align-items:flex-start;gap:16px;background:var(--hijau-muda);border:1px solid var(--batas);border-radius:14px;padding:20px 24px}
+.pn-icon{font-size:24px;flex-shrink:0;margin-top:2px}
+.pn-title{font-size:13px;font-weight:600;color:var(--hijau);margin-bottom:4px}
+.pn-desc{font-size:12px;color:var(--text-sekunder);line-height:1.7}
+
+/* FOOTER */
+.site-footer{background:var(--hijau);padding:32px 1.5rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.footer-brand{display:flex;align-items:center;gap:10px;color:white}
+.fb-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;color:white}
+.fb-sub{font-size:11px;color:rgba(255,255,255,.6)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.7);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--emas)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.4)}
+
+@media(max-width:640px){
+  .tools-grid{grid-template-columns:1fr}
+  .nav-links a:not(.nav-active){display:none}
+  .hero-stats{gap:10px}
+  .hs-div{display:none}
+}
+</style>

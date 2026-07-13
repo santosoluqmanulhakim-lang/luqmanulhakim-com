@@ -1,0 +1,1845 @@
+---
+// src/pages/tools/pdf-toolkit.astro
+import Layout from '../../layouts/Layout.astro';
+const title = "PowerPDF Toolkit — 9 Tools PDF dalam Satu Halaman";
+const description = "Split, join, sisipkan, rotate, kompres, watermark, PDF ke gambar, gambar ke PDF, dan kompres gambar. Semua berjalan di browser tanpa upload ke server.";
+---
+<Layout title={title} description={description}>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" is:inline></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" is:inline></script>
+
+<!-- TOPBAR -->
+<header class="lq-nav">
+  <div class="lq-nav-inner">
+    <a href="/" class="lq-brand">
+      <span class="lq-logo">📚</span>
+      <div><div class="lq-name">Luqmanulhakim</div><div class="lq-tagline">Penerbit Pendidikan Islam</div></div>
+    </a>
+    <nav class="lq-links">
+      <a href="/katalog">Katalog</a>
+      <a href="/tools" class="lq-active">Tools</a>
+      <a href="/kontak">Kontak</a>
+    </nav>
+  </div>
+</header>
+<div class="lq-bc"><div class="lq-bc-inner">
+  <a href="/">Beranda</a><span>›</span><a href="/tools">Tools</a><span>›</span><span>PowerPDF Toolkit</span>
+</div></div>
+
+<div class="toolkit-root">
+
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">Power<span>PDF</span></div>
+    <div class="logo-sub">Toolkit v2.0</div>
+  </div>
+  <div class="sidebar-section">PDF</div>
+  <div class="nav-item active" data-panel="split"><span class="nav-ico">✂️</span><span>Split PDF</span></div>
+  <div class="nav-item" data-panel="join"><span class="nav-ico">🔗</span><span>Join PDF</span></div>
+  <div class="nav-item" data-panel="insert"><span class="nav-ico">➕</span><span>Sisipkan Halaman</span></div>
+  <div class="nav-item" data-panel="rotate"><span class="nav-ico">🔄</span><span>Rotate & Reorder</span></div>
+  <div class="nav-item" data-panel="compress"><span class="nav-ico">📦</span><span>Kompres PDF</span></div>
+  <div class="nav-item" data-panel="watermark"><span class="nav-ico">💧</span><span>Watermark</span></div>
+  <div class="sidebar-section">Gambar</div>
+  <div class="nav-item" data-panel="pdf2img"><span class="nav-ico">🖼</span><span>PDF → Gambar</span></div>
+  <div class="nav-item" data-panel="img2pdf"><span class="nav-ico">📄</span><span>Gambar → PDF</span></div>
+  <div class="nav-item" data-panel="cimg"><span class="nav-ico">⚡</span><span>Kompres Gambar</span></div>
+  <div class="sidebar-footer">
+    <div class="badge-secure">🔒 100% Lokal</div><br>
+    Tidak ada upload<br>ke server
+  </div>
+</nav>
+
+<main class="tk-main">
+
+<!-- ══════════════ SPLIT ══════════════ -->
+<div class="panel active" id="panel-split">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">✂️ PDF Native</div>
+    <div class="pnl-title">Split PDF</div>
+    <div class="pnl-sub">Pecah PDF menjadi beberapa file tanpa mengubah kualitas.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload PDF</div>
+    <div class="dz" id="dz-split"><input type="file" id="fi-split" accept=".pdf"><span class="dz-ico">📄</span><div class="dz-t">Drop PDF di sini</div><p class="dz-s">atau <b>klik untuk pilih file</b></p></div>
+  </div>
+  <div class="errbox" id="err-split"></div>
+  <div class="file-summary" id="fs-split">
+    <span style="font-size:24px">📄</span>
+    <div style="flex:1;min-width:0"><div class="fs-name" id="fs-split-name"></div><div class="fs-info" id="fs-split-info"></div></div>
+    <button class="fs-rm" id="fs-split-rm">✕ Hapus</button>
+  </div>
+  <div id="split-controls" style="display:none">
+    <div class="card">
+      <div class="card-title">Mode Split</div>
+      <div class="smode-row">
+        <div class="smode active" data-m="visual">🖱 Pilih Visual</div>
+        <div class="smode" data-m="range">📝 Range Halaman</div>
+        <div class="smode" data-m="each">📑 Tiap Halaman</div>
+        <div class="smode" data-m="n">🔢 Per-N Halaman</div>
+      </div>
+      <div id="mode-visual">
+        <div class="toolbar">
+          <span class="tlbl">Pilih:</span>
+          <button class="tb" id="sel-all">Semua</button><button class="tb" id="sel-none">Hapus</button>
+          <button class="tb" id="sel-odd">Ganjil</button><button class="tb" id="sel-even">Genap</button>
+          <button class="tb" id="sel-inv">Balik</button>
+          <span class="sel-count" id="sel-count">0 dipilih</span>
+        </div>
+        <div class="pg-grid" id="pg-grid"></div>
+        <p class="hint">Halaman terpilih → 1 file. Sisanya → file kedua (jika ada).</p>
+      </div>
+      <div id="mode-range" style="display:none">
+        <input class="range-inp" id="range-inp" type="text" placeholder="Contoh: 1-3, 5, 7-9">
+        <div class="hint">Gunakan strip untuk range, koma sebagai pemisah. Contoh: <code>1-3</code> · <code>1-3,7-9</code></div>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;cursor:pointer">
+          <input type="checkbox" id="range-multi" checked> Tiap grup jadi file terpisah
+        </label>
+      </div>
+      <div id="mode-each" style="display:none">
+        <div class="notice">📑 Setiap halaman jadi file PDF sendiri. Total: <strong id="each-n">—</strong> file.</div>
+      </div>
+      <div id="mode-n" style="display:none">
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Halaman per file</div>
+            <input type="number" id="n-inp" min="1" value="2" style="width:72px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-family:'DM Mono',monospace;font-size:14px;text-align:center;outline:none;color:var(--ink)">
+          </div>
+          <div style="font-size:12px;color:var(--ink3);line-height:1.8" id="n-preview"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-split" disabled>✂️ Split PDF</button>
+  </div>
+  <div class="prog" id="prog-split">
+    <div class="prog-hdr"><span class="prog-lbl" id="sp-lbl">Memproses...</span><span class="prog-pct" id="sp-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="sp-fill"></div></div>
+    <div class="prog-info" id="sp-info"></div>
+  </div>
+  <div class="result" id="res-split">
+    <div class="res-top"><div class="res-badge">✅</div><div><div class="res-title">Split Berhasil</div><div class="res-sub" id="split-rsub">—</div></div></div>
+    <div class="out-list" id="split-out"></div>
+    <button class="btn btn-green" id="split-dlzip" style="display:none">⬇ Download Semua (ZIP)</button>
+    <div class="btn-row"><button class="btn btn-ghost" id="split-reset">↩ Split Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ JOIN ══════════════ -->
+<div class="panel" id="panel-join">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">🔗 PDF Native</div>
+    <div class="pnl-title">Join PDF</div>
+    <div class="pnl-sub">Gabungkan beberapa file PDF menjadi satu dokumen.</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="card-title" style="margin:0">File PDF (seret untuk urutan)</div>
+      <div class="dz-add" id="dz-add"><input type="file" id="fi-join" accept=".pdf" multiple>＋ Tambah File</div>
+    </div>
+    <div id="join-empty" class="join-empty">Belum ada file. Klik "Tambah File" di atas.</div>
+    <div id="join-list"></div>
+  </div>
+  <div class="errbox" id="err-join"></div>
+  <div class="card" id="join-opts" style="display:none">
+    <div class="card-title">Opsi</div>
+    <div class="toggle-row">
+      <div><div class="toggle-name">Tambah Halaman Kosong Antar File</div><div class="toggle-desc">Sisipkan halaman kosong agar tiap file dimulai dari nomor ganjil</div></div>
+      <label class="sw-label"><input type="checkbox" id="join-blank"><span class="sw-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-name">Hapus Metadata Sumber</div><div class="toggle-desc">Strip author, creator dari masing-masing file asal</div></div>
+      <label class="sw-label"><input type="checkbox" id="join-meta"><span class="sw-track"></span></label>
+    </div>
+  </div>
+  <button class="btn btn-primary" id="btn-join" style="display:none" disabled>🔗 Gabungkan PDF</button>
+  <div class="prog" id="prog-join">
+    <div class="prog-hdr"><span class="prog-lbl" id="jp-lbl">Menggabungkan...</span><span class="prog-pct" id="jp-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="jp-fill"></div></div>
+    <div class="prog-info" id="jp-info"></div>
+  </div>
+  <div class="result" id="res-join">
+    <div class="res-top"><div class="res-badge">🔗</div><div><div class="res-title">PDF Berhasil Digabung</div><div class="res-sub" id="join-rsub">—</div></div></div>
+    <div class="out-list" id="join-out"></div>
+    <div class="btn-row"><button class="btn btn-ghost" id="join-prev">👁 Preview</button><button class="btn btn-ghost" id="join-reset">↩ Gabung Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ INSERT ══════════════ -->
+<div class="panel" id="panel-insert">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">➕ PDF Native</div>
+    <div class="pnl-title">Sisipkan Halaman</div>
+    <div class="pnl-sub">Tambah halaman kosong atau dari PDF lain ke posisi mana saja.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">1. File PDF Utama</div>
+    <div class="dz" id="dz-ins-main"><input type="file" id="fi-ins-main" accept=".pdf"><span class="dz-ico">📂</span><div class="dz-t">Drop PDF Utama</div><p class="dz-s">atau <b>klik untuk pilih</b></p></div>
+    <div class="file-summary" id="fs-ins-main">
+      <span style="font-size:24px">📄</span>
+      <div style="flex:1;min-width:0"><div class="fs-name" id="fs-ins-main-name"></div><div class="fs-info" id="fs-ins-main-info"></div></div>
+      <button class="fs-rm" id="fs-ins-main-rm">✕</button>
+    </div>
+  </div>
+  <div id="ins-controls" style="display:none">
+    <div class="card">
+      <div class="card-title">2. Konfigurasi Sisipan</div>
+      <div class="config-row">
+        <label>Posisi sisipan</label>
+        <select class="sel-inp" id="ins-pos">
+          <option value="before">Sebelum halaman tertentu</option>
+          <option value="after" selected>Setelah halaman tertentu</option>
+          <option value="start">Di awal dokumen</option>
+          <option value="end">Di akhir dokumen</option>
+        </select>
+      </div>
+      <div class="config-row" id="ins-pagenum-row">
+        <label>Nomor halaman referensi (Total: <b id="ins-total-hint">—</b>)</label>
+        <input type="number" class="config-inp" id="ins-pagenum" min="1" value="1">
+      </div>
+      <div class="config-row">
+        <label>Jumlah halaman disisipkan</label>
+        <input type="number" class="config-inp" id="ins-count" min="1" max="50" value="1">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">3. Jenis Halaman Sisipan</div>
+      <div class="ins-tab-row">
+        <button class="ins-tab active" data-t="blank">Halaman Kosong</button>
+        <button class="ins-tab" data-t="frompdf">Dari PDF Lain</button>
+      </div>
+      <div class="ins-tab-pane active" id="ins-tab-blank">
+        <div class="config-row">
+          <label>Ukuran halaman</label>
+          <select class="sel-inp" id="ins-size">
+            <option value="A4">A4 (210×297mm)</option>
+            <option value="A5">A5 (148×210mm)</option>
+            <option value="LETTER">Letter</option>
+            <option value="CUSTOM">Ikuti ukuran PDF utama</option>
+          </select>
+        </div>
+        <div class="config-row">
+          <label>Warna halaman</label>
+          <div class="color-grid" id="ins-color-grid">
+            <div class="color-opt selected" data-color="1,1,1" style="background:#fff" title="Putih"></div>
+            <div class="color-opt" data-color="0.97,0.95,0.88" style="background:#f7f2e0" title="Krem"></div>
+            <div class="color-opt" data-color="0.9,0.95,0.9" style="background:#e6f2e6" title="Hijau muda"></div>
+            <div class="color-opt" data-color="0.88,0.92,0.98" style="background:#e0ebfa" title="Biru muda"></div>
+            <div class="color-opt" data-color="0.98,0.95,0.88" style="background:#faf2e0" title="Kuning muda"></div>
+            <div class="color-opt" data-color="0.12,0.12,0.12" style="background:#1e1e1e" title="Hitam"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ins-tab-pane" id="ins-tab-frompdf">
+        <div class="dz" id="dz-ins-src" style="padding:18px"><input type="file" id="fi-ins-src" accept=".pdf"><span class="dz-ico" style="font-size:22px">📋</span><div class="dz-t" style="font-size:14px">PDF Sumber Sisipan</div><p class="dz-s">Drop atau klik</p></div>
+        <div class="file-summary" id="fs-ins-src" style="margin-top:8px">
+          <span style="font-size:20px">📄</span>
+          <div style="flex:1;min-width:0"><div class="fs-name" id="fs-ins-src-name"></div><div class="fs-info" id="fs-ins-src-info"></div></div>
+          <button class="fs-rm" id="fs-ins-src-rm">✕</button>
+        </div>
+        <div class="config-row" style="margin-top:8px">
+          <label>Rentang halaman sumber (pisah koma)</label>
+          <input type="text" class="config-inp" id="ins-src-pages" placeholder="Contoh: 1,3,5-7">
+          <div class="hint" style="margin-top:4px">Kosongkan = semua halaman</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Antrian Sisipan</div>
+      <div id="ins-queue-list"></div>
+      <div id="ins-queue-empty" style="font-size:12px;color:var(--ink3);margin-bottom:10px">Belum ada antrian. Konfigurasikan lalu klik "Tambah ke Antrian".</div>
+      <button class="btn btn-ghost" id="btn-ins-add" style="width:100%;margin-bottom:8px" disabled>➕ Tambah ke Antrian</button>
+    </div>
+    <div class="errbox" id="err-ins"></div>
+    <button class="btn btn-primary" id="btn-ins-process" disabled>⚡ Proses & Unduh PDF</button>
+  </div>
+  <div class="prog" id="prog-ins">
+    <div class="prog-hdr"><span class="prog-lbl" id="ins-lbl">Memproses...</span><span class="prog-pct" id="ins-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="ins-fill"></div></div>
+  </div>
+  <div class="result" id="res-ins">
+    <div class="res-top"><div class="res-badge">✅</div><div><div class="res-title">PDF Berhasil Diproses</div><div class="res-sub" id="ins-rsub">—</div></div></div>
+    <div class="out-list" id="ins-out"></div>
+    <div class="btn-row"><button class="btn btn-ghost" id="ins-reset">↩ Proses Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ ROTATE & REORDER ══════════════ -->
+<div class="panel" id="panel-rotate">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">🔄 PDF Native</div>
+    <div class="pnl-title">Rotate & Reorder</div>
+    <div class="pnl-sub">Putar halaman individual dan ubah urutan halaman PDF dengan drag & drop.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload PDF</div>
+    <div class="dz" id="dz-rot"><input type="file" id="fi-rot" accept=".pdf"><span class="dz-ico">📄</span><div class="dz-t">Drop PDF di sini</div><p class="dz-s">atau <b>klik untuk pilih</b></p></div>
+  </div>
+  <div class="errbox" id="err-rot"></div>
+  <div class="file-summary" id="fs-rot">
+    <span style="font-size:24px">📄</span>
+    <div style="flex:1;min-width:0"><div class="fs-name" id="fs-rot-name"></div><div class="fs-info" id="fs-rot-info"></div></div>
+    <button class="fs-rm" id="fs-rot-rm">✕ Hapus</button>
+  </div>
+  <div id="rot-controls" style="display:none">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-title" style="margin:0">Halaman — Seret untuk Ubah Urutan</div>
+        <div style="display:flex;gap:5px">
+          <button class="tb" id="rot-all-cw" title="Putar semua 90° searah jarum jam">↻ Semua</button>
+          <button class="tb" id="rot-all-ccw" title="Putar semua 90° berlawanan jarum jam">↺ Semua</button>
+          <button class="tb" id="rot-all-180" title="Balik semua 180°">↕ 180°</button>
+        </div>
+      </div>
+      <div class="rot-grid" id="rot-grid"></div>
+      <p class="hint">Klik ↻ atau ↺ pada tiap halaman untuk putar. Seret kartu untuk ubah urutan.</p>
+    </div>
+    <button class="btn btn-primary" id="btn-rot">🔄 Simpan Perubahan</button>
+  </div>
+  <div class="prog" id="prog-rot">
+    <div class="prog-hdr"><span class="prog-lbl" id="rot-lbl">Memproses...</span><span class="prog-pct" id="rot-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="rot-fill"></div></div>
+  </div>
+  <div class="result" id="res-rot">
+    <div class="res-top"><div class="res-badge">✅</div><div><div class="res-title">PDF Berhasil Dimodifikasi</div><div class="res-sub" id="rot-rsub">—</div></div></div>
+    <div class="out-list" id="rot-out"></div>
+    <div class="btn-row"><button class="btn btn-ghost" id="rot-reset">↩ Edit Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ COMPRESS PDF ══════════════ -->
+<div class="panel" id="panel-compress">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">📦 Dua Metode</div>
+    <div class="pnl-title">Kompres PDF</div>
+    <div class="pnl-sub">Pilih metode kompresi sesuai kebutuhan — native untuk kualitas vektor, rasterisasi untuk ukuran terkecil.</div>
+  </div>
+
+  <!-- Pilih Metode -->
+  <div class="card">
+    <div class="card-title">Pilih Metode Kompresi</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px">
+
+      <!-- Native -->
+      <div class="cpdf-method-card sel" id="cpdf-m-native" data-method="native" style="border:2px solid var(--acc);background:var(--acc-s);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:20px">🧬</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--ink)">Native / Lossless</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:var(--green-s);border-radius:4px;padding:1px 6px;display:inline-block;margin-top:2px">✅ Vektor Tetap Utuh</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--ink2);line-height:1.7">
+          Kompresi dilakukan pada <b>struktur internal PDF</b> tanpa rendering ulang.<br>
+          • Teks, font, vektor <b>100% terjaga</b><br>
+          • Bisa diedit di <b>CorelDRAW, Illustrator</b><br>
+          • Hapus metadata, duplikat objek, optimasi stream<br>
+          • <span style="color:var(--orange)">Penghematan lebih kecil</span> (biasanya 5–30%)
+        </div>
+      </div>
+
+      <!-- Rasterisasi -->
+      <div class="cpdf-method-card" id="cpdf-m-raster" data-method="raster" style="border:2px solid var(--border);background:var(--bg3);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:20px">🖼</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--ink)">Rasterisasi / Lossy</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);background:var(--orange-s);border-radius:4px;padding:1px 6px;display:inline-block;margin-top:2px">⚠️ Vektor Jadi Gambar</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--ink2);line-height:1.7">
+          Setiap halaman di-<b>render ulang menjadi JPEG</b> lalu dikemas kembali.<br>
+          • Teks & vektor <b>tidak bisa diedit</b> lagi<br>
+          • Tidak cocok untuk <b>CorelDRAW / Illustrator</b><br>
+          • Cocok untuk <b>arsip, print, share</b> saja<br>
+          • <span style="color:var(--green)">Penghematan jauh lebih besar</span> (bisa 50–90%)
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Upload -->
+  <div class="card">
+    <div class="card-title">Upload PDF</div>
+    <div class="dz" id="dz-cpdf"><input type="file" id="fi-cpdf" accept=".pdf"><span class="dz-ico">📦</span><div class="dz-t">Drop PDF di sini</div><p class="dz-s">atau <b>klik untuk pilih file</b></p></div>
+    <div id="fl-cpdf" style="margin-top:10px"></div>
+  </div>
+  <div class="errbox" id="err-cpdf"></div>
+
+  <!-- Settings Native -->
+  <div class="card" id="settings-cpdf-native" style="display:none">
+    <div class="card-title">Opsi Native</div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-name">Hapus Metadata</div>
+        <div class="toggle-desc">Strip author, title, creator, producer dari dokumen</div>
+      </div>
+      <label class="sw-label"><input type="checkbox" id="cpdf-native-meta" checked><span class="sw-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-name">Optimasi Object Stream</div>
+        <div class="toggle-desc">Paket ulang objek PDF untuk ukuran lebih kecil (direkomendasikan)</div>
+      </div>
+      <label class="sw-label"><input type="checkbox" id="cpdf-native-objstream" checked><span class="sw-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-name">Hapus Embedded Thumbnail</div>
+        <div class="toggle-desc">Hapus gambar thumbnail yang disimpan di dalam PDF</div>
+      </div>
+      <label class="sw-label"><input type="checkbox" id="cpdf-native-thumb" checked><span class="sw-track"></span></label>
+    </div>
+    <div style="margin-top:12px;padding:10px 12px;background:var(--green-s);border:1px solid rgba(61,186,120,.2);border-radius:8px;font-size:11px;color:var(--green);line-height:1.7">
+      🧬 <strong>Metode ini 100% aman untuk file kerja.</strong> Teks, font, kurva vektor, dan layer tidak diubah sama sekali — PDF hasil tetap bisa dibuka dan diedit di CorelDRAW, Illustrator, dan Acrobat.
+    </div>
+  </div>
+
+  <!-- Settings Rasterisasi -->
+  <div class="card" id="settings-cpdf-raster" style="display:none">
+    <div class="card-title">Opsi Rasterisasi</div>
+    <div style="margin-bottom:14px;padding:10px 12px;background:var(--orange-s);border:1px solid rgba(224,152,80,.2);border-radius:8px;font-size:11px;color:var(--orange);line-height:1.7">
+      ⚠️ <strong>Peringatan:</strong> Metode ini mengubah seluruh isi halaman menjadi gambar JPEG. PDF hasil <strong>tidak bisa diedit</strong> di CorelDRAW atau software desain. Gunakan hanya untuk keperluan arsip, berbagi, atau cetak final.
+    </div>
+    <div class="mode-grid">
+      <div class="mode-card" data-q="92" data-dpi="150"><div class="mode-card-ico">🎯</div><div class="mode-card-name">Ringan</div><div class="mode-card-desc">Q92 · 150dpi</div></div>
+      <div class="mode-card sel" data-q="75" data-dpi="120"><div class="mode-card-ico">⚖️</div><div class="mode-card-name">Seimbang</div><div class="mode-card-desc">Q75 · 120dpi</div></div>
+      <div class="mode-card" data-q="55" data-dpi="96"><div class="mode-card-ico">🗜</div><div class="mode-card-name">Agresif</div><div class="mode-card-desc">Q55 · 96dpi</div></div>
+      <div class="mode-card" data-q="35" data-dpi="72"><div class="mode-card-ico">💾</div><div class="mode-card-name">Maksimal</div><div class="mode-card-desc">Q35 · 72dpi</div></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Kualitas JPEG <span class="sl-val" id="cpdf-qval">75%</span></div>
+      <input type="range" id="cpdf-q" min="20" max="98" value="75">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Resolusi (DPI) <span class="sl-val" id="cpdf-dval">120</span></div>
+      <input type="range" id="cpdf-d" min="60" max="300" value="120">
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-name">Latar Belakang Putih</div><div class="toggle-desc">Ganti transparansi dengan putih solid sebelum render</div></div>
+      <label class="sw-label"><input type="checkbox" id="cpdf-bg" checked><span class="sw-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-name">Hapus Metadata</div><div class="toggle-desc">Strip author, creator, producer dari hasil</div></div>
+      <label class="sw-label"><input type="checkbox" id="cpdf-meta"><span class="sw-track"></span></label>
+    </div>
+    <div class="thumb-grid" id="cpdf-thumbs"></div>
+  </div>
+
+  <button class="btn btn-primary" id="btn-cpdf" style="display:none" disabled>📦 Kompres PDF</button>
+  <div class="prog" id="prog-cpdf">
+    <div class="prog-hdr"><span class="prog-lbl" id="cpdf-plbl">Memproses...</span><span class="prog-pct" id="cpdf-ppct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="cpdf-pfill"></div></div>
+    <div class="prog-info" id="cpdf-pinfo"></div>
+  </div>
+  <div class="result" id="res-cpdf">
+    <div class="res-top"><div class="res-badge">📦</div><div><div class="res-title">Kompresi Selesai</div><div class="res-sub" id="cpdf-method-badge">—</div></div></div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-lbl">Ukuran Asal</div><div class="stat-val" id="cpdf-ro">—</div></div>
+      <div class="stat"><div class="stat-lbl">Ukuran Baru</div><div class="stat-val" id="cpdf-rn">—</div></div>
+      <div class="stat"><div class="stat-lbl">Penghematan</div><div class="stat-val green" id="cpdf-rs">—</div></div>
+    </div>
+    <div class="sbar-wrap">
+      <div class="sbar-lbl">Persentase pengurangan: <strong id="cpdf-rs2">—</strong></div>
+      <div class="sbar"><div class="sbar-fill" id="cpdf-sbar"></div></div>
+    </div>
+    <div class="notice" id="cpdf-notice"></div>
+    <br>
+    <a class="btn btn-green" id="cpdf-dl" href="#" download>⬇ Download PDF Terkompresi</a>
+    <div class="btn-row" style="margin-top:8px"><button class="btn btn-ghost" id="cpdf-prev">👁 Preview</button><button class="btn btn-ghost" id="cpdf-reset">↩ Kompres Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ WATERMARK ══════════════ -->
+<div class="panel" id="panel-watermark">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">💧 PDF Native</div>
+    <div class="pnl-title">Tambah Watermark</div>
+    <div class="pnl-sub">Tambahkan teks watermark ke setiap halaman PDF.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload PDF</div>
+    <div class="dz" id="dz-wm"><input type="file" id="fi-wm" accept=".pdf"><span class="dz-ico">💧</span><div class="dz-t">Drop PDF di sini</div><p class="dz-s">atau <b>klik untuk pilih</b></p></div>
+  </div>
+  <div class="errbox" id="err-wm"></div>
+  <div class="file-summary" id="fs-wm">
+    <span style="font-size:24px">📄</span>
+    <div style="flex:1;min-width:0"><div class="fs-name" id="fs-wm-name"></div><div class="fs-info" id="fs-wm-info"></div></div>
+    <button class="fs-rm" id="fs-wm-rm">✕ Hapus</button>
+  </div>
+  <div id="wm-controls" style="display:none">
+    <div class="card">
+      <div class="card-title">Teks Watermark</div>
+      <div class="config-row">
+        <label>Teks</label>
+        <input type="text" class="config-inp" id="wm-text" value="RAHASIA" maxlength="60" placeholder="Contoh: DRAFT · CONFIDENTIAL · © 2025">
+      </div>
+      <div class="sl-row">
+        <div class="sl-lbl">Ukuran Font <span class="sl-val" id="wm-fsval">48</span></div>
+        <input type="range" id="wm-fs" min="16" max="120" value="48">
+      </div>
+      <div class="sl-row">
+        <div class="sl-lbl">Opasitas <span class="sl-val" id="wm-opval">20%</span></div>
+        <input type="range" id="wm-op" min="5" max="80" value="20">
+      </div>
+      <div class="sl-row">
+        <div class="sl-lbl">Rotasi <span class="sl-val" id="wm-rotval">-35°</span></div>
+        <input type="range" id="wm-rot" min="-90" max="90" value="-35">
+      </div>
+      <div class="config-row">
+        <label>Warna Teks</label>
+        <div class="wm-color-row">
+          <div class="wm-color-swatch sel" data-wm-color="#e05c5c" style="background:#e05c5c"></div>
+          <div class="wm-color-swatch" data-wm-color="#7c6fcd" style="background:#7c6fcd"></div>
+          <div class="wm-color-swatch" data-wm-color="#3dba78" style="background:#3dba78"></div>
+          <div class="wm-color-swatch" data-wm-color="#e09850" style="background:#e09850"></div>
+          <div class="wm-color-swatch" data-wm-color="#4ecdc4" style="background:#4ecdc4"></div>
+          <div class="wm-color-swatch" data-wm-color="#888888" style="background:#888888"></div>
+          <div class="wm-color-swatch" data-wm-color="#000000" style="background:#111"></div>
+          <input type="color" id="wm-color-custom" value="#e05c5c" style="width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;background:none;padding:0">
+        </div>
+      </div>
+      <div class="config-row">
+        <label>Posisi</label>
+        <select class="sel-inp" id="wm-pos">
+          <option value="center">Tengah halaman</option>
+          <option value="tile">Tile (berulang)</option>
+          <option value="topleft">Kiri atas</option>
+          <option value="topright">Kanan atas</option>
+          <option value="bottomleft">Kiri bawah</option>
+          <option value="bottomright">Kanan bawah</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-wm">💧 Tambahkan Watermark</button>
+  </div>
+  <div class="prog" id="prog-wm">
+    <div class="prog-hdr"><span class="prog-lbl" id="wm-lbl">Memproses...</span><span class="prog-pct" id="wm-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="wm-fill"></div></div>
+  </div>
+  <div class="result" id="res-wm">
+    <div class="res-top"><div class="res-badge">💧</div><div><div class="res-title">Watermark Ditambahkan</div><div class="res-sub" id="wm-rsub">—</div></div></div>
+    <div class="out-list" id="wm-out"></div>
+    <div class="btn-row"><button class="btn btn-ghost" id="wm-reset">↩ Watermark Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ PDF → IMAGE ══════════════ -->
+<div class="panel" id="panel-pdf2img">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">🖼 Ekspor Gambar</div>
+    <div class="pnl-title">PDF → Gambar</div>
+    <div class="pnl-sub">Ekspor halaman PDF menjadi file gambar JPEG, PNG, atau WebP.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload PDF</div>
+    <div class="dz" id="dz-p2i"><input type="file" id="fi-p2i" accept=".pdf"><span class="dz-ico">📄</span><div class="dz-t">Drop PDF di sini</div><p class="dz-s">atau <b>klik untuk pilih file</b></p></div>
+    <div id="fl-p2i" style="margin-top:10px"></div>
+  </div>
+  <div class="errbox" id="err-p2i"></div>
+  <div class="card" id="settings-p2i" style="display:none">
+    <div class="card-title">Opsi Export</div>
+    <div class="config-row">
+      <label>Format</label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="radio" name="p2i-fmt" value="jpeg" checked> JPEG</label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="radio" name="p2i-fmt" value="png"> PNG</label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="radio" name="p2i-fmt" value="webp"> WebP</label>
+      </div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Resolusi (DPI) <span class="sl-val" id="p2i-dval">150</span></div>
+      <input type="range" id="p2i-d" min="72" max="300" value="150">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Kualitas <span class="sl-val" id="p2i-qval">90%</span></div>
+      <input type="range" id="p2i-q" min="50" max="100" value="90">
+    </div>
+    <div class="config-row">
+      <label>Halaman</label>
+      <select class="sel-inp" id="p2i-range">
+        <option value="all">Semua halaman</option>
+        <option value="first">Halaman pertama saja</option>
+        <option value="custom">Halaman tertentu</option>
+      </select>
+    </div>
+    <input type="text" class="config-inp" id="p2i-custom-range" placeholder="Contoh: 1,3,5-7" style="display:none;margin-top:6px">
+    <div class="toggle-row" style="margin-top:8px">
+      <div><div class="toggle-name">Latar Belakang Putih</div></div>
+      <label class="sw-label"><input type="checkbox" id="p2i-bg" checked><span class="sw-track"></span></label>
+    </div>
+    <div class="thumb-grid" id="p2i-thumbs"></div>
+  </div>
+  <button class="btn btn-primary" id="btn-p2i" style="display:none" disabled>🖼 Export ke Gambar</button>
+  <div class="prog" id="prog-p2i">
+    <div class="prog-hdr"><span class="prog-lbl" id="p2i-plbl">Memproses...</span><span class="prog-pct" id="p2i-ppct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="p2i-pfill"></div></div>
+    <div class="prog-info" id="p2i-pinfo"></div>
+  </div>
+  <div class="result" id="res-p2i">
+    <div class="res-top"><div class="res-badge">🖼</div><div><div class="res-title">Export Selesai</div><div class="res-sub" id="p2i-rsub">—</div></div></div>
+    <div class="img-grid" id="p2i-imgrid"></div>
+    <button class="btn btn-green" id="p2i-dlall">⬇ Download Semua (ZIP)</button>
+    <div class="btn-row" style="margin-top:8px"><button class="btn btn-ghost" id="p2i-reset">↩ Export Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ IMAGE → PDF ══════════════ -->
+<div class="panel" id="panel-img2pdf">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">📄 Buat PDF</div>
+    <div class="pnl-title">Gambar → PDF</div>
+    <div class="pnl-sub">Jadikan satu atau banyak gambar menjadi file PDF.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload Gambar (bisa multiple)</div>
+    <div class="dz" id="dz-i2p"><input type="file" id="fi-i2p" accept="image/*" multiple><span class="dz-ico">🖼</span><div class="dz-t">Drop Gambar di sini</div><p class="dz-s">PNG, JPEG, WebP · <b>bisa multiple</b></p></div>
+    <div id="fl-i2p" style="margin-top:10px"></div>
+  </div>
+  <div class="errbox" id="err-i2p"></div>
+  <div class="notice" id="notice-i2p" style="display:none">Urutan gambar dalam daftar = urutan halaman PDF. Hapus individual dengan ✕.</div>
+  <div class="card" id="settings-i2p" style="display:none">
+    <div class="card-title">Opsi PDF</div>
+    <div class="config-row">
+      <label>Ukuran Halaman</label>
+      <select class="sel-inp" id="i2p-size">
+        <option value="a4">A4</option><option value="letter">Letter</option><option value="a3">A3</option><option value="auto">Otomatis (ikuti ukuran gambar)</option>
+      </select>
+    </div>
+    <div class="config-row">
+      <label>Orientasi</label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px"><input type="radio" name="i2p-ori" value="portrait" checked> Portrait</label>
+        <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px"><input type="radio" name="i2p-ori" value="landscape"> Landscape</label>
+        <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px"><input type="radio" name="i2p-ori" value="auto"> Otomatis</label>
+      </div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Kualitas JPEG <span class="sl-val" id="i2p-qval">88%</span></div>
+      <input type="range" id="i2p-q" min="50" max="100" value="88">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Margin (px) <span class="sl-val" id="i2p-mval">0</span></div>
+      <input type="range" id="i2p-m" min="0" max="80" value="0">
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-name">Fit ke Halaman</div><div class="toggle-desc">Scale gambar agar pas di halaman (hanya jika ukuran tertentu dipilih)</div></div>
+      <label class="sw-label"><input type="checkbox" id="i2p-fit" checked><span class="sw-track"></span></label>
+    </div>
+  </div>
+  <button class="btn btn-primary" id="btn-i2p" style="display:none" disabled>📄 Buat PDF</button>
+  <div class="prog" id="prog-i2p">
+    <div class="prog-hdr"><span class="prog-lbl" id="i2p-plbl">Memproses...</span><span class="prog-pct" id="i2p-ppct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="i2p-pfill"></div></div>
+    <div class="prog-info" id="i2p-pinfo"></div>
+  </div>
+  <div class="result" id="res-i2p">
+    <div class="res-top"><div class="res-badge">📄</div><div><div class="res-title">PDF Berhasil Dibuat</div><div class="res-sub" id="i2p-rsub">—</div></div></div>
+    <div class="out-list" id="i2p-out"></div>
+    <div class="btn-row"><button class="btn btn-ghost" id="i2p-prev">👁 Preview</button><button class="btn btn-ghost" id="i2p-reset">↩ Buat Lagi</button></div>
+  </div>
+</div>
+
+<!-- ══════════════ COMPRESS IMAGE ══════════════ -->
+<div class="panel" id="panel-cimg">
+  <div class="pnl-hdr">
+    <div class="pnl-eyebrow">⚡ Kompres Gambar</div>
+    <div class="pnl-title">Kompres Gambar</div>
+    <div class="pnl-sub">Perkecil ukuran gambar JPEG, PNG, atau WebP langsung di browser.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload Gambar (bisa multiple)</div>
+    <div class="dz" id="dz-cimg"><input type="file" id="fi-cimg" accept="image/*" multiple><span class="dz-ico">⚡</span><div class="dz-t">Drop Gambar di sini</div><p class="dz-s">PNG, JPEG, WebP · <b>bisa multiple</b></p></div>
+    <div id="fl-cimg" style="margin-top:10px"></div>
+  </div>
+  <div class="errbox" id="err-cimg"></div>
+  <div class="card" id="settings-cimg" style="display:none">
+    <div class="card-title">Opsi Kompresi</div>
+    <div class="config-row">
+      <label>Format Output</label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px"><input type="radio" name="cimg-fmt" value="same" checked> Sama seperti input</label>
+        <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px"><input type="radio" name="cimg-fmt" value="jpeg"> JPEG</label>
+        <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px"><input type="radio" name="cimg-fmt" value="webp"> WebP</label>
+      </div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Kualitas <span class="sl-val" id="cimg-qval">80%</span></div>
+      <input type="range" id="cimg-q" min="10" max="100" value="80">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Lebar Maks (0=bebas) <span class="sl-val" id="cimg-wval">bebas</span></div>
+      <input type="range" id="cimg-w" min="0" max="4000" step="100" value="0">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Tinggi Maks (0=bebas) <span class="sl-val" id="cimg-hval">bebas</span></div>
+      <input type="range" id="cimg-h" min="0" max="4000" step="100" value="0">
+    </div>
+  </div>
+  <button class="btn btn-primary" id="btn-cimg" style="display:none" disabled>⚡ Kompres Gambar</button>
+  <div class="prog" id="prog-cimg">
+    <div class="prog-hdr"><span class="prog-lbl" id="cimg-plbl">Memproses...</span><span class="prog-pct" id="cimg-ppct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="cimg-pfill"></div></div>
+    <div class="prog-info" id="cimg-pinfo"></div>
+  </div>
+  <div class="result" id="res-cimg">
+    <div class="res-top"><div class="res-badge">⚡</div><div><div class="res-title">Kompresi Selesai</div><div class="res-sub" id="cimg-rsub">—</div></div></div>
+    <div class="img-grid" id="cimg-grid"></div>
+    <button class="btn btn-green" id="cimg-dlall">⬇ Download Semua (ZIP)</button>
+    <div class="btn-row" style="margin-top:8px"><button class="btn btn-ghost" id="cimg-reset">↩ Kompres Lagi</button></div>
+  </div>
+</div>
+
+</main>
+
+
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-inner">
+    <div class="mobile-nav-item active" data-panel="split"><span class="mobile-nav-ico">✂️</span>Split</div>
+    <div class="mobile-nav-item" data-panel="join"><span class="mobile-nav-ico">🔗</span>Join</div>
+    <div class="mobile-nav-item" data-panel="insert"><span class="mobile-nav-ico">➕</span>Sisipkan</div>
+    <div class="mobile-nav-item" data-panel="rotate"><span class="mobile-nav-ico">🔄</span>Rotate</div>
+    <div class="mobile-nav-item" data-panel="compress"><span class="mobile-nav-ico">📦</span>Kompres</div>
+    <div class="mobile-nav-item" data-panel="watermark"><span class="mobile-nav-ico">💧</span>Watermark</div>
+    <div class="mobile-nav-item" data-panel="pdf2img"><span class="mobile-nav-ico">🖼</span>PDF→Img</div>
+    <div class="mobile-nav-item" data-panel="img2pdf"><span class="mobile-nav-ico">📄</span>Img→PDF</div>
+    <div class="mobile-nav-item" data-panel="cimg"><span class="mobile-nav-ico">⚡</span>Kompres Img</div>
+  </div>
+</nav>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-ttl" id="modal-ttl">Preview</div><button class="modal-x" id="modal-x">✕ Tutup</button></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-ft">
+      <button class="nav-btn" id="m-prev">← Prev</button>
+      <span class="nav-info" id="m-nav">—</span>
+      <button class="nav-btn" id="m-next">Next →</button>
+    </div>
+  </div>
+</div>
+
+</Layout>
+
+<style>
+/* Luqmanulhakim topbar */
+.lq-nav{background:#0d4a2a;border-bottom:3px solid #c9a84c;position:sticky;top:0;z-index:200}
+.lq-nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.lq-brand{display:flex;align-items:center;gap:10px;color:white;text-decoration:none}
+.lq-logo{font-size:24px}
+.lq-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:white;letter-spacing:-.01em}
+.lq-tagline{font-size:10px;color:rgba(255,255,255,.6)}
+.lq-links{display:flex;align-items:center;gap:4px}
+.lq-links a{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:rgba(255,255,255,.75);transition:all .18s;text-decoration:none}
+.lq-links a:hover{color:white;background:rgba(255,255,255,.1)}
+.lq-links .lq-active{background:#c9a84c;color:#0d4a2a;font-weight:700}
+.lq-bc{background:#E8F5EE;border-bottom:1px solid #d4e6da}
+.lq-bc-inner{max-width:1100px;margin:0 auto;padding:8px 1.5rem;display:flex;align-items:center;gap:6px;font-size:12px;color:#4a5e52}
+.lq-bc-inner a{color:#155c35;text-decoration:none}
+.lq-bc-inner a:hover{color:#0d4a2a}
+.lq-bc-inner span{color:#d4e6da}
+/* Toolkit root wraps the full dark app */
+.toolkit-root{display:flex;min-height:calc(100vh - 63px)}
+.toolkit-root{--bg:#0e0f14;--bg2:#151720;--bg3:#1c1e2a;--bg4:#242636;--border:#2a2d42;--border2:#363a54;--ink:#e8eaf6;--ink2:#a8abc8;--ink3:#6b6e8e;--ink4:#444668;--acc:#7c6fcd;--acc2:#9d91e0;--acc-s:rgba(124,111,205,0.12);--acc-b:rgba(124,111,205,0.25);--green:#3dba78;--green-s:rgba(61,186,120,0.1);--red:#e05c5c;--red-s:rgba(224,92,92,0.1);--orange:#e09850;--orange-s:rgba(224,152,80,0.1);--cyan:#4ecdc4;--r:14px}
+.toolkit-root{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5}
+/* Override sidebar top for sticky with lq-nav */
+.sidebar{top:63px!important;height:calc(100vh - 63px)!important;overflow-y:auto!important}
+.tk-main{margin-left:220px;flex:1;min-height:calc(100vh - 63px);min-width:0;overflow-x:hidden}
+@media(max-width:768px){
+  /* Sembunyikan sidebar sepenuhnya di mobile */
+  .sidebar{display:none!important}
+  /* Main ambil full width */
+  .tk-main{margin-left:0!important;width:100%}
+  .panel{padding:16px 14px 100px;max-width:100%}
+  /* Bottom nav bar muncul */
+  .mobile-nav{display:flex!important}
+  /* Lq navbar — sembunyikan link selain aktif */
+  .lq-links a:not(.lq-active){display:none}
+  /* Grid adjustments */
+  .mode-grid{grid-template-columns:1fr 1fr}
+  .pg-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}
+  .rot-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+  .stat-row{flex-direction:column}
+  /* Compress method cards stack */
+  #panel-compress [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+}
+
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0f14;
+  --bg2:#151720;
+  --bg3:#1c1e2a;
+  --bg4:#242636;
+  --surface:#1e2030;
+  --border:#2a2d42;
+  --border2:#363a54;
+  --ink:#e8eaf6;
+  --ink2:#a8abc8;
+  --ink3:#6b6e8e;
+  --ink4:#444668;
+  --acc:#7c6fcd;
+  --acc2:#9d91e0;
+  --acc-s:rgba(124,111,205,0.12);
+  --acc-b:rgba(124,111,205,0.25);
+  --green:#3dba78;
+  --green-s:rgba(61,186,120,0.1);
+  --red:#e05c5c;
+  --red-s:rgba(224,92,92,0.1);
+  --orange:#e09850;
+  --orange-s:rgba(224,152,80,0.1);
+  --cyan:#4ecdc4;
+  --cyan-s:rgba(78,205,196,0.1);
+  --sh:0 2px 12px rgba(0,0,0,0.4);
+  --sh2:0 8px 32px rgba(0,0,0,0.5);
+  --r:14px;
+}
+
+.toolkit-root *{box-sizing:border-box}
+
+/* ── Sidebar Nav ── */
+
+.sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.logo-text{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+.logo-text span{color:var(--acc2)}
+.logo-sub{font-size:10px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.sidebar-section{padding:16px 12px 4px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;transition:all .18s;margin:0 8px 2px;color:var(--ink2);font-size:13px;font-weight:500;border:1px solid transparent}
+.nav-item:hover{background:var(--bg3);color:var(--ink)}
+.nav-item.active{background:var(--acc-s);border-color:var(--acc-b);color:var(--acc2)}
+.nav-ico{font-size:15px;flex-shrink:0;width:20px;text-align:center}
+.sidebar-footer{margin-top:auto;padding:16px;border-top:1px solid var(--border);font-size:10px;color:var(--ink4);line-height:1.7;text-align:center}
+.badge-secure{display:inline-flex;align-items:center;gap:4px;background:var(--green-s);border:1px solid rgba(61,186,120,0.2);color:var(--green);border-radius:20px;padding:3px 8px;font-size:10px;font-weight:600}
+
+/* ── Main ── */
+
+.panel{display:none;padding:36px 32px 80px;max-width:860px;width:100%}
+.panel.active{display:block;animation:slideIn .22s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── Panel Header ── */
+.pnl-hdr{margin-bottom:28px}
+.pnl-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);background:var(--acc-s);border:1px solid var(--acc-b);border-radius:20px;padding:4px 12px;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px}
+.pnl-title{font-family:'Syne',sans-serif;font-size:clamp(24px,3.5vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.pnl-sub{font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.7;max-width:520px}
+
+/* ── Cards ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:14px}
+.card-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';display:block;width:3px;height:14px;border-radius:2px;background:var(--acc)}
+
+/* ── Drop Zone ── */
+.dz{border:2px dashed var(--border2);border-radius:12px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3)}
+.dz:hover,.dz.over{border-color:var(--acc);background:var(--acc-s)}
+.dz input[type=file]{display:none}
+.dz-ico{font-size:28px;margin-bottom:10px;display:block;transition:transform .2s}
+.dz:hover .dz-ico,.dz.over .dz-ico{transform:scale(1.1) translateY(-2px)}
+.dz-t{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px}
+.dz-s{font-size:12px;color:var(--ink3)}
+.dz-s b{color:var(--acc2)}
+
+/* ── Errbox ── */
+.errbox{background:var(--red-s);border:1px solid rgba(224,92,92,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:12px;display:none}
+.errbox.show{display:block}
+
+/* ── File Summary ── */
+.file-summary{display:none;align-items:center;gap:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.file-summary.show{display:flex}
+.fs-name{font-size:12px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fs-info{font-size:11px;color:var(--ink3);margin-top:2px}
+.fs-rm{background:none;border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-family:inherit;font-size:11px;color:var(--ink3);cursor:pointer;flex-shrink:0;transition:all .2s}
+.fs-rm:hover{border-color:var(--red);color:var(--red)}
+
+/* ── File Item List ── */
+.file-item{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 14px;margin-bottom:6px}
+.fi-ico{font-size:20px;flex-shrink:0}
+.fi-meta{flex:1;min-width:0}
+.fi-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fi-size{font-size:11px;color:var(--ink3)}
+.fi-rm{background:none;border:none;color:var(--ink4);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;transition:all .15s}
+.fi-rm:hover{background:var(--red-s);color:var(--red)}
+
+/* ── Mode Tabs ── */
+.smode-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.smode{padding:7px 14px;border:1px solid var(--border2);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--ink3);background:var(--bg3);transition:all .18s;user-select:none}
+.smode.active{border-color:var(--acc);color:var(--acc2);background:var(--acc-s)}
+
+/* ── Page grid ── */
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:12px}
+.pg-card{background:var(--bg3);border:2px solid var(--border);border-radius:9px;overflow:hidden;cursor:pointer;transition:all .18s;position:relative}
+.pg-card:hover{border-color:var(--border2)}
+.pg-card.sel{border-color:var(--acc);background:var(--acc-s)}
+.pg-card.sel::after{content:'✓';position:absolute;top:3px;right:4px;width:17px;height:17px;background:var(--acc);color:white;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:17px;text-align:center}
+.pg-thumb{width:100%;aspect-ratio:3/4;background:var(--bg4);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pg-thumb canvas{width:100%;height:100%;object-fit:contain;display:block}
+.pg-num{font-family:'DM Mono',monospace;font-size:10px;text-align:center;padding:5px 3px;color:var(--ink3)}
+.pg-card.sel .pg-num{color:var(--acc2);font-weight:700}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:9px}
+.tlbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.tb{padding:4px 10px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;font-family:inherit;font-size:11px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s}
+.tb:hover{border-color:var(--acc);color:var(--acc2)}
+.sel-count{margin-left:auto;background:var(--acc-s);border:1px solid var(--acc-b);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--acc2);font-family:'DM Mono',monospace}
+
+/* ── Toggle ── */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-name{font-size:12px;font-weight:600;color:var(--ink)}
+.toggle-desc{font-size:11px;color:var(--ink3);margin-top:1px}
+.sw-label{position:relative;width:38px;height:21px;flex-shrink:0;display:inline-block;margin-left:14px}
+.sw-label input{opacity:0;width:0;height:0;position:absolute}
+.sw-track{position:absolute;inset:0;background:var(--bg4);border:1px solid var(--border2);border-radius:21px;cursor:pointer;transition:all .22s}
+.sw-track::after{content:'';position:absolute;width:13px;height:13px;left:3px;top:3px;background:var(--ink4);border-radius:50%;transition:all .22s}
+.sw-label input:checked + .sw-track{background:var(--acc-s);border-color:var(--acc)}
+.sw-label input:checked + .sw-track::after{background:var(--acc2);transform:translateX(17px)}
+
+/* ── Range input ── */
+.range-inp{width:100%;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-family:'DM Mono',monospace;font-size:13px;color:var(--ink);outline:none;transition:border-color .2s;margin-bottom:8px}
+.range-inp:focus{border-color:var(--acc);background:var(--bg4)}
+.hint{font-size:11px;color:var(--ink3);line-height:1.7}
+.hint code{background:var(--bg4);padding:1px 5px;border-radius:4px;font-family:'DM Mono',monospace}
+
+/* ── Progress ── */
+.prog{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;display:none}
+.prog.show{display:block}
+.prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.prog-lbl{font-size:12px;font-weight:600;color:var(--ink2)}
+.prog-pct{font-family:'Syne',sans-serif;font-size:22px;color:var(--acc2)}
+.prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--cyan));border-radius:3px;width:0;transition:width .35s ease}
+.prog-info{font-size:11px;color:var(--ink3)}
+
+/* ── Result ── */
+.result{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--sh);display:none}
+.result.show{display:block}
+.res-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.res-badge{width:42px;height:42px;border-radius:11px;background:var(--green-s);border:1px solid rgba(61,186,120,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.res-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.res-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.out-list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.out-item{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.oi-meta{flex:1;min-width:0}
+.oi-name{font-size:12px;font-weight:700}
+.oi-info{font-size:11px;color:var(--ink3)}
+.oi-dl{background:var(--acc);color:white;border:none;border-radius:7px;padding:6px 12px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .2s;flex-shrink:0}
+.oi-dl:hover{filter:brightness(1.15)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;padding:12px 18px}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:white;margin-bottom:10px;box-shadow:0 4px 20px rgba(124,111,205,.3)}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(124,111,205,.4)}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ghost{background:var(--bg3);color:var(--ink2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border2);color:var(--ink)}
+.btn-green{background:linear-gradient(135deg,#2ea863,var(--green));color:white;width:100%;margin-bottom:10px;box-shadow:0 4px 16px rgba(61,186,120,.25)}
+.btn-green:hover{filter:brightness(1.1)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── Join list ── */
+.join-empty{text-align:center;padding:28px;color:var(--ink4);font-size:13px;background:var(--bg3);border:2px dashed var(--border);border-radius:10px}
+.ji{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 12px;display:flex;align-items:center;gap:8px;cursor:grab;transition:border-color .2s;margin-bottom:5px}
+.ji.drag-over{border-color:var(--acc);background:var(--acc-s)}
+.ji.dragging{opacity:.4}
+.ji-drag{color:var(--ink4);font-size:16px;flex-shrink:0}
+.ji-meta{flex:1;min-width:0}
+.ji-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ji-info{font-size:10px;color:var(--ink3)}
+.ji-range{border:none;border-bottom:1px dashed var(--border2);background:none;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);width:60px;padding:2px 4px;outline:none}
+.ji-range:focus{border-bottom-color:var(--acc)}
+.ji-rm{background:none;border:none;color:var(--ink4);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:4px;transition:all .15s}
+.ji-rm:hover{background:var(--red-s);color:var(--red)}
+.dz-add{border:1px dashed var(--border2);border-radius:8px;padding:7px 14px;cursor:pointer;transition:all .2s;background:var(--bg3);font-size:12px;font-weight:700;color:var(--acc2);display:inline-flex;align-items:center;gap:5px}
+.dz-add:hover{border-color:var(--acc);background:var(--acc-s)}
+.dz-add input[type=file]{display:none}
+
+/* ── Mode cards ── */
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.mode-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .18s;text-align:center}
+.mode-card:hover{border-color:var(--border2)}
+.mode-card.sel{border-color:var(--acc);background:var(--acc-s)}
+.mode-card-ico{font-size:22px;margin-bottom:6px}
+.mode-card-name{font-size:11px;font-weight:700;color:var(--ink)}
+.mode-card-desc{font-size:10px;color:var(--ink3);margin-top:2px}
+
+/* ── Slider row ── */
+.sl-row{margin-bottom:12px}
+.sl-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--ink2)}
+.sl-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--acc2);background:var(--acc-s);border:1px solid var(--acc-b);border-radius:5px;padding:2px 7px}
+input[type=range]{width:100%;accent-color:var(--acc);height:5px;cursor:pointer}
+
+/* ── Select ── */
+.sel-inp{width:100%;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--ink);outline:none;transition:border-color .2s;cursor:pointer;appearance:none}
+.sel-inp:focus{border-color:var(--acc)}
+
+/* ── Thumb grid ── */
+.thumb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:5px;margin:10px 0;min-height:30px}
+.th{position:relative;border-radius:5px;overflow:hidden;aspect-ratio:3/4;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink4);transition:all .2s}
+.th.act{outline:2px solid var(--acc)}
+.th.done{outline:2px solid var(--green)}
+.th canvas{width:100%;height:100%;object-fit:cover;display:block}
+.th-ck{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;line-height:1}
+.th span{font-family:'DM Mono',monospace}
+
+/* ── Image grid output ── */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:14px}
+.img-out-item{position:relative;border-radius:8px;overflow:hidden;background:var(--bg3);border:1px solid var(--border)}
+.img-out-item img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.img-out-pg{position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.7);color:white;border-radius:5px;font-size:9px;padding:2px 5px;font-family:'DM Mono',monospace}
+.img-out-dl{position:absolute;bottom:4px;right:4px;background:var(--acc);border:none;border-radius:6px;padding:4px 6px;font-size:10px;cursor:pointer;color:white;transition:all .15s}
+.img-out-dl:hover{filter:brightness(1.2)}
+
+/* ── Notice ── */
+.notice{background:var(--orange-s);border:1px solid rgba(224,152,80,.2);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--orange);line-height:1.7;margin-bottom:12px}
+.notice.ok{background:var(--green-s);border-color:rgba(61,186,120,.2);color:var(--green)}
+.notice.warn{background:var(--orange-s);border-color:rgba(224,152,80,.2);color:var(--orange)}
+
+/* ── Compress stats ── */
+.stat-row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px 16px;flex:1;min-width:90px}
+.stat-lbl{font-size:10px;color:var(--ink3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.stat-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--ink)}
+.stat-val.green{color:var(--green)}
+.sbar-wrap{margin-bottom:12px}
+.sbar-lbl{font-size:11px;color:var(--ink3);margin-bottom:5px}
+.sbar{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.sbar-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--green));border-radius:4px;width:0;transition:width .6s cubic-bezier(.22,.61,.36,1)}
+
+/* ── Watermark specific ── */
+.wm-color-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.wm-color-swatch{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.wm-color-swatch.sel{border-color:var(--acc2);transform:scale(1.12)}
+.wm-preview{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:18px;text-align:center;margin-bottom:12px;position:relative;overflow:hidden;min-height:80px;display:flex;align-items:center;justify-content:center}
+.wm-preview-canvas{max-width:100%;max-height:160px;border-radius:4px}
+
+/* ── Rotate ── */
+.rot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin-bottom:12px}
+.rot-card{background:var(--bg3);border:2px solid var(--border);border-radius:9px;overflow:hidden;cursor:pointer;transition:all .18s;position:relative;user-select:none}
+.rot-card .pg-thumb{background:var(--bg4)}
+.rot-card .pg-num{font-size:10px;padding:5px 3px}
+.rot-badge{position:absolute;top:3px;left:3px;background:var(--acc);color:white;border-radius:4px;font-size:9px;padding:1px 4px;font-family:'DM Mono',monospace}
+.rot-ctrls{position:absolute;top:3px;right:3px;display:flex;gap:2px}
+.rot-btn{background:rgba(0,0,0,.65);border:none;border-radius:4px;color:white;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.rot-btn:hover{background:var(--acc)}
+
+/* ── Modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(14,15,20,.85);backdrop-filter:blur(10px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.6);width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-ttl{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+.modal-x{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-family:inherit;font-size:12px;color:var(--ink2);cursor:pointer;transition:all .15s}
+.modal-x:hover{border-color:var(--red);color:var(--red)}
+.modal-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.mpw{background:var(--bg3);border-radius:6px;overflow:hidden;width:100%;max-width:540px;box-shadow:var(--sh2)}
+.mpw canvas{display:block;width:100%;height:auto}
+.modal-ft{border-top:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
+.nav-btn{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 14px;font-family:inherit;font-size:12px;color:var(--ink2);cursor:pointer;transition:all .2s}
+.nav-btn:hover:not(:disabled){border-color:var(--acc);color:var(--acc2)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.nav-info{font-family:'DM Mono',monospace;font-size:14px;color:var(--ink3);min-width:60px;text-align:center}
+
+/* ── Inserter specific ── */
+.ins-tab-row{display:flex;gap:6px;margin-bottom:12px}
+.ins-tab{padding:7px 14px;border:1px solid var(--border2);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--ink3);background:var(--bg3);transition:all .18s}
+.ins-tab.active{border-color:var(--acc);color:var(--acc2);background:var(--acc-s)}
+.ins-tab-pane{display:none}
+.ins-tab-pane.active{display:block}
+.config-row{margin-bottom:10px}
+.config-row label{display:block;font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.config-inp{width:100%;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--ink);outline:none;transition:border .2s}
+.config-inp:focus{border-color:var(--acc)}
+.ins-queue-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;font-size:12px}
+.ins-q-desc{flex:1;color:var(--ink2)}
+.ins-q-rm{background:none;border:none;color:var(--ink4);cursor:pointer;font-size:14px;transition:color .15s}
+.ins-q-rm:hover{color:var(--red)}
+.color-grid{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.color-opt{width:24px;height:24px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.color-opt.selected{border-color:var(--acc2);transform:scale(1.15)}
+.color-opt:hover{transform:scale(1.1)}
+
+/* ── Footer ── */
+footer{text-align:center;padding:24px 0 0;font-size:10px;color:var(--ink4);line-height:1.8}
+
+
+
+/* Mobile bottom nav — hidden by default, shown on mobile */
+.mobile-nav{
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  z-index:100;
+  padding:0;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.mobile-nav::-webkit-scrollbar{display:none}
+.mobile-nav-inner{
+  display:flex;
+  align-items:stretch;
+  min-width:max-content;
+  padding:0 4px;
+}
+.mobile-nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  padding:8px 12px;
+  cursor:pointer;
+  color:var(--ink3);
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  border-top:2px solid transparent;
+  transition:all .18s;
+  min-width:60px;
+  white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+.mobile-nav-item.active{color:var(--acc2);border-top-color:var(--acc)}
+.mobile-nav-item:hover{color:var(--ink);background:var(--bg3)}
+.mobile-nav-ico{font-size:18px;line-height:1}
+
+</style>
+
+<script>
+
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const $=id=>document.getElementById(id);
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function fmtB(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(2)+' MB'}
+function tick(){return new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)))}
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+function setP(fillId,pctId,lblId,pct,lbl){$(fillId).style.width=pct+'%';$(pctId).textContent=pct+'%';if(lblId&&lbl!==undefined)$(lblId).textContent=lbl}
+function showErr(id,m){const e=$(id);e.textContent=m;e.classList.add('show')}
+function hideErr(id){$(id).classList.remove('show')}
+function dlBlob(bytes,mime,name){const b=new Blob([bytes],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click()}
+function readFileAsDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+function loadImage(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src})}
+
+function crc32(data){let c=0xffffffff;for(let i=0;i<data.length;i++){c^=data[i];for(let j=0;j<8;j++)c=c&1?(c>>>1)^0xedb88320:(c>>>1)}return(c^0xffffffff)>>>0}
+function concat(arrays){const t=arrays.reduce((s,a)=>s+a.length,0);const o=new Uint8Array(t);let off=0;for(const a of arrays){o.set(a,off);off+=a.length}return o}
+function makeZip(files){
+  const chunks=[],cd=[];let offset=0;
+  for(const f of files){
+    const name=new TextEncoder().encode(f.name);const crcVal=crc32(f.data);
+    const lh=new Uint8Array(30+name.length);const lv=new DataView(lh.buffer);
+    lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint32(14,crcVal,true);lv.setUint32(18,f.data.length,true);lv.setUint32(22,f.data.length,true);lv.setUint16(26,name.length,true);lh.set(name,30);
+    const cde=new Uint8Array(46+name.length);const cv=new DataView(cde.buffer);
+    cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint32(16,crcVal,true);cv.setUint32(20,f.data.length,true);cv.setUint32(24,f.data.length,true);cv.setUint16(28,name.length,true);cv.setUint32(42,offset,true);cde.set(name,46);
+    cd.push(cde);chunks.push(lh,f.data);offset+=lh.length+f.data.length;
+  }
+  const cdBuf=concat(cd);const eocd=new Uint8Array(22);const ev=new DataView(eocd.buffer);
+  ev.setUint32(0,0x06054b50,true);ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);ev.setUint32(12,cdBuf.length,true);ev.setUint32(16,offset,true);
+  return concat([...chunks,cdBuf,eocd]);
+}
+
+function makeOutItem(name,info,bytes,mime,dlName){
+  const item=document.createElement('div');item.className='out-item';
+  const ico=document.createElement('span');ico.textContent=mime.includes('image')?'🖼':'📄';ico.style.cssText='font-size:20px;flex-shrink:0';
+  const meta=document.createElement('div');meta.className='oi-meta';
+  const nm=document.createElement('div');nm.className='oi-name';nm.textContent=name;
+  const inf=document.createElement('div');inf.className='oi-info';inf.textContent=info;
+  meta.append(nm,inf);
+  const btn=document.createElement('a');btn.className='oi-dl';btn.textContent='⬇ Download';
+  btn.href=URL.createObjectURL(new Blob([bytes],{type:mime}));btn.download=dlName;
+  item.append(ico,meta,btn);return item;
+}
+
+function renderFileList(listId,files,type,onRemove){
+  const el=$(listId);el.innerHTML='';
+  files.forEach((f,i)=>{
+    const div=document.createElement('div');div.className='file-item';
+    const ico=document.createElement('span');ico.className='fi-ico';ico.textContent=type==='pdf'?'📄':'🖼';
+    const meta=document.createElement('div');meta.className='fi-meta';
+    const name=document.createElement('div');name.className='fi-name';name.textContent=f.name;
+    const size=document.createElement('div');size.className='fi-size';size.textContent=fmtB(f.size);
+    const rm=document.createElement('button');rm.className='fi-rm';rm.textContent='✕';
+    rm.onclick=()=>onRemove(i);
+    meta.append(name,size);div.append(ico,meta,rm);el.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════
+// NAV — sidebar + mobile bottom nav sync
+// ══════════════════════════════════════════════
+function switchPanel(panelId){
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('[data-panel="'+panelId+'"]').forEach(x=>x.classList.add('active'));
+  const panel=$('panel-'+panelId);
+  if(panel) panel.classList.add('active');
+  // scroll mobile nav item into view
+  const mItem=document.querySelector('.mobile-nav-item[data-panel="'+panelId+'"]');
+  if(mItem) mItem.scrollIntoView({inline:'center',behavior:'smooth'});
+}
+document.querySelectorAll('.nav-item').forEach(n=>{
+  n.addEventListener('click',()=>switchPanel(n.dataset.panel));
+});
+document.querySelectorAll('.mobile-nav-item').forEach(n=>{
+  n.addEventListener('click',()=>switchPanel(n.dataset.panel));
+});
+
+// ══════════════════════════════════════════════
+// DROP ZONE FACTORY
+// ══════════════════════════════════════════════
+function setupDz(dzId,fiId,cb,multiple=false){
+  const dz=$(dzId),fi=$(fiId);
+  dz.addEventListener('click',()=>fi.click());
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');cb(multiple?[...e.dataTransfer.files]:[e.dataTransfer.files[0]])});
+  fi.addEventListener('change',()=>{cb(multiple?[...fi.files]:[fi.files[0]]);fi.value=''});
+}
+
+// ══════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════
+let mPdf=null,mPage=1,mTotal=0;
+function openModal(title){$('modal-ttl').textContent=title;$('modal-body').innerHTML='<div style="padding:40px;color:var(--ink3);font-size:13px">Memuat preview...</div>';$('modal').classList.add('open')}
+function startModal(pdf){mPdf=pdf;mTotal=pdf.numPages;mPage=1;renderModalPage(1)}
+async function renderModalPage(n){
+  $('m-nav').textContent=`${n} / ${mTotal}`;$('m-prev').disabled=n<=1;$('m-next').disabled=n>=mTotal;
+  try{
+    const page=await mPdf.getPage(n);const vp=page.getViewport({scale:1.4});
+    const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+    await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+    const w=document.createElement('div');w.className='mpw';w.appendChild(c);
+    $('modal-body').innerHTML='';$('modal-body').appendChild(w);
+  }catch(e){$('modal-body').innerHTML=`<div style="padding:20px;color:var(--red)">${e.message}</div>`}
+}
+$('m-prev').onclick=()=>{if(mPage>1){mPage--;renderModalPage(mPage)}};
+$('m-next').onclick=()=>{if(mPage<mTotal){mPage++;renderModalPage(mPage)}};
+$('modal-x').onclick=()=>$('modal').classList.remove('open');
+$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.remove('open')};
+
+// ══════════════════════════════════════════════
+// SPLIT
+// ══════════════════════════════════════════════
+let spFile=null,spBytes=null,spPdfJs=null,spN=0,spSelected=new Set(),spMode='visual',spOutputs=[];
+
+setupDz('dz-split','fi-split',f=>loadSplitFile(f));
+async function loadSplitFile(f){
+  if(!f?.name?.toLowerCase().endsWith('.pdf')){showErr('err-split','Pilih file PDF.');return}
+  hideErr('err-split');spFile=f;spSelected.clear();spOutputs=[];
+  $('fs-split-name').textContent=f.name;$('fs-split-info').textContent='Memuat...';
+  $('fs-split').classList.add('show');$('split-controls').style.display='';
+  $('res-split').classList.remove('show');$('prog-split').classList.remove('show');$('btn-split').disabled=true;
+  const buf=await f.arrayBuffer();spBytes=new Uint8Array(buf);
+  spPdfJs=await pdfjsLib.getDocument({data:spBytes.slice()}).promise;spN=spPdfJs.numPages;
+  $('fs-split-info').textContent=`${spN} halaman · ${fmtB(f.size)}`;$('each-n').textContent=spN;
+  updateNPreview();await buildSplitGrid();$('btn-split').disabled=false;updateSelCount();
+}
+async function buildSplitGrid(){
+  const grid=$('pg-grid');grid.innerHTML='';
+  for(let i=1;i<=spN;i++){
+    const card=document.createElement('div');card.className='pg-card';card.dataset.p=i;
+    const thumb=document.createElement('div');thumb.className='pg-thumb';thumb.innerHTML='<span style="font-size:9px;color:var(--ink4)">…</span>';
+    const num=document.createElement('div');num.className='pg-num';num.textContent='Hal '+i;
+    card.append(thumb,num);card.onclick=()=>toggleSplitPage(i,card);grid.appendChild(card);
+    (async()=>{try{const page=await spPdfJs.getPage(i);const vp=page.getViewport({scale:.35});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;thumb.innerHTML='';thumb.appendChild(c)}catch(e){}})();
+    await tick();
+  }
+}
+function toggleSplitPage(n,card){if(spSelected.has(n)){spSelected.delete(n);card.classList.remove('sel')}else{spSelected.add(n);card.classList.add('sel')};updateSelCount()}
+function updateSelCount(){$('sel-count').textContent=spSelected.size+' dipilih'}
+$('sel-all').onclick=()=>{for(let i=1;i<=spN;i++)spSelected.add(i);document.querySelectorAll('.pg-card').forEach(c=>c.classList.add('sel'));updateSelCount()};
+$('sel-none').onclick=()=>{spSelected.clear();document.querySelectorAll('.pg-card').forEach(c=>c.classList.remove('sel'));updateSelCount()};
+$('sel-odd').onclick=()=>{spSelected.clear();document.querySelectorAll('.pg-card').forEach(c=>{const p=+c.dataset.p;if(p%2===1){spSelected.add(p);c.classList.add('sel')}else c.classList.remove('sel')});updateSelCount()};
+$('sel-even').onclick=()=>{spSelected.clear();document.querySelectorAll('.pg-card').forEach(c=>{const p=+c.dataset.p;if(p%2===0){spSelected.add(p);c.classList.add('sel')}else c.classList.remove('sel')});updateSelCount()};
+$('sel-inv').onclick=()=>{document.querySelectorAll('.pg-card').forEach(c=>{const p=+c.dataset.p;if(spSelected.has(p)){spSelected.delete(p);c.classList.remove('sel')}else{spSelected.add(p);c.classList.add('sel')}});updateSelCount()};
+document.querySelectorAll('.smode').forEach(s=>{
+  s.addEventListener('click',()=>{
+    document.querySelectorAll('.smode').forEach(x=>x.classList.remove('active'));s.classList.add('active');spMode=s.dataset.m;
+    ['visual','range','each','n'].forEach(m=>$('mode-'+m).style.display='none');$('mode-'+spMode).style.display='';
+  });
+});
+$('n-inp').oninput=updateNPreview;
+function updateNPreview(){const n=Math.max(1,parseInt($('n-inp').value)||1);if(!spN){$('n-preview').textContent='';return}const k=Math.ceil(spN/n);const parts=[];for(let i=0;i<k;i++){const a=i*n+1,b=Math.min((i+1)*n,spN);parts.push(a===b?`${a}`:`${a}–${b}`)}$('n-preview').innerHTML=`<strong>${k} file:</strong><br>${parts.slice(0,8).join(', ')}${parts.length>8?', …':''}`}
+function buildSplitGroups(){
+  if(spMode==='visual'){if(!spSelected.size)return[];const sel=[...spSelected].sort((a,b)=>a-b);const unsel=[];for(let i=1;i<=spN;i++)if(!spSelected.has(i))unsel.push(i);return unsel.length?[sel,unsel]:[sel]}
+  if(spMode==='each')return Array.from({length:spN},(_,i)=>[i+1]);
+  if(spMode==='n'){const n=Math.max(1,parseInt($('n-inp').value)||1);const groups=[];for(let i=0;i<spN;i+=n){const g=[];for(let j=i;j<Math.min(i+n,spN);j++)g.push(j+1);groups.push(g)}return groups}
+  if(spMode==='range'){const raw=$('range-inp').value.trim();if(!raw)return[];const multi=$('range-multi').checked;const groups=[];for(const p of raw.split(',')){const m=p.trim().match(/^(\d+)(?:-(\d+))?$/);if(!m)continue;const from=+m[1],to=m[2]?+m[2]:from;const g=[];for(let i=Math.max(1,from);i<=Math.min(to,spN);i++)g.push(i);if(!g.length)continue;if(multi)groups.push(g);else{if(!groups.length)groups.push([]);groups[0].push(...g)}}return groups}
+  return[];
+}
+$('btn-split').onclick=async()=>{
+  if(!spFile||!spBytes)return;const groups=buildSplitGroups();
+  if(!groups.length){showErr('err-split','Tidak ada halaman dipilih.');return}
+  $('btn-split').disabled=true;$('prog-split').classList.add('show');$('res-split').classList.remove('show');hideErr('err-split');spOutputs=[];
+  try{
+    const baseName=spFile.name.replace(/\.pdf$/i,'');
+    for(let g=0;g<groups.length;g++){
+      setP('sp-fill','sp-pct','sp-lbl',5+Math.round((g/groups.length)*90),`File ${g+1}/${groups.length}...`);$('sp-info').textContent='Halaman: '+groups[g].join(', ');await tick();
+      const srcDoc=await PDFLib.PDFDocument.load(spBytes,{ignoreEncryption:true});const outDoc=await PDFLib.PDFDocument.create();
+      const copied=await outDoc.copyPages(srcDoc,groups[g].map(p=>p-1));copied.forEach(p=>outDoc.addPage(p));
+      const saved=await outDoc.save({useObjectStreams:true});
+      let name;if(groups.length===1)name=`${baseName}_split.pdf`;else if(spMode==='each')name=`${baseName}_p${groups[g][0]}.pdf`;else name=`${baseName}_part${g+1}.pdf`;
+      spOutputs.push({bytes:saved,name});await tick();
+    }
+    setP('sp-fill','sp-pct','sp-lbl',100,'Selesai!');await delay(300);
+    $('split-out').innerHTML='';
+    for(const out of spOutputs){const tmpDoc=await PDFLib.PDFDocument.load(out.bytes);$('split-out').appendChild(makeOutItem(out.name,`${tmpDoc.getPageCount()} halaman · ${fmtB(out.bytes.byteLength)}`,out.bytes,'application/pdf',out.name))}
+    $('split-rsub').textContent=`${spOutputs.length} file dari "${spFile.name}"`;$('split-dlzip').style.display=spOutputs.length>1?'flex':'none';
+    $('prog-split').classList.remove('show');$('res-split').classList.add('show');$('btn-split').disabled=false;
+  }catch(e){showErr('err-split','Gagal: '+e.message);$('prog-split').classList.remove('show');$('btn-split').disabled=false}
+};
+$('split-dlzip').onclick=()=>{if(spOutputs.length)dlBlob(makeZip(spOutputs.map(o=>({name:o.name,data:o.bytes}))),'application/zip',spFile.name.replace(/\.pdf$/i,'')+'_split.zip')};
+function resetSplit(){spFile=null;spBytes=null;spPdfJs=null;spN=0;spSelected.clear();spOutputs=[];$('fs-split').classList.remove('show');$('split-controls').style.display='none';$('pg-grid').innerHTML='';$('prog-split').classList.remove('show');$('res-split').classList.remove('show');hideErr('err-split');$('btn-split').disabled=true}
+$('fs-split-rm').onclick=resetSplit;$('split-reset').onclick=resetSplit;
+
+// ══════════════════════════════════════════════
+// JOIN
+// ══════════════════════════════════════════════
+let joinFiles=[],joinResultBytes=null;
+
+const dzAdd=$('dz-add'),fiJoin=$('fi-join');
+dzAdd.onclick=()=>fiJoin.click();
+fiJoin.onchange=()=>{addJoinFiles([...fiJoin.files]);fiJoin.value=''};
+
+async function addJoinFiles(files){
+  hideErr('err-join');
+  for(const f of files){if(!f.name.toLowerCase().endsWith('.pdf')){showErr('err-join',`"${f.name}" bukan PDF, dilewati.`);continue}
+    const buf=await f.arrayBuffer();let pageCount=0;
+    try{const d=await PDFLib.PDFDocument.load(new Uint8Array(buf),{ignoreEncryption:true});pageCount=d.getPageCount()}catch(e){}
+    joinFiles.push({file:f,buf:buf.slice(),pageCount,range:''});}
+  renderJoinList();
+}
+function renderJoinList(){
+  const list=$('join-list'),empty=$('join-empty');
+  if(!joinFiles.length){empty.style.display='';list.innerHTML='';$('join-opts').style.display='none';$('btn-join').style.display='none';return}
+  empty.style.display='none';$('join-opts').style.display='';$('btn-join').style.display='flex';$('btn-join').disabled=false;
+  list.innerHTML='';
+  joinFiles.forEach((jf,i)=>{
+    const item=document.createElement('div');item.className='ji';item.draggable=true;item.dataset.idx=i;
+    item.innerHTML=`<span class="ji-drag">⠿</span><span style="font-size:18px">📄</span>
+      <div class="ji-meta"><div class="ji-name">${jf.file.name}</div><div class="ji-info">${jf.pageCount} hal · ${fmtB(jf.file.size)}</div></div>
+      <span style="font-size:11px;color:var(--ink3)">Hal:</span>
+      <input class="ji-range" type="text" placeholder="semua" value="${jf.range}" title="Range halaman, cth: 1-3">
+      <button class="ji-rm">✕</button>`;
+    item.querySelector('.ji-range').onchange=e=>joinFiles[i].range=e.target.value.trim();
+    item.querySelector('.ji-rm').onclick=()=>{joinFiles.splice(i,1);renderJoinList()};
+    item.ondragstart=e=>{e.dataTransfer.setData('text/plain',i);item.classList.add('dragging')};
+    item.ondragend=()=>item.classList.remove('dragging');
+    item.ondragover=e=>{e.preventDefault();item.classList.add('drag-over')};
+    item.ondragleave=()=>item.classList.remove('drag-over');
+    item.ondrop=e=>{e.preventDefault();item.classList.remove('drag-over');const from=parseInt(e.dataTransfer.getData('text/plain'));if(from===i)return;const moved=joinFiles.splice(from,1)[0];joinFiles.splice(i,0,moved);renderJoinList()};
+    list.appendChild(item);
+  });
+}
+$('btn-join').onclick=async()=>{
+  if(!joinFiles.length)return;
+  $('btn-join').disabled=true;$('prog-join').classList.add('show');$('res-join').classList.remove('show');hideErr('err-join');
+  const addBlank=$('join-blank').checked,stripMeta=$('join-meta').checked;
+  try{
+    setP('jp-fill','jp-pct','jp-lbl',3,'Memulai...');const outDoc=await PDFLib.PDFDocument.create();let totalPages=0;
+    for(let i=0;i<joinFiles.length;i++){
+      setP('jp-fill','jp-pct','jp-lbl',5+Math.round((i/joinFiles.length)*88),`Proses file ${i+1}/${joinFiles.length}`);$('jp-info').textContent=joinFiles[i].file.name;await tick();
+      const srcDoc=await PDFLib.PDFDocument.load(new Uint8Array(joinFiles[i].buf),{ignoreEncryption:true});const N=srcDoc.getPageCount();
+      let idxs=[];const range=joinFiles[i].range.trim();
+      if(!range){for(let j=0;j<N;j++)idxs.push(j)}else{for(const p of range.split(',')){const m=p.trim().match(/^(\d+)(?:-(\d+))?$/);if(!m)continue;const from=+m[1]-1,to=m[2]?+m[2]-1:from;for(let j=Math.max(0,from);j<=Math.min(to,N-1);j++)idxs.push(j)}if(!idxs.length)for(let j=0;j<N;j++)idxs.push(j)}
+      if(addBlank&&i>0&&totalPages%2!==0){outDoc.addPage();totalPages++}
+      const copied=await outDoc.copyPages(srcDoc,idxs);copied.forEach(p=>outDoc.addPage(p));totalPages+=idxs.length;await tick();
+    }
+    if(stripMeta){outDoc.setTitle('');outDoc.setAuthor('');outDoc.setSubject('');outDoc.setKeywords([]);outDoc.setProducer('');outDoc.setCreator('')}
+    setP('jp-fill','jp-pct','jp-lbl',95,'Menyimpan...');const saved=await outDoc.save({useObjectStreams:true});joinResultBytes=saved;setP('jp-fill','jp-pct','jp-lbl',100,'Selesai!');await delay(300);
+    const outName=joinFiles.length===2?joinFiles[0].file.name.replace(/\.pdf$/i,'')+'_joined.pdf':'merged.pdf';
+    $('join-out').innerHTML='';$('join-out').appendChild(makeOutItem(outName,`${totalPages} halaman · ${fmtB(saved.byteLength)} · dari ${joinFiles.length} file`,saved,'application/pdf',outName));
+    $('join-rsub').textContent=`${joinFiles.length} file → ${totalPages} hal · ${fmtB(saved.byteLength)}`;$('prog-join').classList.remove('show');$('res-join').classList.add('show');$('btn-join').disabled=false;
+  }catch(e){showErr('err-join','Gagal: '+e.message);$('prog-join').classList.remove('show');$('btn-join').disabled=false}
+};
+$('join-prev').onclick=async()=>{if(!joinResultBytes)return;openModal('Preview PDF Gabungan');const pdf=await pdfjsLib.getDocument({data:new Uint8Array(joinResultBytes)}).promise;startModal(pdf)};
+$('join-reset').onclick=()=>{joinFiles=[];joinResultBytes=null;renderJoinList();$('prog-join').classList.remove('show');$('res-join').classList.remove('show');hideErr('err-join')};
+
+// ══════════════════════════════════════════════
+// INSERT
+// ══════════════════════════════════════════════
+let insMainBytes=null,insMainPageCount=0,insSrcBytes=null,insSrcPageCount=0,insQueue=[],insActiveTab='blank',insColor=[1,1,1];
+
+setupDz('dz-ins-main','fi-ins-main',f=>loadInsMain(Array.isArray(f)?f[0]:f));
+async function loadInsMain(f){
+  if(!f?.name?.toLowerCase().endsWith('.pdf')){return}
+  insMainBytes=null;insMainPageCount=0;
+  const buf=await f.arrayBuffer();insMainBytes=new Uint8Array(buf);
+  try{const d=await PDFLib.PDFDocument.load(insMainBytes,{ignoreEncryption:true});insMainPageCount=d.getPageCount()}catch(e){}
+  $('fs-ins-main-name').textContent=f.name;$('fs-ins-main-info').textContent=`${insMainPageCount} halaman · ${fmtB(f.size)}`;$('fs-ins-main').classList.add('show');
+  $('ins-total-hint').textContent=insMainPageCount;$('ins-pagenum').max=insMainPageCount;$('ins-controls').style.display='';$('btn-ins-add').disabled=false;hideErr('err-ins');
+}
+$('fs-ins-main-rm').onclick=()=>{insMainBytes=null;insMainPageCount=0;$('fs-ins-main').classList.remove('show');$('ins-controls').style.display='none';insQueue=[];renderInsQueue()};
+setupDz('dz-ins-src','fi-ins-src',async f=>{
+  f=Array.isArray(f)?f[0]:f;if(!f?.name?.toLowerCase().endsWith('.pdf'))return;
+  const buf=await f.arrayBuffer();insSrcBytes=new Uint8Array(buf);
+  try{const d=await PDFLib.PDFDocument.load(insSrcBytes,{ignoreEncryption:true});insSrcPageCount=d.getPageCount()}catch(e){}
+  $('fs-ins-src-name').textContent=f.name;$('fs-ins-src-info').textContent=`${insSrcPageCount} halaman · ${fmtB(f.size)}`;$('fs-ins-src').classList.add('show');
+});
+$('fs-ins-src-rm').onclick=()=>{insSrcBytes=null;insSrcPageCount=0;$('fs-ins-src').classList.remove('show')};
+document.querySelectorAll('.ins-tab').forEach(t=>{
+  t.onclick=()=>{document.querySelectorAll('.ins-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');insActiveTab=t.dataset.t;
+    document.querySelectorAll('.ins-tab-pane').forEach(x=>x.classList.remove('active'));$('ins-tab-'+t.dataset.t).classList.add('active')};
+});
+document.querySelectorAll('#ins-color-grid .color-opt').forEach(o=>{
+  o.onclick=()=>{document.querySelectorAll('#ins-color-grid .color-opt').forEach(x=>x.classList.remove('selected'));o.classList.add('selected');insColor=o.dataset.color.split(',').map(Number)};
+});
+$('ins-pos').onchange=()=>{$('ins-pagenum-row').style.display=['before','after'].includes($('ins-pos').value)?'':'none'};
+$('btn-ins-add').onclick=()=>{
+  if(!insMainBytes)return;
+  const pos=$('ins-pos').value,refPage=parseInt($('ins-pagenum').value)||1,count=parseInt($('ins-count').value)||1;
+  if(['before','after'].includes(pos)&&(refPage<1||refPage>insMainPageCount)){showErr('err-ins','Nomor halaman tidak valid.');return}
+  if(insActiveTab==='frompdf'&&!insSrcBytes){showErr('err-ins','Upload PDF sumber terlebih dahulu.');return}
+  const entry={pos,refPage,count,type:insActiveTab,color:[...insColor],size:$('ins-size').value,srcPages:$('ins-src-pages').value.trim()};
+  insQueue.push(entry);renderInsQueue();hideErr('err-ins');$('btn-ins-process').disabled=false;
+};
+function renderInsQueue(){
+  const el=$('ins-queue-list'),empty=$('ins-queue-empty');
+  el.innerHTML='';empty.style.display=insQueue.length?'none':'';
+  insQueue.forEach((e,i)=>{
+    const div=document.createElement('div');div.className='ins-queue-item';
+    const pos_map={before:'Sebelum',after:'Setelah',start:'Di awal',end:'Di akhir'};
+    const desc=`${pos_map[e.pos]||e.pos}${['before','after'].includes(e.pos)?' hal.'+e.refPage:''} · ${e.count}x · ${e.type==='blank'?'Kosong':'Dari PDF'}`;
+    div.innerHTML=`<span class="ins-q-desc">${desc}</span><button class="ins-q-rm">✕</button>`;
+    div.querySelector('.ins-q-rm').onclick=()=>{insQueue.splice(i,1);renderInsQueue();if(!insQueue.length)$('btn-ins-process').disabled=true};
+    el.appendChild(div);
+  });
+}
+function parsePageRangesIns(str,max){const pages=[];if(!str){for(let i=0;i<max;i++)pages.push(i);return pages}for(const p of str.split(',')){const m=p.trim().match(/^(\d+)(?:-(\d+))?$/);if(!m)continue;const from=+m[1]-1,to=m[2]?+m[2]-1:from;for(let i=Math.max(0,from);i<=Math.min(to,max-1);i++)pages.push(i)}return pages.length?pages:Array.from({length:max},(_,i)=>i)}
+$('btn-ins-process').onclick=async()=>{
+  if(!insMainBytes||!insQueue.length)return;
+  $('btn-ins-process').disabled=true;$('prog-ins').classList.add('show');$('res-ins').classList.remove('show');hideErr('err-ins');
+  try{
+    setP('ins-fill','ins-pct','ins-lbl',5,'Memuat dokumen...');
+    const outDoc=await PDFLib.PDFDocument.load(insMainBytes,{ignoreEncryption:true});
+    // sort queue by resolved position descending so insertions don't shift indices
+    const resolved=insQueue.map(e=>{let absPos;if(e.pos==='start')absPos=0;else if(e.pos==='end')absPos=outDoc.getPageCount();else if(e.pos==='before')absPos=e.refPage-1;else absPos=e.refPage;return{...e,absPos}}).sort((a,b)=>b.absPos-a.absPos);
+    const total=resolved.length;let srcDocCache=null;
+    for(let qi=0;qi<total;qi++){
+      setP('ins-fill','ins-pct','ins-lbl',10+Math.round((qi/total)*80),`Sisipan ${qi+1}/${total}...`);await tick();
+      const e=resolved[qi];
+      if(e.type==='blank'){
+        const sizes={A4:[595.28,841.89],A5:[419.53,595.28],LETTER:[612,792]};
+        let pw,ph;if(e.size==='CUSTOM'){const pg=outDoc.getPage(Math.min(e.absPos,outDoc.getPageCount()-1));const sz=pg.getSize();pw=sz.width;ph=sz.height}else{[pw,ph]=sizes[e.size]||sizes.A4}
+        const [r,g,b]=e.color;
+        for(let k=0;k<e.count;k++){const pg=outDoc.insertPage(e.absPos,[pw,ph]);if(!(r===1&&g===1&&b===1))pg.drawRectangle({x:0,y:0,width:pw,height:ph,color:PDFLib.rgb(r,g,b)})}
+      }else{
+        if(!srcDocCache)srcDocCache=await PDFLib.PDFDocument.load(insSrcBytes,{ignoreEncryption:true});
+        const pageIdxs=parsePageRangesIns(e.srcPages,srcDocCache.getPageCount());
+        const copies=await outDoc.copyPages(srcDocCache,pageIdxs);
+        for(let k=0;k<e.count;k++)for(let ci=0;ci<copies.length;ci++)outDoc.insertPage(e.absPos+k*copies.length+ci,copies[ci]);
+      }
+    }
+    setP('ins-fill','ins-pct','ins-lbl',95,'Menyimpan...');const saved=await outDoc.save({useObjectStreams:true});setP('ins-fill','ins-pct','ins-lbl',100,'Selesai!');await delay(300);
+    const outName='output_sisipan.pdf';$('ins-out').innerHTML='';
+    $('ins-out').appendChild(makeOutItem(outName,`${outDoc.getPageCount()} halaman · ${fmtB(saved.byteLength)}`,saved,'application/pdf',outName));
+    $('ins-rsub').textContent=`${insQueue.length} sisipan berhasil diterapkan`;$('prog-ins').classList.remove('show');$('res-ins').classList.add('show');$('btn-ins-process').disabled=false;
+  }catch(e){showErr('err-ins','Gagal: '+e.message);$('prog-ins').classList.remove('show');$('btn-ins-process').disabled=false}
+};
+$('ins-reset').onclick=()=>{insMainBytes=null;insMainPageCount=0;insSrcBytes=null;insSrcPageCount=0;insQueue=[];$('fs-ins-main').classList.remove('show');$('fs-ins-src').classList.remove('show');$('ins-controls').style.display='none';$('prog-ins').classList.remove('show');$('res-ins').classList.remove('show');renderInsQueue();hideErr('err-ins')};
+
+// ══════════════════════════════════════════════
+// ROTATE & REORDER
+// ══════════════════════════════════════════════
+let rotFile=null,rotBytes=null,rotPdfJs=null,rotN=0;
+let rotState=[]; // [{origIdx, rotation}]
+
+setupDz('dz-rot','fi-rot',f=>loadRotFile(Array.isArray(f)?f[0]:f));
+async function loadRotFile(f){
+  if(!f?.name?.toLowerCase().endsWith('.pdf')){showErr('err-rot','Pilih file PDF.');return}
+  hideErr('err-rot');rotFile=f;
+  $('fs-rot-name').textContent=f.name;$('fs-rot-info').textContent='Memuat...';$('fs-rot').classList.add('show');$('rot-controls').style.display='';
+  $('res-rot').classList.remove('show');$('prog-rot').classList.remove('show');
+  const buf=await f.arrayBuffer();rotBytes=new Uint8Array(buf);
+  rotPdfJs=await pdfjsLib.getDocument({data:rotBytes.slice()}).promise;rotN=rotPdfJs.numPages;
+  rotState=Array.from({length:rotN},(_,i)=>({origIdx:i,rotation:0}));
+  $('fs-rot-info').textContent=`${rotN} halaman · ${fmtB(f.size)}`;
+  await buildRotGrid();
+}
+async function buildRotGrid(){
+  const grid=$('rot-grid');grid.innerHTML='';
+  for(let i=0;i<rotState.length;i++){
+    const s=rotState[i];
+    const card=document.createElement('div');card.className='rot-card';card.dataset.si=i;card.draggable=true;
+    const thumb=document.createElement('div');thumb.className='pg-thumb';thumb.innerHTML='<span style="font-size:9px;color:var(--ink4)">…</span>';
+    const num=document.createElement('div');num.className='pg-num';num.textContent=`Hal ${s.origIdx+1}`;
+    const ctrls=document.createElement('div');ctrls.className='rot-ctrls';
+    const ccw=document.createElement('button');ccw.className='rot-btn';ccw.textContent='↺';ccw.title='Putar kiri';
+    const cw=document.createElement('button');cw.className='rot-btn';cw.textContent='↻';cw.title='Putar kanan';
+    const badge=document.createElement('div');badge.className='rot-badge';badge.id='rot-badge-'+i;badge.textContent=s.rotation?s.rotation+'°':'';badge.style.display=s.rotation?'':'none';
+    ccw.onclick=e=>{e.stopPropagation();rotState[i].rotation=(rotState[i].rotation-90+360)%360;updateRotBadge(i)};
+    cw.onclick=e=>{e.stopPropagation();rotState[i].rotation=(rotState[i].rotation+90)%360;updateRotBadge(i)};
+    ctrls.append(ccw,cw);card.append(thumb,badge,ctrls,num);grid.appendChild(card);
+    // drag reorder
+    card.ondragstart=e=>{e.dataTransfer.setData('text/plain',i);card.style.opacity='.4'};
+    card.ondragend=()=>card.style.opacity='1';
+    card.ondragover=e=>{e.preventDefault();card.style.outline='2px solid var(--acc)'};
+    card.ondragleave=()=>card.style.outline='';
+    card.ondrop=e=>{e.preventDefault();card.style.outline='';const from=parseInt(e.dataTransfer.getData('text/plain'));if(from===i)return;const moved=rotState.splice(from,1)[0];rotState.splice(i,0,moved);buildRotGrid()};
+    (async()=>{
+      try{
+        const page=await rotPdfJs.getPage(s.origIdx+1);const vp=page.getViewport({scale:.35});
+        const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+        await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;thumb.innerHTML='';thumb.appendChild(c);
+      }catch(e){}
+    })();
+    await tick();
+  }
+}
+function updateRotBadge(i){const badge=$('rot-badge-'+i);if(badge){badge.textContent=rotState[i].rotation?rotState[i].rotation+'°':'';badge.style.display=rotState[i].rotation?'':'none'}}
+$('rot-all-cw').onclick=()=>{rotState.forEach((_,i)=>{rotState[i].rotation=(rotState[i].rotation+90)%360;updateRotBadge(i)})};
+$('rot-all-ccw').onclick=()=>{rotState.forEach((_,i)=>{rotState[i].rotation=(rotState[i].rotation-90+360)%360;updateRotBadge(i)})};
+$('rot-all-180').onclick=()=>{rotState.forEach((_,i)=>{rotState[i].rotation=(rotState[i].rotation+180)%360;updateRotBadge(i)})};
+$('btn-rot').onclick=async()=>{
+  if(!rotFile||!rotBytes)return;
+  $('btn-rot').disabled=true;$('prog-rot').classList.add('show');$('res-rot').classList.remove('show');
+  try{
+    setP('rot-fill','rot-pct','rot-lbl',5,'Memuat...');
+    const srcDoc=await PDFLib.PDFDocument.load(rotBytes,{ignoreEncryption:true});const outDoc=await PDFLib.PDFDocument.create();
+    for(let i=0;i<rotState.length;i++){
+      setP('rot-fill','rot-pct','rot-lbl',10+Math.round((i/rotState.length)*85),`Halaman ${i+1}/${rotState.length}`);await tick();
+      const [pg]=await outDoc.copyPages(srcDoc,[rotState[i].origIdx]);
+      const origRot=pg.getRotation().angle;pg.setRotation(PDFLib.degrees((origRot+rotState[i].rotation)%360));outDoc.addPage(pg);
+    }
+    setP('rot-fill','rot-pct','rot-lbl',96,'Menyimpan...');const saved=await outDoc.save({useObjectStreams:true});setP('rot-fill','rot-pct','rot-lbl',100,'Selesai!');await delay(300);
+    const outName=rotFile.name.replace(/\.pdf$/i,'')+'_edited.pdf';$('rot-out').innerHTML='';
+    $('rot-out').appendChild(makeOutItem(outName,`${rotState.length} halaman · ${fmtB(saved.byteLength)}`,saved,'application/pdf',outName));
+    $('rot-rsub').textContent=`${rotState.length} halaman`;$('prog-rot').classList.remove('show');$('res-rot').classList.add('show');$('btn-rot').disabled=false;
+  }catch(e){showErr('err-rot','Gagal: '+e.message);$('prog-rot').classList.remove('show');$('btn-rot').disabled=false}
+};
+$('fs-rot-rm').onclick=rotReset;$('rot-reset').onclick=rotReset;
+function rotReset(){rotFile=null;rotBytes=null;rotPdfJs=null;rotN=0;rotState=[];$('fs-rot').classList.remove('show');$('rot-controls').style.display='none';$('rot-grid').innerHTML='';$('prog-rot').classList.remove('show');$('res-rot').classList.remove('show');hideErr('err-rot')}
+
+// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// COMPRESS PDF — DUAL METHOD
+// ══════════════════════════════════════════════
+let cpdfFile=null,cpdfBytes=null,cpdfMethod='native';
+
+// ── Method selector ──
+document.querySelectorAll('.cpdf-method-card').forEach(card=>{
+  card.onclick=()=>{
+    cpdfMethod=card.dataset.method;
+    document.querySelectorAll('.cpdf-method-card').forEach(c=>{
+      const sel=c===card;
+      c.style.border=sel?'2px solid var(--acc)':'2px solid var(--border)';
+      c.style.background=sel?'var(--acc-s)':'var(--bg3)';
+    });
+    if(cpdfFile){
+      $('settings-cpdf-native').style.display=cpdfMethod==='native'?'':'none';
+      $('settings-cpdf-raster').style.display=cpdfMethod==='raster'?'':'none';
+      updateCpdfBtn();
+    }
+  };
+});
+
+function updateCpdfBtn(){
+  $('btn-cpdf').textContent=cpdfMethod==='native'?'🧬 Kompres Native':'🖼 Kompres Rasterisasi';
+}
+
+setupDz('dz-cpdf','fi-cpdf',f=>{
+  f=Array.isArray(f)?f[0]:f;
+  if(!f?.name?.toLowerCase().endsWith('.pdf')){showErr('err-cpdf','Pilih file PDF.');return}
+  hideErr('err-cpdf');cpdfFile=f;cpdfBytes=null;
+  renderFileList('fl-cpdf',[f],'pdf',()=>{
+    cpdfFile=null;$('fl-cpdf').innerHTML='';
+    $('settings-cpdf-native').style.display='none';$('settings-cpdf-raster').style.display='none';$('btn-cpdf').style.display='none';
+  });
+  $('settings-cpdf-native').style.display=cpdfMethod==='native'?'':'none';
+  $('settings-cpdf-raster').style.display=cpdfMethod==='raster'?'':'none';
+  $('btn-cpdf').style.display='flex';$('btn-cpdf').disabled=false;
+  $('res-cpdf').classList.remove('show');$('prog-cpdf').classList.remove('show');
+  updateCpdfBtn();
+});
+
+// Raster mode card / slider events
+document.querySelectorAll('#settings-cpdf-raster .mode-card').forEach(c=>{
+  c.onclick=()=>{
+    document.querySelectorAll('#settings-cpdf-raster .mode-card').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');$('cpdf-q').value=c.dataset.q;$('cpdf-qval').textContent=c.dataset.q+'%';$('cpdf-d').value=c.dataset.dpi;$('cpdf-dval').textContent=c.dataset.dpi;
+  };
+});
+$('cpdf-q').oninput=()=>$('cpdf-qval').textContent=$('cpdf-q').value+'%';
+$('cpdf-d').oninput=()=>$('cpdf-dval').textContent=$('cpdf-d').value;
+
+// ── NATIVE compress ──
+async function compressNative(){
+  setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',5,'Membaca struktur PDF...');
+  const buf=await cpdfFile.arrayBuffer();
+  const pdfDoc=await PDFLib.PDFDocument.load(new Uint8Array(buf),{ignoreEncryption:true});
+  setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',30,'Memproses metadata & stream...');await tick();
+
+  // Strip metadata
+  if($('cpdf-native-meta').checked){
+    pdfDoc.setTitle('');pdfDoc.setAuthor('');pdfDoc.setSubject('');
+    pdfDoc.setKeywords([]);pdfDoc.setProducer('pdf-lib');pdfDoc.setCreator('PowerPDF');
+  }
+
+  // Remove embedded thumbnails (XRef objects named /Thumb)
+  if($('cpdf-native-thumb').checked){
+    try{
+      const pages=pdfDoc.getPages();
+      pages.forEach(pg=>{
+        try{const dict=pg.node;if(dict.has&&dict.has(PDFLib.PDFName.of('Thumb')))dict.delete(PDFLib.PDFName.of('Thumb'))}catch(e){}
+      });
+    }catch(e){}
+  }
+
+  setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',70,'Menyimpan dengan optimasi...');await tick();
+  const useObjStream=$('cpdf-native-objstream').checked;
+  const saved=await pdfDoc.save({useObjectStreams:useObjStream,addDefaultPage:false,updateFieldAppearances:false});
+  return saved;
+}
+
+// ── RASTER compress ──
+async function compressRaster(){
+  const q=parseInt($('cpdf-q').value)/100,dpi=parseInt($('cpdf-d').value),scale=dpi/96;
+  const whiteBg=$('cpdf-bg').checked,stripMeta=$('cpdf-meta').checked;
+  setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',3,'Membaca PDF...');
+  const buf=await cpdfFile.arrayBuffer();
+  const pdfjs=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;const N=pdfjs.numPages;
+  setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',8,`PDF dimuat — ${N} halaman`);
+  const newDoc=await PDFLib.PDFDocument.create();const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');
+  $('cpdf-thumbs').innerHTML='';const thumbs=[];
+  for(let i=0;i<Math.min(N,24);i++){const d=document.createElement('div');d.className='th';d.innerHTML=`<span>${i+1}</span><div class="th-ck">✓</div>`;$('cpdf-thumbs').appendChild(d);thumbs.push(d)}
+  for(let p=1;p<=N;p++){
+    setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',8+Math.round((p/N)*82),`Render halaman ${p}/${N}`);$('cpdf-pinfo').textContent=`JPEG ${Math.round(q*100)}% @ ${dpi}dpi`;
+    if(p-1<thumbs.length){if(p>1&&p-2<thumbs.length){thumbs[p-2].classList.remove('act');thumbs[p-2].classList.add('done')}thumbs[p-1].classList.add('act')}
+    const page=await pdfjs.getPage(p);const vp=page.getViewport({scale});
+    canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+    if(whiteBg){ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height)}else ctx.clearRect(0,0,canvas.width,canvas.height);
+    await page.render({canvasContext:ctx,viewport:vp}).promise;
+    if(p-1<thumbs.length){const tc=document.createElement('canvas');tc.width=52;tc.height=Math.round(canvas.height*(52/canvas.width));tc.getContext('2d').drawImage(canvas,0,0,tc.width,tc.height);thumbs[p-1].innerHTML='<div class="th-ck">✓</div>';thumbs[p-1].insertBefore(tc,thumbs[p-1].firstChild);thumbs[p-1].classList.add('done')}
+    const dataUrl=canvas.toDataURL('image/jpeg',q);const jb=Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0));const img=await newDoc.embedJpg(jb);
+    const origVp=page.getViewport({scale:1});const wPt=origVp.width*.75,hPt=origVp.height*.75;newDoc.addPage([wPt,hPt]).drawImage(img,{x:0,y:0,width:wPt,height:hPt});await tick();
+  }
+  setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',94,'Menyusun PDF...');
+  if(stripMeta){newDoc.setTitle('');newDoc.setAuthor('');newDoc.setSubject('');newDoc.setKeywords([]);newDoc.setProducer('');newDoc.setCreator('')}
+  return await newDoc.save({useObjectStreams:true});
+}
+
+// ── Main handler ──
+$('btn-cpdf').onclick=async()=>{
+  if(!cpdfFile)return;
+  $('btn-cpdf').disabled=true;$('prog-cpdf').classList.add('show');$('res-cpdf').classList.remove('show');hideErr('err-cpdf');
+  try{
+    let saved;
+    if(cpdfMethod==='native'){saved=await compressNative()}
+    else{saved=await compressRaster()}
+    cpdfBytes=saved;
+    setP('cpdf-pfill','cpdf-ppct','cpdf-plbl',100,'Selesai!');await delay(300);
+    const oSz=cpdfFile.size,nSz=saved.byteLength,pct=(oSz-nSz)/oSz*100;
+    $('cpdf-ro').textContent=fmtB(oSz);$('cpdf-rn').textContent=fmtB(nSz);
+    $('cpdf-rs').textContent=(pct>0?'-':'+')+Math.abs(pct).toFixed(1)+'%';$('cpdf-rs2').textContent=Math.abs(pct).toFixed(1)+'%';
+    setTimeout(()=>$('cpdf-sbar').style.width=Math.max(0,Math.min(100,pct)).toFixed(1)+'%',100);
+    const isNative=cpdfMethod==='native';
+    $('cpdf-method-badge').textContent=isNative?'🧬 Metode Native — vektor & teks tetap utuh':'🖼 Metode Rasterisasi — halaman jadi gambar JPEG';
+    if(isNative){
+      $('cpdf-notice').textContent=pct<1?'ℹ️ Penghematan sangat kecil — PDF ini sudah teroptimasi. Struktur internalnya padat, tidak banyak yang bisa dibuang.':`✅ Hemat ${fmtB(Math.max(0,oSz-nSz))} — metadata, thumbnail, dan stream dioptimasi. Teks & vektor tetap bisa diedit.`;
+      $('cpdf-notice').className='notice '+(pct<1?'':'ok');
+    }else{
+      $('cpdf-notice').textContent=pct<2?'⚠️ Penghematan kecil — PDF mungkin sudah padat. Coba mode Agresif.':`✅ Hemat ${fmtB(Math.max(0,oSz-nSz))} — halaman dirender ulang sebagai JPEG. PDF hasil tidak bisa diedit di software desain.`;
+      $('cpdf-notice').className='notice '+(pct<2?'warn':'ok');
+    }
+    const suffix=isNative?'_native.pdf':'_compressed.pdf';
+    $('cpdf-dl').href=URL.createObjectURL(new Blob([saved],{type:'application/pdf'}));$('cpdf-dl').download=cpdfFile.name.replace(/\.pdf$/i,'')+suffix;
+    $('prog-cpdf').classList.remove('show');$('res-cpdf').classList.add('show');$('btn-cpdf').disabled=false;
+  }catch(e){showErr('err-cpdf','Gagal: '+e.message);$('prog-cpdf').classList.remove('show');$('btn-cpdf').disabled=false}
+};
+$('cpdf-prev').onclick=async()=>{if(!cpdfBytes)return;openModal('Preview PDF Terkompresi');const pdf=await pdfjsLib.getDocument({data:new Uint8Array(cpdfBytes)}).promise;startModal(pdf)};
+$('cpdf-reset').onclick=()=>{
+  cpdfFile=null;cpdfBytes=null;$('fl-cpdf').innerHTML='';
+  $('settings-cpdf-native').style.display='none';$('settings-cpdf-raster').style.display='none';
+  $('btn-cpdf').style.display='none';$('prog-cpdf').classList.remove('show');$('res-cpdf').classList.remove('show');hideErr('err-cpdf');
+};
+
+// ══════════════════════════════════════════════
+// WATERMARK
+// ══════════════════════════════════════════════
+let wmFile=null,wmBytes=null;
+let wmColor='#e05c5c';
+
+setupDz('dz-wm','fi-wm',f=>{
+  f=Array.isArray(f)?f[0]:f;if(!f?.name?.toLowerCase().endsWith('.pdf')){showErr('err-wm','Pilih file PDF.');return}
+  hideErr('err-wm');wmFile=f;wmBytes=null;
+  $('fs-wm-name').textContent=f.name;$('fs-wm-info').textContent=fmtB(f.size);$('fs-wm').classList.add('show');$('wm-controls').style.display='';
+  $('res-wm').classList.remove('show');$('prog-wm').classList.remove('show');
+});
+$('fs-wm-rm').onclick=()=>{wmFile=null;wmBytes=null;$('fs-wm').classList.remove('show');$('wm-controls').style.display='none';$('res-wm').classList.remove('show')};
+$('wm-fs').oninput=()=>$('wm-fsval').textContent=$('wm-fs').value;
+$('wm-op').oninput=()=>$('wm-opval').textContent=$('wm-op').value+'%';
+$('wm-rot').oninput=()=>$('wm-rotval').textContent=$('wm-rot').value+'°';
+document.querySelectorAll('.wm-color-swatch').forEach(s=>{s.onclick=()=>{document.querySelectorAll('.wm-color-swatch').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');wmColor=s.dataset.wmColor;$('wm-color-custom').value=wmColor}});
+$('wm-color-custom').oninput=()=>{wmColor=$('wm-color-custom').value;document.querySelectorAll('.wm-color-swatch').forEach(x=>x.classList.remove('sel'))};
+
+function hexToRgb(hex){const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;return{r,g,b}}
+
+$('btn-wm').onclick=async()=>{
+  if(!wmFile)return;
+  $('btn-wm').disabled=true;$('prog-wm').classList.add('show');$('res-wm').classList.remove('show');hideErr('err-wm');
+  const text=$('wm-text').value.trim()||'WATERMARK';const fontSize=parseInt($('wm-fs').value);
+  const opacity=parseInt($('wm-op').value)/100;const rotDeg=parseInt($('wm-rot').value);const pos=$('wm-pos').value;
+  const {r,g,b}=hexToRgb(wmColor);
+  try{
+    setP('wm-fill','wm-pct','wm-lbl',5,'Memuat PDF...');
+    const buf=await wmFile.arrayBuffer();const pdfDoc=await PDFLib.PDFDocument.load(new Uint8Array(buf),{ignoreEncryption:true});
+    const pages=pdfDoc.getPages();const N=pages.length;
+    const font=await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+    for(let i=0;i<N;i++){
+      setP('wm-fill','wm-pct','wm-lbl',10+Math.round((i/N)*85),`Halaman ${i+1}/${N}`);await tick();
+      const page=pages[i];const {width,height}=page.getSize();
+      const textWidth=font.widthOfTextAtSize(text,fontSize);
+      const drawOpts={text,font,size:fontSize,color:PDFLib.rgb(r,g,b),opacity};
+      if(pos==='tile'){
+        const stepX=Math.max(textWidth*1.5,180),stepY=fontSize*4;
+        const angleRad=rotDeg*Math.PI/180;
+        for(let tx=-width;tx<width*2;tx+=stepX){for(let ty=-height;ty<height*2;ty+=stepY){
+          page.drawText(text,{...drawOpts,x:tx,y:ty,rotate:PDFLib.degrees(rotDeg)})}}
+      }else if(pos==='center'){
+        page.drawText(text,{...drawOpts,x:(width-textWidth)/2,y:(height-fontSize)/2,rotate:PDFLib.degrees(rotDeg)});
+      }else{
+        const margin=24;const x_map={topleft:margin,topright:width-textWidth-margin,bottomleft:margin,bottomright:width-textWidth-margin};const y_map={topleft:height-fontSize-margin,topright:height-fontSize-margin,bottomleft:margin,bottomright:margin};
+        page.drawText(text,{...drawOpts,x:x_map[pos]||margin,y:y_map[pos]||margin});
+      }
+    }
+    setP('wm-fill','wm-pct','wm-lbl',97,'Menyimpan...');const saved=await pdfDoc.save({useObjectStreams:true});setP('wm-fill','wm-pct','wm-lbl',100,'Selesai!');await delay(300);
+    const outName=wmFile.name.replace(/\.pdf$/i,'')+'_watermark.pdf';$('wm-out').innerHTML='';
+    $('wm-out').appendChild(makeOutItem(outName,`${N} halaman · ${fmtB(saved.byteLength)}`,saved,'application/pdf',outName));
+    $('wm-rsub').textContent=`Watermark "${text}" di ${N} halaman`;$('prog-wm').classList.remove('show');$('res-wm').classList.add('show');$('btn-wm').disabled=false;
+  }catch(e){showErr('err-wm','Gagal: '+e.message);$('prog-wm').classList.remove('show');$('btn-wm').disabled=false}
+};
+$('wm-reset').onclick=()=>{wmFile=null;wmBytes=null;$('fs-wm').classList.remove('show');$('wm-controls').style.display='none';$('prog-wm').classList.remove('show');$('res-wm').classList.remove('show');hideErr('err-wm')};
+
+// ══════════════════════════════════════════════
+// PDF → IMAGE
+// ══════════════════════════════════════════════
+let p2iFile=null,p2iImages=[];
+setupDz('dz-p2i','fi-p2i',f=>{
+  f=Array.isArray(f)?f[0]:f;if(!f?.name?.toLowerCase().endsWith('.pdf')){showErr('err-p2i','Pilih file PDF.');return}
+  hideErr('err-p2i');p2iFile=f;p2iImages=[];renderFileList('fl-p2i',[f],'pdf',()=>{p2iFile=null;$('fl-p2i').innerHTML='';$('settings-p2i').style.display='none';$('btn-p2i').style.display='none'});
+  $('settings-p2i').style.display='';$('btn-p2i').style.display='flex';$('btn-p2i').disabled=false;$('res-p2i').classList.remove('show');$('prog-p2i').classList.remove('show');
+});
+$('p2i-range').onchange=()=>$('p2i-custom-range').style.display=$('p2i-range').value==='custom'?'block':'none';
+$('p2i-d').oninput=()=>$('p2i-dval').textContent=$('p2i-d').value;
+$('p2i-q').oninput=()=>$('p2i-qval').textContent=$('p2i-q').value+'%';
+$('btn-p2i').onclick=async()=>{
+  if(!p2iFile)return;$('btn-p2i').disabled=true;p2iImages=[];$('prog-p2i').classList.add('show');$('res-p2i').classList.remove('show');
+  const fmt_type=document.querySelector('input[name=p2i-fmt]:checked').value;const q=parseInt($('p2i-q').value)/100;const dpi=parseInt($('p2i-d').value);const scale=dpi/96;const whiteBg=$('p2i-bg').checked;const mime={jpeg:'image/jpeg',png:'image/png',webp:'image/webp'}[fmt_type]||'image/jpeg';
+  try{
+    setP('p2i-pfill','p2i-ppct','p2i-plbl',3,'Membaca PDF...');
+    const buf=await p2iFile.arrayBuffer();const pdfjs=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;const N=pdfjs.numPages;
+    let pages=[];const range=$('p2i-range').value;
+    if(range==='all'){for(let i=1;i<=N;i++)pages.push(i)}else if(range==='first'){pages=[1]}else{const raw=$('p2i-custom-range').value||'';for(const p of raw.split(',')){const m=p.trim().match(/^(\d+)(?:-(\d+))?$/);if(m){for(let i=parseInt(m[1]);i<=Math.min(parseInt(m[2]||m[1]),N);i++)pages.push(i)}else{const n=parseInt(p.trim());if(!isNaN(n)&&n>=1&&n<=N)pages.push(n)}}if(!pages.length)for(let i=1;i<=N;i++)pages.push(i)}
+    $('p2i-thumbs').innerHTML='';const thumbs=[];for(let i=0;i<Math.min(pages.length,24);i++){const d=document.createElement('div');d.className='th';d.innerHTML=`<span>${pages[i]}</span><div class="th-ck">✓</div>`;$('p2i-thumbs').appendChild(d);thumbs.push(d)}
+    const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');
+    for(let i=0;i<pages.length;i++){
+      const p=pages[i];setP('p2i-pfill','p2i-ppct','p2i-plbl',5+Math.round((i/pages.length)*88),`Render halaman ${p}...`);$('p2i-pinfo').textContent=`${fmt_type.toUpperCase()} @ ${dpi}dpi`;
+      if(i<thumbs.length){if(i>0)thumbs[i-1].classList.add('done');thumbs[i].classList.add('act')}
+      const page=await pdfjs.getPage(p);const vp=page.getViewport({scale});canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+      if(whiteBg){ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height)}else ctx.clearRect(0,0,canvas.width,canvas.height);
+      await page.render({canvasContext:ctx,viewport:vp}).promise;
+      const dataUrl=canvas.toDataURL(mime,q);const bytes=Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0));
+      p2iImages.push({page:p,dataUrl,bytes,mime,fmt_type});
+      if(i<thumbs.length){const tc=document.createElement('canvas');tc.width=52;tc.height=Math.round(canvas.height*(52/canvas.width));tc.getContext('2d').drawImage(canvas,0,0,tc.width,tc.height);thumbs[i].innerHTML='<div class="th-ck">✓</div>';thumbs[i].insertBefore(tc,thumbs[i].firstChild);thumbs[i].classList.add('done')}
+      await tick();
+    }
+    setP('p2i-pfill','p2i-ppct','p2i-plbl',100,'Selesai!');await delay(300);
+    $('p2i-imgrid').innerHTML='';
+    for(const img of p2iImages){const div=document.createElement('div');div.className='img-out-item';const el=document.createElement('img');el.src=img.dataUrl;const pg=document.createElement('span');pg.className='img-out-pg';pg.textContent='p.'+img.page;const btn=document.createElement('button');btn.className='img-out-dl';btn.textContent='⬇';btn.onclick=()=>dlBlob(img.bytes,img.mime,`page_${img.page}.${img.fmt_type}`);div.append(el,pg,btn);$('p2i-imgrid').appendChild(div)}
+    $('p2i-rsub').textContent=`${p2iImages.length} halaman diekspor sebagai ${fmt_type.toUpperCase()} @ ${dpi}dpi`;$('prog-p2i').classList.remove('show');$('res-p2i').classList.add('show');$('btn-p2i').disabled=false;
+  }catch(e){showErr('err-p2i','Gagal: '+e.message);$('prog-p2i').classList.remove('show');$('btn-p2i').disabled=false}
+};
+$('p2i-dlall').onclick=()=>{if(!p2iImages.length)return;dlBlob(makeZip(p2iImages.map(img=>({name:`page_${img.page}.${img.fmt_type}`,data:img.bytes}))),'application/zip',p2iFile.name.replace(/\.pdf$/i,'')+'_pages.zip')};
+$('p2i-reset').onclick=()=>{p2iFile=null;p2iImages=[];$('fl-p2i').innerHTML='';$('settings-p2i').style.display='none';$('btn-p2i').style.display='none';$('prog-p2i').classList.remove('show');$('res-p2i').classList.remove('show')};
+
+// ══════════════════════════════════════════════
+// IMAGE → PDF
+// ══════════════════════════════════════════════
+let i2pFiles=[];
+$('i2p-q').oninput=()=>$('i2p-qval').textContent=$('i2p-q').value+'%';
+$('i2p-m').oninput=()=>$('i2p-mval').textContent=$('i2p-m').value;
+setupDz('dz-i2p','fi-i2p',files=>{
+  hideErr('err-i2p');const valid=(Array.isArray(files)?files:[files]).filter(f=>f&&f.type.startsWith('image/'));
+  if(!valid.length){showErr('err-i2p','Pilih file gambar.');return}
+  i2pFiles=[...i2pFiles,...valid];
+  renderFileList('fl-i2p',i2pFiles,'img',i=>{i2pFiles.splice(i,1);renderFileList('fl-i2p',i2pFiles,'img',arguments.callee);if(!i2pFiles.length){$('settings-i2p').style.display='none';$('btn-i2p').style.display='none';$('notice-i2p').style.display='none'}});
+  $('settings-i2p').style.display='';$('btn-i2p').style.display='flex';$('btn-i2p').disabled=false;$('notice-i2p').style.display='';$('res-i2p').classList.remove('show');
+},true);
+$('btn-i2p').onclick=async()=>{
+  if(!i2pFiles.length)return;$('btn-i2p').disabled=true;$('prog-i2p').classList.add('show');$('res-i2p').classList.remove('show');
+  const q=parseInt($('i2p-q').value)/100,margin=parseInt($('i2p-m').value),sizeOpt=$('i2p-size').value,oriOpt=document.querySelector('input[name=i2p-ori]:checked').value,fitPage=$('i2p-fit').checked;
+  const sizes={a4:[595,842],letter:[612,792],a3:[842,1191]};
+  try{
+    const newDoc=await PDFLib.PDFDocument.create();
+    for(let i=0;i<i2pFiles.length;i++){
+      setP('i2p-pfill','i2p-ppct','i2p-plbl',5+Math.round((i/i2pFiles.length)*88),`Proses ${i+1}/${i2pFiles.length}...`);$('i2p-pinfo').textContent=i2pFiles[i].name;await tick();
+      const imgData=await readFileAsDataURL(i2pFiles[i]);const img=await loadImage(imgData);
+      const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);
+      const mime=i2pFiles[i].type==='image/png'?'image/png':'image/jpeg';const dataUrl=canvas.toDataURL(mime,q);const b64=dataUrl.split(',')[1];const bytes=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+      const embImg=mime==='image/jpeg'?await newDoc.embedJpg(bytes):await newDoc.embedPng(bytes);
+      let pw,ph;if(sizeOpt==='auto'){pw=img.naturalWidth*.75;ph=img.naturalHeight*.75}else[pw,ph]=sizes[sizeOpt];
+      let finalW=pw,finalH=ph;if(oriOpt==='landscape'&&ph>pw)[finalW,finalH]=[ph,pw];else if(oriOpt==='portrait'&&pw>ph)[finalW,finalH]=[ph,pw];else if(oriOpt==='auto'&&img.naturalWidth>img.naturalHeight&&ph>pw)[finalW,finalH]=[ph,pw];
+      const page=newDoc.addPage([finalW,finalH]);const avW=finalW-margin*2*.75,avH=finalH-margin*2*.75;
+      let iw,ih;if(fitPage&&sizeOpt!=='auto'){const ratio=Math.min(avW/img.naturalWidth*.75,avH/img.naturalHeight*.75);iw=img.naturalWidth*.75*ratio;ih=img.naturalHeight*.75*ratio}else{iw=img.naturalWidth*.75;ih=img.naturalHeight*.75}
+      page.drawImage(embImg,{x:(finalW-iw)/2,y:(finalH-ih)/2,width:iw,height:ih});await tick();
+    }
+    setP('i2p-pfill','i2p-ppct','i2p-plbl',96,'Menyimpan...');const saved=await newDoc.save({useObjectStreams:true});setP('i2p-pfill','i2p-ppct','i2p-plbl',100,'Selesai!');await delay(300);
+    window._i2pBytes=saved;$('i2p-out').innerHTML='';$('i2p-out').appendChild(makeOutItem('images_to_pdf.pdf',`${i2pFiles.length} halaman · ${fmtB(saved.byteLength)}`,saved,'application/pdf','images_to_pdf.pdf'));
+    $('i2p-rsub').textContent=`${i2pFiles.length} gambar → ${fmtB(saved.byteLength)}`;$('prog-i2p').classList.remove('show');$('res-i2p').classList.add('show');$('btn-i2p').disabled=false;
+  }catch(e){showErr('err-i2p','Gagal: '+e.message);$('prog-i2p').classList.remove('show');$('btn-i2p').disabled=false}
+};
+$('i2p-prev').onclick=async()=>{if(!window._i2pBytes)return;openModal('Preview PDF dari Gambar');const pdfjs=await pdfjsLib.getDocument({data:new Uint8Array(window._i2pBytes)}).promise;startModal(pdfjs)};
+$('i2p-reset').onclick=()=>{i2pFiles=[];window._i2pBytes=null;$('fl-i2p').innerHTML='';$('settings-i2p').style.display='none';$('btn-i2p').style.display='none';$('notice-i2p').style.display='none';$('prog-i2p').classList.remove('show');$('res-i2p').classList.remove('show')};
+
+// ══════════════════════════════════════════════
+// COMPRESS IMAGE
+// ══════════════════════════════════════════════
+let cimgFiles=[],cimgResults=[];
+$('cimg-q').oninput=()=>$('cimg-qval').textContent=$('cimg-q').value+'%';
+$('cimg-w').oninput=()=>$('cimg-wval').textContent=$('cimg-w').value==0?'bebas':$('cimg-w').value;
+$('cimg-h').oninput=()=>$('cimg-hval').textContent=$('cimg-h').value==0?'bebas':$('cimg-h').value;
+setupDz('dz-cimg','fi-cimg',files=>{
+  hideErr('err-cimg');const valid=(Array.isArray(files)?files:[files]).filter(f=>f&&f.type.startsWith('image/'));
+  if(!valid.length){showErr('err-cimg','Pilih file gambar.');return}
+  cimgFiles=[...cimgFiles,...valid];cimgResults=[];
+  renderFileList('fl-cimg',cimgFiles,'img',i=>{cimgFiles.splice(i,1);renderFileList('fl-cimg',cimgFiles,'img',arguments.callee);if(!cimgFiles.length){$('settings-cimg').style.display='none';$('btn-cimg').style.display='none'}});
+  $('settings-cimg').style.display='';$('btn-cimg').style.display='flex';$('btn-cimg').disabled=false;$('res-cimg').classList.remove('show');
+},true);
+$('btn-cimg').onclick=async()=>{
+  if(!cimgFiles.length)return;$('btn-cimg').disabled=true;cimgResults=[];$('prog-cimg').classList.add('show');$('res-cimg').classList.remove('show');
+  const q=parseInt($('cimg-q').value)/100,fmtOpt=document.querySelector('input[name=cimg-fmt]:checked').value,maxW=parseInt($('cimg-w').value)||0,maxH=parseInt($('cimg-h').value)||0;
+  try{
+    for(let i=0;i<cimgFiles.length;i++){
+      setP('cimg-pfill','cimg-ppct','cimg-plbl',5+Math.round((i/cimgFiles.length)*90),`Kompres ${i+1}/${cimgFiles.length}`);$('cimg-pinfo').textContent=cimgFiles[i].name;await tick();
+      const imgUrl=await readFileAsDataURL(cimgFiles[i]);const img=await loadImage(imgUrl);
+      let w=img.naturalWidth,h=img.naturalHeight;if(maxW&&w>maxW){const r=maxW/w;w=maxW;h=Math.round(h*r)}if(maxH&&h>maxH){const r=maxH/h;h=maxH;w=Math.round(w*r)}
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);
+      let outFmt=fmtOpt==='same'?cimgFiles[i].type:('image/'+fmtOpt);if(outFmt==='image/jpg')outFmt='image/jpeg';const ext=outFmt.split('/')[1].replace('jpeg','jpg');
+      const dataUrl=canvas.toDataURL(outFmt,q);const bytes=Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0));
+      cimgResults.push({name:cimgFiles[i].name.replace(/\.[^.]+$/,'.')+ext,orig:cimgFiles[i].size,bytes,dataUrl,mime:outFmt,ext});await tick();
+    }
+    setP('cimg-pfill','cimg-ppct','cimg-plbl',100,'Selesai!');await delay(300);
+    $('cimg-grid').innerHTML='';let totalOrig=0,totalNew=0;
+    for(const r of cimgResults){totalOrig+=r.orig;totalNew+=r.bytes.length;const div=document.createElement('div');div.className='img-out-item';const el=document.createElement('img');el.src=r.dataUrl;const pg=document.createElement('span');pg.className='img-out-pg';const saved=((r.orig-r.bytes.length)/r.orig*100).toFixed(0);pg.textContent=`-${saved}%`;const btn=document.createElement('button');btn.className='img-out-dl';btn.textContent='⬇';btn.onclick=()=>dlBlob(r.bytes,r.mime,r.name);div.append(el,pg,btn);$('cimg-grid').appendChild(div)}
+    const totalSaved=((totalOrig-totalNew)/totalOrig*100).toFixed(1);$('cimg-rsub').textContent=`${cimgFiles.length} gambar · ${fmtB(totalOrig)} → ${fmtB(totalNew)} · Hemat ${totalSaved}%`;
+    $('prog-cimg').classList.remove('show');$('res-cimg').classList.add('show');$('btn-cimg').disabled=false;
+  }catch(e){showErr('err-cimg','Gagal: '+e.message);$('prog-cimg').classList.remove('show');$('btn-cimg').disabled=false}
+};
+$('cimg-dlall').onclick=()=>{if(cimgResults.length)dlBlob(makeZip(cimgResults.map(r=>({name:r.name,data:r.bytes}))),'application/zip','compressed_images.zip')};
+$('cimg-reset').onclick=()=>{cimgFiles=[];cimgResults=[];$('fl-cimg').innerHTML='';$('settings-cimg').style.display='none';$('btn-cimg').style.display='none';$('prog-cimg').classList.remove('show');$('res-cimg').classList.remove('show')};
+
+</script>

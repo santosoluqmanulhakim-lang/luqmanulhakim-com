@@ -1,0 +1,683 @@
+---
+// src/pages/tools/pdf-editor.astro
+import Layout from '../../layouts/Layout.astro';
+
+const title = "PDF Editor — Sisipkan & Hapus Halaman";
+const description = "Edit halaman PDF langsung di browser. Sisipkan halaman kosong atau dari PDF lain, hapus halaman yang tidak perlu. Teks, font, dan vektor tetap utuh — hasil bisa diedit di CorelDRAW & Illustrator.";
+---
+
+<Layout title={title} description={description}>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" is:inline></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" is:inline></script>
+
+  <!-- NAVBAR -->
+  <header class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <span class="nav-logo">📚</span>
+        <div>
+          <div class="nav-name">Luqmanulhakim</div>
+          <div class="nav-tagline">Penerbit Pendidikan Islam</div>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="/katalog">Katalog</a>
+        <a href="/tools" class="nav-active">Tools</a>
+        <a href="/kontak">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb-bar">
+    <div class="bc-inner">
+      <a href="/">Beranda</a>
+      <span class="bc-sep">›</span>
+      <a href="/tools">Tools</a>
+      <span class="bc-sep">›</span>
+      <span>PDF Editor</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="hero-inner">
+      <div class="hero-badges">
+        <span class="badge-green">🧬 PDF Native · Vektor Utuh</span>
+        <span class="badge-gold">🔒 100% Lokal · Tanpa Upload Server</span>
+      </div>
+      <h1 class="hero-title">PDF <span>Editor</span></h1>
+      <p class="hero-desc">
+        Sisipkan atau hapus halaman PDF langsung di browser — tanpa aplikasi tambahan.
+        Teks, font, dan vektor <strong>tidak diubah</strong> sehingga hasil tetap bisa diedit di CorelDRAW &amp; Illustrator.
+      </p>
+      <div class="hero-features">
+        <div class="hf-item">➕ Sisipkan halaman kosong</div>
+        <div class="hf-item">📋 Sisipkan dari PDF lain</div>
+        <div class="hf-item">🗑 Hapus halaman tertentu</div>
+        <div class="hf-item">👁 Preview thumbnail visual</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <div class="app-shell">
+
+    <!-- Upload -->
+    <div class="upload-section">
+      <div class="dz" id="dropMain">
+        <input type="file" id="fileMain" accept=".pdf" />
+        <span class="dz-ico">📂</span>
+        <div class="dz-t">Drop PDF di sini</div>
+        <p class="dz-s">atau <b>klik untuk pilih file</b></p>
+      </div>
+      <div class="file-pill" id="fileInfo">
+        <span class="fp-ico">📄</span>
+        <div class="fp-meta">
+          <div class="fp-name" id="fiName">—</div>
+          <div class="fp-info" id="fiMeta">—</div>
+        </div>
+        <button class="fp-rm" id="btnRemove">✕ Hapus</button>
+      </div>
+      <div class="errbox" id="errbox"></div>
+    </div>
+
+    <!-- Editor -->
+    <div class="editor-grid" id="editorLayout" style="display:none">
+
+      <!-- SIDEBAR -->
+      <aside class="editor-sidebar">
+
+        <div class="mode-switch">
+          <button class="mode-btn mode-ins active" id="modeInsert">➕ Sisipkan</button>
+          <button class="mode-btn mode-del" id="modeDelete">🗑 Hapus</button>
+        </div>
+
+        <div class="mode-label ins" id="modeBadge">Mode: Sisipkan Halaman</div>
+
+        <!-- INSERT PANEL -->
+        <div id="insertPanel">
+
+          <div class="field-group">
+            <div class="field-lbl">Posisi Sisipan</div>
+            <select class="inp-sel" id="insertPos">
+              <option value="after" selected>Sesudah halaman tertentu</option>
+              <option value="before">Sebelum halaman tertentu</option>
+              <option value="start">Di awal dokumen</option>
+              <option value="end">Di akhir dokumen</option>
+            </select>
+            <div class="click-hint" id="clickHint">👆 Klik thumbnail di kanan untuk pilih halaman referensi</div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-lbl">Jumlah Halaman Disisipkan</div>
+            <input type="number" class="inp-num" id="insertCount" min="1" max="50" value="1" />
+          </div>
+
+          <div class="field-group">
+            <div class="field-lbl">Jenis Sisipan</div>
+            <div class="tab-pills">
+              <button class="tab-pill active" data-tab="blank">Halaman Kosong</button>
+              <button class="tab-pill" data-tab="frompdf">Dari PDF Lain</button>
+            </div>
+
+            <div class="tab-body active" id="tab-blank">
+              <div class="field-lbl" style="margin-top:10px">Ukuran Halaman</div>
+              <select class="inp-sel" id="blankSize">
+                <option value="A4">A4 (210×297mm)</option>
+                <option value="A5">A5 (148×210mm)</option>
+                <option value="LETTER">Letter</option>
+                <option value="CUSTOM">Ikuti ukuran PDF utama</option>
+              </select>
+              <div class="field-lbl" style="margin-top:10px">Warna Halaman</div>
+              <div class="color-row">
+                <div class="color-dot sel" data-color="1,1,1" style="background:#fff" title="Putih"></div>
+                <div class="color-dot" data-color="0.97,0.95,0.88" style="background:#f7f2e0" title="Krem"></div>
+                <div class="color-dot" data-color="0.9,0.95,0.9" style="background:#e6f2e6" title="Hijau muda"></div>
+                <div class="color-dot" data-color="0.88,0.92,0.98" style="background:#e0ebfa" title="Biru muda"></div>
+                <div class="color-dot" data-color="0.98,0.95,0.88" style="background:#faf2e0" title="Kuning muda"></div>
+                <div class="color-dot" data-color="0.12,0.12,0.12" style="background:#222" title="Hitam"></div>
+              </div>
+            </div>
+
+            <div class="tab-body" id="tab-frompdf">
+              <div class="dz dz-sm" id="dropSrc" style="margin-top:10px">
+                <input type="file" id="fileSrc" accept=".pdf" />
+                <span style="font-size:18px">📋</span>
+                <div class="dz-t" style="font-size:12px">Drop PDF Sumber</div>
+                <p class="dz-s">atau klik</p>
+              </div>
+              <div class="file-pill file-pill-sm" id="srcInfo">
+                <span class="fp-ico" style="font-size:16px">📄</span>
+                <div class="fp-meta">
+                  <div class="fp-name" id="srcName" style="font-size:11px">—</div>
+                  <div class="fp-info" id="srcMeta" style="font-size:10px">—</div>
+                </div>
+                <button class="fp-rm" id="btnRemoveSrc" style="font-size:10px;padding:3px 8px">✕</button>
+              </div>
+              <div class="field-lbl" style="margin-top:8px">Rentang Halaman Sumber</div>
+              <input type="text" class="inp-sel" id="srcPages" placeholder="Cth: 1,3,5-7 (kosong = semua)" />
+            </div>
+          </div>
+
+          <button class="btn-add-q" id="btnAddQ">➕ Tambah ke Antrian</button>
+
+          <div class="queue-wrap" id="queueWrap" style="display:none">
+            <div class="queue-hdr">
+              <span>Antrian Sisipan</span>
+              <button class="q-clear-btn" id="btnClearQ">Hapus Semua</button>
+            </div>
+            <div id="queueItems"></div>
+          </div>
+
+        </div>
+
+        <!-- DELETE PANEL -->
+        <div id="deletePanel" style="display:none">
+          <div class="del-info">
+            Klik thumbnail halaman di kanan untuk menandai halaman yang akan dihapus. Klik lagi untuk membatalkan.
+          </div>
+          <div class="del-stat-row">
+            <span>Dipilih:</span>
+            <strong id="delCount">0</strong>
+            <span>halaman</span>
+          </div>
+          <div class="del-pages-list" id="delPagesList">Belum ada halaman dipilih.</div>
+          <button class="btn-ghost-sm" id="btnClearDel">✕ Batalkan Semua</button>
+        </div>
+
+        <div class="status-box" id="statusBox"></div>
+
+        <button class="btn-process" id="btnProcess" disabled>⚡ Proses &amp; Download PDF</button>
+
+        <div class="prog-area" id="progArea" style="display:none">
+          <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+          <div class="prog-txt" id="progTxt">Memproses...</div>
+        </div>
+
+        <div class="native-note">
+          🧬 <strong>100% Native PDF.</strong> Teks, font &amp; vektor tidak dirender ulang. Hasil tetap bisa diedit di CorelDRAW &amp; Illustrator.
+        </div>
+
+      </aside>
+
+      <!-- PREVIEW -->
+      <div class="preview-panel">
+        <div class="preview-topbar">
+          <div class="preview-title" id="prevTitle">Halaman PDF</div>
+          <div class="prev-nav">
+            <button class="pnav-btn" id="btnScrollUp" disabled>↑</button>
+            <span class="pnav-ctr" id="pgCtr">—</span>
+            <button class="pnav-btn" id="btnScrollDown" disabled>↓</button>
+          </div>
+        </div>
+        <div class="thumb-grid" id="thumbGrid">
+          <div class="thumb-empty" id="thumbEmpty">
+            <span style="font-size:32px;display:block;margin-bottom:8px">📄</span>
+            Upload PDF untuk melihat preview halaman
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <section class="info-section">
+    <div class="info-inner">
+      <div class="info-card">
+        <div class="ic-ico">🧬</div>
+        <div class="ic-title">PDF Native</div>
+        <div class="ic-desc">Tidak ada rendering ulang. Teks, kurva, dan font tetap sebagai objek vektor yang bisa diedit di CorelDRAW &amp; Illustrator.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-ico">🔒</div>
+        <div class="ic-title">Privasi Terjaga</div>
+        <div class="ic-desc">Semua proses terjadi di browser Anda. File tidak pernah dikirim ke server manapun.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-ico">⚡</div>
+        <div class="ic-title">Cepat &amp; Gratis</div>
+        <div class="ic-desc">Tidak perlu daftar akun atau instal aplikasi. Langsung pakai di browser kapan saja.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span>📚</span>
+        <div>
+          <div class="fb-name">Penerbit Luqmanulhakim</div>
+          <div class="fb-sub">Buku &amp; Aplikasi Pendidikan Islam — Kurikulum Merdeka</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="/katalog">Katalog Buku</a>
+        <a href="/tools">Tools</a>
+        <a href="/tentang">Tentang</a>
+        <a href="/kontak">Kontak</a>
+      </div>
+      <div class="footer-copy">© 2025 Penerbit Luqmanulhakim · luqmanulhakim.com</div>
+    </div>
+  </footer>
+
+</Layout>
+
+<style>
+:root{--hijau:#0d4a2a;--hijau-mid:#155c35;--hijau-muda:#E8F5EE;--emas:#c9a84c;--text-utama:#1a2a1e;--text-sekunder:#4a5e52;--batas:#d4e6da;}
+
+/* NAV */
+.site-nav{background:var(--hijau);border-bottom:3px solid var(--emas);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;color:white;text-decoration:none}
+.nav-logo{font-size:24px}
+.nav-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:white;letter-spacing:-.01em}
+.nav-tagline{font-size:10px;color:rgba(255,255,255,.6)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:rgba(255,255,255,.75);transition:all .18s;text-decoration:none}
+.nav-links a:hover{color:white;background:rgba(255,255,255,.1)}
+.nav-links .nav-active{background:var(--emas);color:var(--hijau);font-weight:700}
+
+/* BREADCRUMB */
+.breadcrumb-bar{background:var(--hijau-muda);border-bottom:1px solid var(--batas)}
+.bc-inner{max-width:1100px;margin:0 auto;padding:8px 1.5rem;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-sekunder)}
+.bc-inner a{color:var(--hijau-mid);text-decoration:none}
+.bc-inner a:hover{color:var(--hijau)}
+.bc-sep{color:var(--batas)}
+
+/* HERO */
+.page-hero{background:linear-gradient(135deg,var(--hijau) 0%,var(--hijau-mid) 100%);padding:48px 1.5rem 40px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(201,168,76,.12)}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.badge-green{display:inline-flex;align-items:center;gap:4px;background:rgba(61,186,120,.15);border:1px solid rgba(61,186,120,.35);color:#6debb0;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700}
+.badge-gold{display:inline-flex;align-items:center;gap:4px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);color:var(--emas);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:800;color:white;letter-spacing:-.03em;line-height:1.05;margin-bottom:12px}
+.hero-title span{color:var(--emas)}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.8);max-width:580px;line-height:1.75;margin-bottom:20px}
+.hero-desc strong{color:white}
+.hero-features{display:flex;gap:8px;flex-wrap:wrap}
+.hf-item{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.9)}
+
+/* APP */
+.app-shell{max-width:1100px;margin:0 auto;padding:24px 1.5rem}
+.upload-section{margin-bottom:16px}
+
+/* DROP ZONE */
+.dz{border:2px dashed #c8d8ce;border-radius:14px;padding:28px 24px;text-align:center;cursor:pointer;transition:all .2s;background:white}
+.dz:hover,.dz.drag-over{border-color:var(--hijau-mid);background:var(--hijau-muda)}
+.dz input[type=file]{display:none}
+.dz-ico{font-size:28px;display:block;margin-bottom:8px;transition:transform .2s}
+.dz:hover .dz-ico{transform:scale(1.1) translateY(-2px)}
+.dz-t{font-size:15px;font-weight:700;color:var(--text-utama);margin-bottom:4px}
+.dz-s{font-size:12px;color:var(--text-sekunder)}
+.dz-s b{color:var(--hijau-mid)}
+.dz-sm{padding:14px}
+.dz-sm .dz-t{font-size:12px}
+
+/* FILE PILL */
+.file-pill{display:none;align-items:center;gap:12px;background:white;border:1px solid var(--batas);border-radius:12px;padding:12px 16px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.file-pill.vis{display:flex}
+.file-pill-sm.vis{display:flex;margin-top:8px}
+.fp-ico{font-size:24px;flex-shrink:0}
+.fp-meta{flex:1;min-width:0}
+.fp-name{font-size:13px;font-weight:700;color:var(--text-utama);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-info{font-size:11px;color:var(--text-sekunder);margin-top:2px}
+.fp-rm{background:none;border:1px solid var(--batas);border-radius:7px;padding:5px 10px;font-family:inherit;font-size:11px;color:var(--text-sekunder);cursor:pointer;flex-shrink:0;transition:all .2s}
+.fp-rm:hover{border-color:#e05c5c;color:#e05c5c}
+
+.errbox{background:#fff5f5;border:1px solid #ffc5c5;border-radius:8px;padding:10px 14px;font-size:12px;color:#c0392b;margin-top:8px;display:none}
+.errbox.show{display:block}
+
+/* EDITOR GRID */
+.editor-grid{display:grid;grid-template-columns:290px 1fr;gap:16px;min-height:75vh}
+
+/* SIDEBAR */
+.editor-sidebar{background:#1c1e2a;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;border:1px solid #2a2d42}
+
+/* MODE SWITCH */
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mode-btn{display:flex;align-items:center;justify-content:center;gap:4px;padding:9px 6px;border:1px solid #363a54;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:#242636;color:#6b6e8e;transition:all .2s}
+.mode-btn.active.mode-ins{background:rgba(124,111,205,.15);border-color:rgba(124,111,205,.4);color:#9d91e0}
+.mode-btn.active.mode-del{background:rgba(224,92,92,.12);border-color:rgba(224,92,92,.35);color:#e05c5c}
+.mode-label{text-align:center;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:6px}
+.mode-label.ins{background:rgba(124,111,205,.12);color:#9d91e0;border:1px solid rgba(124,111,205,.25)}
+.mode-label.del{background:rgba(224,92,92,.1);color:#e05c5c;border:1px solid rgba(224,92,92,.2)}
+
+/* FIELDS */
+.field-group{display:flex;flex-direction:column;gap:4px}
+.field-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#444668}
+.inp-sel{width:100%;padding:8px 10px;background:#242636;border:1px solid #2a2d42;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#e8eaf6;outline:none;transition:border .2s;appearance:none;cursor:pointer}
+.inp-sel:focus{border-color:#7c6fcd}
+.inp-num{width:72px;padding:7px 10px;background:#242636;border:1px solid #2a2d42;border-radius:8px;font-family:'DM Mono',monospace;font-size:14px;color:#e8eaf6;outline:none;text-align:center;transition:border .2s}
+.inp-num:focus{border-color:#7c6fcd}
+.click-hint{font-size:10px;color:#9d91e0;background:rgba(124,111,205,.1);border:1px solid rgba(124,111,205,.2);border-radius:6px;padding:6px 8px;line-height:1.5}
+
+/* TABS */
+.tab-pills{display:flex;gap:3px;background:#242636;border:1px solid #2a2d42;border-radius:8px;padding:3px}
+.tab-pill{flex:1;padding:5px;border:none;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;cursor:pointer;background:transparent;color:#6b6e8e;transition:all .2s}
+.tab-pill.active{background:#7c6fcd;color:white}
+.tab-body{display:none}
+.tab-body.active{display:block}
+
+/* COLORS */
+.color-row{display:flex;gap:5px;flex-wrap:wrap}
+.color-dot{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.color-dot.sel{border-color:#9d91e0;transform:scale(1.15)}
+.color-dot:hover{transform:scale(1.08)}
+
+/* QUEUE */
+.btn-add-q{width:100%;padding:9px;background:rgba(124,111,205,.12);border:1px solid rgba(124,111,205,.25);border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#9d91e0;cursor:pointer;transition:all .2s}
+.btn-add-q:hover{background:#7c6fcd;color:white;border-color:#7c6fcd}
+.queue-wrap{background:#242636;border:1px solid #2a2d42;border-radius:9px;overflow:hidden}
+.queue-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid #2a2d42;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#444668}
+.q-clear-btn{background:none;border:none;font-size:10px;color:#e05c5c;cursor:pointer;font-family:inherit}
+.q-item{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid #2a2d42;font-size:11px;color:#a8abc8;gap:6px}
+.q-item:last-child{border-bottom:none}
+.q-tag{background:rgba(124,111,205,.15);color:#9d91e0;border-radius:4px;font-size:9px;font-weight:700;padding:1px 5px;margin-right:4px;letter-spacing:.04em}
+.q-rm{background:none;border:none;color:#444668;cursor:pointer;font-size:12px;flex-shrink:0;transition:color .15s}
+.q-rm:hover{color:#e05c5c}
+
+/* DELETE */
+.del-info{background:rgba(224,92,92,.1);border:1px solid rgba(224,92,92,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#e05c5c;line-height:1.7}
+.del-stat-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#a8abc8}
+.del-stat-row strong{font-family:'Syne',sans-serif;font-size:24px;color:#e05c5c}
+.del-pages-list{font-size:11px;color:#6b6e8e;font-family:'DM Mono',monospace;background:#242636;border:1px solid #2a2d42;border-radius:7px;padding:8px 10px;line-height:1.7;min-height:36px}
+.btn-ghost-sm{background:none;border:1px solid #2a2d42;border-radius:7px;padding:6px 12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#6b6e8e;cursor:pointer;transition:all .2s;width:100%}
+.btn-ghost-sm:hover{border-color:#e05c5c;color:#e05c5c}
+
+/* STATUS */
+.status-box{font-size:11px;border-radius:7px;padding:7px 10px;display:none;line-height:1.6}
+.status-box.info{display:block;background:rgba(124,111,205,.12);color:#9d91e0;border:1px solid rgba(124,111,205,.25)}
+.status-box.ok{display:block;background:rgba(61,186,120,.1);color:#3dba78;border:1px solid rgba(61,186,120,.2)}
+.status-box.err{display:block;background:rgba(224,92,92,.1);color:#e05c5c;border:1px solid rgba(224,92,92,.2)}
+
+/* PROCESS BTN */
+.btn-process{width:100%;padding:13px;background:linear-gradient(135deg,var(--hijau),var(--hijau-mid));border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:white;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(13,74,42,.35)}
+.btn-process:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 20px rgba(13,74,42,.45)}
+.btn-process:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* PROGRESS */
+.prog-area{display:flex;flex-direction:column;gap:4px}
+.prog-track{height:5px;background:#2a2d42;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#7c6fcd,#3dba78);border-radius:3px;width:0;transition:width .35s ease}
+.prog-txt{font-size:10px;color:#6b6e8e}
+
+/* NATIVE NOTE */
+.native-note{background:rgba(61,186,120,.08);border:1px solid rgba(61,186,120,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#3dba78;line-height:1.7;margin-top:auto}
+
+/* PREVIEW */
+.preview-panel{background:white;border:1px solid var(--batas);border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.preview-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--batas);background:var(--hijau-muda);flex-shrink:0}
+.preview-title{font-size:12px;font-weight:700;color:var(--hijau-mid)}
+.prev-nav{display:flex;align-items:center;gap:8px}
+.pnav-btn{background:white;border:1px solid var(--batas);border-radius:6px;width:28px;height:28px;font-size:13px;color:var(--text-sekunder);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.pnav-btn:hover:not(:disabled){border-color:var(--hijau-mid);color:var(--hijau)}
+.pnav-btn:disabled{opacity:.3;cursor:not-allowed}
+.pnav-ctr{font-family:'DM Mono',monospace;font-size:12px;color:var(--text-sekunder);min-width:44px;text-align:center}
+.thumb-grid{flex:1;overflow-y:auto;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;align-content:start}
+.thumb-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-sekunder);font-size:13px;line-height:1.7}
+
+/* THUMBNAILS */
+.pg-card{background:var(--hijau-muda);border:2px solid var(--batas);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .18s;position:relative;user-select:none}
+.pg-card:hover{border-color:var(--hijau-mid);transform:translateY(-1px);box-shadow:0 3px 10px rgba(13,74,42,.12)}
+.pg-card canvas{display:block;width:100%;height:auto}
+.pg-num{font-family:'DM Mono',monospace;font-size:10px;text-align:center;padding:5px 4px;color:var(--text-sekunder);background:var(--hijau-muda);border-top:1px solid var(--batas)}
+
+.pg-card.state-del{border-color:#e05c5c;background:#fff5f5}
+.pg-card.state-del .pg-num{color:#e05c5c}
+.pg-card.state-del::before{content:'🗑 HAPUS';position:absolute;top:4px;left:50%;transform:translateX(-50%);background:#e05c5c;color:white;font-size:8px;font-weight:700;padding:2px 6px;border-radius:6px;white-space:nowrap;z-index:2}
+
+.pg-card.state-ins{border-color:var(--hijau-mid);background:var(--hijau-muda)}
+.pg-card.state-ins .pg-num{color:var(--hijau);font-weight:700}
+.pg-card.state-ins::before{content:attr(data-ins-label);position:absolute;top:4px;left:50%;transform:translateX(-50%);background:var(--hijau-mid);color:white;font-size:8px;font-weight:700;padding:2px 6px;border-radius:6px;white-space:nowrap;z-index:2}
+
+/* INFO */
+.info-section{background:var(--hijau-muda);border-top:1px solid var(--batas);border-bottom:1px solid var(--batas);padding:40px 1.5rem;margin-top:32px}
+.info-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.info-card{background:white;border:1px solid var(--batas);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.ic-ico{font-size:24px}
+.ic-title{font-size:14px;font-weight:700;color:var(--hijau)}
+.ic-desc{font-size:13px;color:var(--text-sekunder);line-height:1.65}
+
+/* FOOTER */
+.site-footer{background:var(--hijau);padding:32px 1.5rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.footer-brand{display:flex;align-items:center;gap:10px;color:white;font-size:14px}
+.fb-name{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:white}
+.fb-sub{font-size:11px;color:rgba(255,255,255,.6)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.7);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--emas)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.4)}
+
+@media(max-width:768px){
+  .editor-grid{grid-template-columns:1fr}
+  .editor-sidebar{position:static;max-height:none}
+  .preview-panel{min-height:420px}
+  .nav-links a:not(.nav-active){display:none}
+}
+</style>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const $=id=>document.getElementById(id);
+const fmt=b=>b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(2)+' MB';
+
+let mainBytes=null,pdfJsDoc=null,pageCount=0;
+let srcBytes=null;
+let mode='insert';
+let selectedRefPage=null;
+let deleteSet=new Set();
+let insertQueue=[];
+let selectedColor=[1,1,1];
+let activeTab='blank';
+let curPage=1;
+
+function showStatus(msg,type='info'){const e=$('statusBox');e.textContent=msg;e.className='status-box '+type}
+function clearStatus(){const e=$('statusBox');e.className='status-box';e.textContent=''}
+function showErr(msg){const e=$('errbox');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),4000)}
+function setProgress(p){const a=$('progArea'),f=$('progFill'),t=$('progTxt');if(p===null){a.style.display='none';f.style.width='0%'}else{a.style.display='';f.style.width=p+'%';t.textContent=p<100?`Memproses ${p}%...`:'Selesai!'}}
+function updateBtn(){const ok=mainBytes&&((mode==='insert'&&insertQueue.length>0)||(mode==='delete'&&deleteSet.size>0));$('btnProcess').disabled=!ok}
+
+function setupDrop(dzId,fiId,handler){
+  const dz=$(dzId),inp=$(fiId);
+  dz.addEventListener('click',()=>inp.click());
+  inp.addEventListener('change',e=>{if(e.target.files[0])handler(e.target.files[0]);inp.value='';});
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag-over')}));
+  ['dragleave','dragend'].forEach(ev=>dz.addEventListener(ev,()=>dz.classList.remove('drag-over')));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f&&f.name.toLowerCase().endsWith('.pdf'))handler(f);else showErr('Hanya file PDF yang diterima.')});
+}
+setupDrop('dropMain','fileMain',handleMain);
+setupDrop('dropSrc','fileSrc',handleSrc);
+
+async function handleMain(file){
+  showStatus('Memuat PDF...','info');
+  const buf=await file.arrayBuffer();mainBytes=new Uint8Array(buf);
+  try{
+    pdfJsDoc=await pdfjsLib.getDocument({data:mainBytes.slice()}).promise;
+    pageCount=pdfJsDoc.numPages;
+    $('dropMain').style.display='none';$('fileInfo').classList.add('vis');
+    $('fiName').textContent=file.name;$('fiMeta').textContent=`${pageCount} halaman · ${fmt(file.size)}`;
+    $('prevTitle').textContent=`${file.name} · ${pageCount} halaman`;
+    $('editorLayout').style.display='grid';
+    deleteSet.clear();insertQueue=[];selectedRefPage=null;
+    renderQueue();updateDelDisplay();clearStatus();
+    await buildThumbs();updateBtn();
+  }catch(e){showErr('Gagal membaca PDF: '+e.message);mainBytes=null;}
+}
+
+$('btnRemove').addEventListener('click',()=>{
+  mainBytes=null;pdfJsDoc=null;pageCount=0;
+  $('dropMain').style.display='';$('fileInfo').classList.remove('vis');
+  $('editorLayout').style.display='none';
+  clearThumbs();clearStatus();updateBtn();
+});
+
+async function handleSrc(file){
+  const buf=await file.arrayBuffer();srcBytes=new Uint8Array(buf);
+  try{
+    const tmp=await PDFLib.PDFDocument.load(srcBytes,{ignoreEncryption:true});const n=tmp.getPageCount();
+    $('dropSrc').style.display='none';$('srcInfo').classList.add('vis');
+    $('srcName').textContent=file.name;$('srcMeta').textContent=n+' halaman · '+fmt(file.size);
+    showStatus('PDF sumber dimuat: '+n+' halaman','ok');
+  }catch(e){showErr('Gagal membaca PDF sumber.')}
+}
+$('btnRemoveSrc').addEventListener('click',()=>{srcBytes=null;$('dropSrc').style.display='';$('srcInfo').classList.remove('vis')});
+
+$('modeInsert').addEventListener('click',()=>switchMode('insert'));
+$('modeDelete').addEventListener('click',()=>switchMode('delete'));
+function switchMode(m){
+  mode=m;
+  $('modeInsert').className='mode-btn mode-ins'+(m==='insert'?' active':'');
+  $('modeDelete').className='mode-btn mode-del'+(m==='delete'?' active':'');
+  $('insertPanel').style.display=m==='insert'?'':'none';
+  $('deletePanel').style.display=m==='delete'?'':'none';
+  const b=$('modeBadge');
+  if(m==='insert'){b.textContent='Mode: Sisipkan Halaman';b.className='mode-label ins'}
+  else{b.textContent='Mode: Hapus Halaman';b.className='mode-label del'}
+  selectedRefPage=null;refreshCards();updateBtn();
+}
+
+document.querySelectorAll('.tab-pill').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-pill').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-body').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');activeTab=b.dataset.tab;$('tab-'+activeTab).classList.add('active');
+}));
+
+document.querySelectorAll('.color-dot').forEach(o=>o.addEventListener('click',()=>{
+  document.querySelectorAll('.color-dot').forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');selectedColor=o.dataset.color.split(',').map(Number);
+}));
+
+$('insertPos').addEventListener('change',()=>{
+  const v=$('insertPos').value,need=v==='before'||v==='after';
+  $('clickHint').style.display=need?'':'none';
+  if(!need){selectedRefPage=null;refreshCards();}
+});
+
+async function buildThumbs(){
+  clearThumbs();$('thumbEmpty').style.display='none';
+  for(let i=1;i<=pageCount;i++){
+    const card=document.createElement('div');card.className='pg-card';card.id='pg-'+i;card.dataset.page=i;
+    const canvas=document.createElement('canvas');
+    const lbl=document.createElement('div');lbl.className='pg-num';lbl.textContent='Hal. '+i;
+    card.append(canvas,lbl);$('thumbGrid').appendChild(card);
+    card.addEventListener('click',()=>handleCardClick(i));
+    (async(pn,c)=>{
+      try{const pg=await pdfJsDoc.getPage(pn);const vp=pg.getViewport({scale:.42});c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;}catch(e){}
+    })(i,canvas);
+  }
+  $('btnScrollUp').disabled=false;$('btnScrollDown').disabled=false;$('pgCtr').textContent=`1/${pageCount}`;
+}
+
+function clearThumbs(){
+  [...$('thumbGrid').children].forEach(c=>{if(c.id!=='thumbEmpty')c.remove()});
+  $('thumbEmpty').style.display='';$('btnScrollUp').disabled=true;$('btnScrollDown').disabled=true;$('pgCtr').textContent='—';
+}
+
+function handleCardClick(n){
+  if(mode==='delete'){if(deleteSet.has(n))deleteSet.delete(n);else deleteSet.add(n);updateDelDisplay();refreshCards();updateBtn();return;}
+  const pos=$('insertPos').value;
+  if(pos==='start'||pos==='end'){showStatus('Posisi ini tidak perlu memilih halaman referensi.','info');return;}
+  selectedRefPage=selectedRefPage===n?null:n;
+  if(selectedRefPage)showStatus(`Halaman ${n} dipilih sebagai referensi.`,'info');else clearStatus();
+  refreshCards();
+}
+
+function refreshCards(){
+  for(let i=1;i<=pageCount;i++){
+    const el=$('pg-'+i);if(!el)continue;
+    el.classList.remove('state-del','state-ins');el.removeAttribute('data-ins-label');
+    if(mode==='delete'&&deleteSet.has(i))el.classList.add('state-del');
+    else if(mode==='insert'&&selectedRefPage===i){
+      el.classList.add('state-ins');
+      el.dataset.insLabel=$('insertPos').value==='before'?'⬆ SISIP SEBELUM':'⬇ SISIP SESUDAH';
+    }
+  }
+}
+
+function updateDelDisplay(){
+  const s=[...deleteSet].sort((a,b)=>a-b);
+  $('delCount').textContent=s.length;
+  $('delPagesList').textContent=s.length?'Halaman: '+s.join(', '):'Belum ada halaman dipilih.';
+}
+$('btnClearDel').addEventListener('click',()=>{deleteSet.clear();updateDelDisplay();refreshCards();updateBtn()});
+
+$('btnScrollUp').addEventListener('click',()=>{if(curPage>1){curPage--;scrollToPage(curPage)}});
+$('btnScrollDown').addEventListener('click',()=>{if(curPage<pageCount){curPage++;scrollToPage(curPage)}});
+function scrollToPage(n){const el=$('pg-'+n);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});$('pgCtr').textContent=`${n}/${pageCount}`}
+$('thumbGrid').addEventListener('scroll',function(){for(let i=pageCount;i>=1;i--){const el=$('pg-'+i);if(el&&el.offsetTop-this.scrollTop<=80){curPage=i;break}}$('pgCtr').textContent=`${curPage}/${pageCount}`});
+
+$('btnAddQ').addEventListener('click',addQ);
+function addQ(){
+  if(!pdfJsDoc){showStatus('Upload PDF terlebih dahulu.','err');return}
+  const pos=$('insertPos').value,count=parseInt($('insertCount').value)||1;
+  const needRef=pos==='before'||pos==='after';
+  if(needRef&&!selectedRefPage){showStatus('Klik thumbnail halaman untuk memilih referensi.','err');return}
+  if(activeTab==='frompdf'&&!srcBytes){showStatus('Upload PDF sumber terlebih dahulu.','err');return}
+  insertQueue.push({id:Date.now(),pos,refPage:selectedRefPage,count,type:activeTab,color:[...selectedColor],srcPages:$('srcPages').value.trim(),blankSize:$('blankSize').value});
+  selectedRefPage=null;refreshCards();renderQueue();showStatus('✓ Ditambahkan ke antrian.','ok');updateBtn();
+}
+function descQ(e){const pd=e.pos==='before'?`sebelum hal.${e.refPage}`:e.pos==='after'?`sesudah hal.${e.refPage}`:e.pos==='start'?'di awal':'di akhir';return `${e.count}× ${e.type==='blank'?'kosong':'dari PDF'} ${pd}`}
+function renderQueue(){
+  const wrap=$('queueWrap'),items=$('queueItems');
+  if(!insertQueue.length){wrap.style.display='none';return}
+  wrap.style.display='';
+  items.innerHTML=insertQueue.map((e,i)=>`<div class="q-item"><span><span class="q-tag">SISIP</span>${descQ(e)}</span><button class="q-rm" onclick="removeQ(${i})">✕</button></div>`).join('');
+}
+window.removeQ=function(i){insertQueue.splice(i,1);renderQueue();if(!insertQueue.length)clearStatus();updateBtn()};
+$('btnClearQ').addEventListener('click',()=>{insertQueue=[];renderQueue();clearStatus();updateBtn()});
+
+function parseRanges(str,max){
+  if(!str)return Array.from({length:max},(_,i)=>i);
+  const res=new Set();
+  str.split(',').forEach(p=>{p=p.trim();if(p.includes('-')){const[a,b]=p.split('-').map(Number);for(let i=a;i<=b&&i<=max;i++)res.add(i-1)}else{const n=parseInt(p);if(!isNaN(n)&&n>=1&&n<=max)res.add(n-1)}});
+  return[...res].sort((a,b)=>a-b);
+}
+function resolveIdx(entry,doc){const cur=doc.getPageCount();if(entry.pos==='start')return 0;if(entry.pos==='end')return cur;if(entry.pos==='before')return Math.min((entry.refPage||1)-1,cur);return Math.min(entry.refPage||1,cur)}
+
+$('btnProcess').addEventListener('click',processAll);
+async function processAll(){
+  if(!mainBytes)return;
+  setProgress(5);showStatus('Memproses...','info');$('btnProcess').disabled=true;
+  try{
+    const pdfDoc=await PDFLib.PDFDocument.load(mainBytes,{ignoreEncryption:true});
+    if(mode==='delete'&&deleteSet.size>0){
+      if(deleteSet.size>=pdfDoc.getPageCount()){showStatus('Tidak bisa menghapus semua halaman!','err');$('btnProcess').disabled=false;setProgress(null);return}
+      [...deleteSet].sort((a,b)=>b-a).forEach(p=>{if(p>=1&&p<=pdfDoc.getPageCount())pdfDoc.removePage(p-1)});
+      setProgress(80);
+    }
+    if(mode==='insert'&&insertQueue.length>0){
+      const sorted=[...insertQueue].sort((a,b)=>resolveIdx(b,pdfDoc)-resolveIdx(a,pdfDoc));
+      for(let i=0;i<sorted.length;i++){
+        setProgress(10+Math.round((i/sorted.length)*80));
+        const entry=sorted[i];let idx=resolveIdx(entry,pdfDoc);idx=Math.max(0,Math.min(idx,pdfDoc.getPageCount()));
+        if(entry.type==='blank'){
+          const SIZES={A4:[595.28,841.89],A5:[419.53,595.28],LETTER:[612,792]};let w,h;
+          if(entry.blankSize==='CUSTOM'){const ref=pdfDoc.getPage(Math.max(0,idx-1));const sz=ref.getSize();w=sz.width;h=sz.height}else[w,h]=SIZES[entry.blankSize];
+          for(let k=0;k<entry.count;k++){const np=pdfDoc.insertPage(idx+k,[w,h]);const[r,g,b]=entry.color;np.drawRectangle({x:0,y:0,width:w,height:h,color:PDFLib.rgb(r,g,b)})}
+        }else if(entry.type==='frompdf'&&srcBytes){
+          const srcDoc=await PDFLib.PDFDocument.load(srcBytes,{ignoreEncryption:true});
+          const idxs=parseRanges(entry.srcPages,srcDoc.getPageCount());
+          const copied=await pdfDoc.copyPages(srcDoc,idxs);
+          for(let k=0;k<entry.count;k++)for(let ci=0;ci<copied.length;ci++)pdfDoc.insertPage(idx+k*copied.length+ci,copied[ci]);
+        }
+      }
+    }
+    setProgress(96);const out=await pdfDoc.save({useObjectStreams:true});setProgress(100);
+    const blob=new Blob([out],{type:'application/pdf'});const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='hasil_edit_'+(mode==='delete'?'hapus':'sisip')+'.pdf';a.click();URL.revokeObjectURL(a.href);
+    const desc=mode==='delete'?`${deleteSet.size} halaman berhasil dihapus`:`${insertQueue.length} operasi sisipan diterapkan`;
+    showStatus('✅ '+desc+'. PDF diunduh.','ok');setTimeout(()=>setProgress(null),1500);$('btnProcess').disabled=false;
+  }catch(e){setProgress(null);showErr('Gagal: '+e.message);showStatus('Gagal: '+e.message,'err');$('btnProcess').disabled=false}
+}
+
+switchMode('insert');
+$('clickHint').style.display='';
+</script>
