@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kritik & Saran — Penerbit Luqmanulhakim</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;500;600&display=swap');
+
+  :root{
+    --ink:#1c2b26;
+    --paper:#f7f3ea;
+    --emerald:#1f4d3f;
+    --emerald-dark:#153c31;
+    --gold:#b6862c;
+    --line:#d8cfb8;
+    --error:#a13a2f;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Sans 3', system-ui, sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:48px 16px;
+  }
+
+  .card{
+    width:100%;
+    max-width:560px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:2px;
+    box-shadow:0 1px 2px rgba(28,43,38,0.04);
+    overflow:hidden;
+  }
+
+  .card__band{
+    height:6px;
+    background:linear-gradient(90deg, var(--emerald) 0%, var(--gold) 100%);
+  }
+
+  .card__body{ padding:36px 32px 32px; }
+
+  h1{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    font-size:1.7rem;
+    color:var(--emerald-dark);
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+
+  .subtitle{
+    margin:0 0 28px;
+    color:#5c6b64;
+    font-size:0.95rem;
+  }
+
+  label{
+    display:block;
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--emerald-dark);
+    margin-bottom:6px;
+  }
+
+  .req{ color:var(--error); font-weight:400; }
+
+  .field{ margin-bottom:20px; }
+
+  input[type=text], input[type=tel], textarea{
+    width:100%;
+    font-family:inherit;
+    font-size:0.98rem;
+    color:var(--ink);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:11px 12px;
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+
+  input:focus, textarea:focus{
+    border-color:var(--emerald);
+    background:#fff;
+  }
+
+  textarea{ resize:vertical; min-height:90px; }
+
+  .hint{
+    font-size:0.8rem;
+    color:#8a9089;
+    margin-top:5px;
+  }
+
+  button{
+    width:100%;
+    background:var(--emerald);
+    color:#fff;
+    font-family:inherit;
+    font-size:1rem;
+    font-weight:600;
+    border:none;
+    border-radius:2px;
+    padding:13px 20px;
+    cursor:pointer;
+    transition:background .15s ease;
+    margin-top:8px;
+  }
+
+  button:hover{ background:var(--emerald-dark); }
+  button:disabled{ background:#9aa8a1; cursor:not-allowed; }
+
+  .status{
+    margin-top:16px;
+    font-size:0.9rem;
+    padding:12px 14px;
+    border-radius:2px;
+    display:none;
+  }
+
+  .status--ok{
+    display:block;
+    background:#eef5f0;
+    color:var(--emerald-dark);
+    border:1px solid #bcd6c6;
+  }
+
+  .status--err{
+    display:block;
+    background:#fbeeec;
+    color:var(--error);
+    border:1px solid #e7c2ba;
+  }
+
+  .footer-note{
+    text-align:center;
+    font-size:0.78rem;
+    color:#9aa199;
+    margin-top:18px;
+  }
+
+  @media (max-width: 480px){
+    body{ padding:0; }
+    .card{ max-width:100%; border-radius:0; border-left:none; border-right:none; min-height:100vh; }
+    .card__body{ padding:28px 20px 24px; }
+    h1{ font-size:1.4rem; }
+  }
+
+  /* ---- Modal ---- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(21,60,49,0.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+  }
+
+  .modal-overlay.open{ display:flex; }
+
+  .modal{
+    background:#fff;
+    width:100%;
+    max-width:400px;
+    border-radius:2px;
+    border-top:5px solid var(--gold);
+    padding:32px 28px 26px;
+    text-align:center;
+    box-shadow:0 12px 32px rgba(21,60,49,0.25);
+  }
+
+  .modal__icon{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:#eef5f0;
+    color:var(--emerald);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 16px;
+    font-size:1.4rem;
+  }
+
+  .modal h2{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    font-size:1.25rem;
+    color:var(--emerald-dark);
+    margin:0 0 10px;
+  }
+
+  .modal p{
+    font-size:0.95rem;
+    color:#4a5650;
+    margin:0 0 22px;
+    line-height:1.6;
+  }
+
+  .modal button{ margin-top:0; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card__band"></div>
+  <div class="card__body">
+    <h1>Kritik, Saran & Masukan</h1>
+    <p class="subtitle">Untuk perbaikan buku-buku Penerbit Luqmanulhakim. Baarokallohu fiikum atas kepedulian Anda.</p>
+
+    <form id="feedbackForm">
+      <div class="field">
+        <label for="nama">Nama <span class="req">*</span></label>
+        <input type="text" id="nama" name="nama" required autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="hp">No. HP / WhatsApp</label>
+        <input type="tel" id="hp" name="hp" autocomplete="tel" placeholder="08xxxxxxxxxx (opsional)">
+      </div>
+
+      <div class="field">
+        <label for="buku">Judul Buku & Halaman <span class="req">*</span></label>
+        <input type="text" id="buku" name="buku" required placeholder="Contoh: IPAS Kelas 1, hal. 24">
+      </div>
+
+      <div class="field">
+        <label for="alasan">Alasan Masukan <span class="req">*</span></label>
+        <textarea id="alasan" name="alasan" required placeholder="Apa yang menjadi perhatian atau kekhawatiran Anda?"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="saran">Masukan / Saran</label>
+        <textarea id="saran" name="saran" placeholder="Usulan perbaikan (opsional)"></textarea>
+        <div class="hint">Boleh dikosongkan jika hanya ingin menyampaikan pertanyaan/perhatian.</div>
+      </div>
+
+      <button type="submit" id="submitBtn">Kirim Masukan</button>
+      <div id="statusMsg" class="status"></div>
+    </form>
+
+    <div class="footer-note">Masukan Anda akan kami baca dan bahas untuk perbaikan buku.</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="thanksModal">
+  <div class="modal">
+    <div class="modal__icon">✓</div>
+    <h2>Jazakumullahu Khoiron</h2>
+    <p>Terima kasih atas perhatian dan kontribusinya. Semoga bermanfaat untuk kaum muslimin secara umum. Baarokallohu fiikum.</p>
+    <button type="button" id="closeModalBtn">Tutup</button>
+  </div>
+</div>
+
+<script>
+  // Ganti URL ini dengan URL Web App hasil deploy Google Apps Script Anda.
+  // Cara mendapatkannya: Extensions > Apps Script di Google Sheet tujuan,
+  // tempel kode Code.gs (lihat file terpisah), lalu Deploy > New deployment
+  // > Web app, akses: "Anyone".
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmy_UiSuQNF6dkwQm-w8KRj8S1-AInSggJjzSIzr0FJ5_QHR-JAQupiR2annzPQAUE/exec";
+
+  const form = document.getElementById('feedbackForm');
+  const btn = document.getElementById('submitBtn');
+  const status = document.getElementById('statusMsg');
+  const modal = document.getElementById('thanksModal');
+
+  document.getElementById('closeModalBtn').addEventListener('click', function(){
+    modal.classList.remove('open');
+  });
+  modal.addEventListener('click', function(e){
+    if (e.target === modal) modal.classList.remove('open');
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    status.className = 'status';
+    status.textContent = '';
+
+    if (SCRIPT_URL.indexOf('GANTI_DENGAN') === 0) {
+      status.className = 'status status--err';
+      status.textContent = 'SCRIPT_URL belum diisi — lihat komentar di kode.';
+      return;
+    }
+
+    const data = new FormData(form);
+    btn.disabled = true;
+    btn.textContent = 'Mengirim...';
+
+    fetch(SCRIPT_URL, { method: 'POST', body: data })
+      .then(function(res){ return res.json(); })
+      .then(function(res){
+        if (res && res.result === 'success') {
+          form.reset();
+          document.getElementById('thanksModal').classList.add('open');
+        } else {
+          throw new Error((res && res.error) || 'Gagal mengirim');
+        }
+      })
+      .catch(function(err){
+        status.className = 'status status--err';
+        status.textContent = 'Maaf, terjadi kendala saat mengirim. Silakan coba lagi. (' + err.message + ')';
+      })
+      .finally(function(){
+        btn.disabled = false;
+        btn.textContent = 'Kirim Masukan';
+      });
+  });
+</script>
+
+</body>
+</html>
