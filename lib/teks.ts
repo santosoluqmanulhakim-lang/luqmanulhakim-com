@@ -124,7 +124,7 @@ export const UI = {
 export const SITUS = {
   nama: 'Uji Materi SDIT',
   penerbit: 'Penerbit Luqmanulhakim',
-  tautanBuku: 'Materi Uji',
+  tautanBuku: 'Lihat Materi',
   footer: 'Uji Materi SDIT · Penerbit Luqmanulhakim · Kunci jawaban tidak ditampilkan agar tes tetap adil.',
   bukuJudul: 'Ingin mendalami lebih lanjut? Ingin tahu jawabannya?',
   bukuKetUmum: 'Semua materi tes ini ada di buku SDIT terbitan Penerbit Luqmanulhakim.',
