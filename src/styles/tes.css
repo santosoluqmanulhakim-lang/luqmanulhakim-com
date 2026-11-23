@@ -350,6 +350,48 @@ html:has(.tes-root) { background: #c4def2; }
   html:has(.tes-root) { background: #0f2536; }
   .tes-root:not([data-theme="light"]) :is(.ubin a, .tes-komp, .card, .card-link, .opt, .belum-tepat) { background: rgba(10,25,36,.6); }
 }
+
+/* Beranda: materi putih dengan border emas; kompetensi emas lembut dengan border putih */
+.beranda .ubin a {
+  background: #fff;
+  border: 2px solid #d8b85a;
+  box-shadow: 0 2px 8px rgba(133, 100, 25, .10);
+  color: #13304a;
+}
+.beranda .ubin a:hover {
+  background: #fff;
+  border-color: #c69b35;
+  box-shadow: 0 6px 16px rgba(133, 100, 25, .14);
+}
+.beranda .tes-komp {
+  background: #f8edc9;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 10px rgba(133, 100, 25, .12);
+  color: #13304a;
+}
+.beranda .tes-komp:hover {
+  background: #f5e5b5;
+  border-color: #fff;
+  box-shadow: 0 6px 16px rgba(133, 100, 25, .16);
+}
+.beranda .tk-teks b,
+.beranda .tk-teks span,
+.beranda .tk-panah,
+.beranda .tes-komp {
+  color: #13304a;
+}
+.tes-root:not([data-theme="light"]) .beranda .ubin a,
+.tes-root:not([data-theme="light"]) .beranda .tes-komp {
+  color: #13304a;
+}
+.tes-root:not([data-theme="light"]) .beranda .ubin a {
+  background: #fff;
+  border-color: #d8b85a;
+}
+.tes-root:not([data-theme="light"]) .beranda .tes-komp {
+  background: #f8edc9;
+  border-color: #fff;
+}
 /* HP sangat pendek (mis. 320×568) */
 @media (max-height: 600px) and (orientation: portrait) {
   .beranda { gap: 10px; padding-top: 8px; padding-bottom: 8px; }
