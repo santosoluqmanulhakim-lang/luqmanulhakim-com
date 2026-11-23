@@ -6,6 +6,14 @@ dist/
 # dependencies
 node_modules/
 
+.wrangler/
+.dev.vars
+# Bank soal + kunci tidak boleh masuk Git. Contoh tetap dipertahankan.
+soal/*
+!soal/contoh/
+!soal/README.md
+!soal/PANDUAN-PENULISAN.md
+
 # logs
 npm-debug.log*
 yarn-debug.log*

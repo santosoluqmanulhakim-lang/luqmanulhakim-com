@@ -1,0 +1,10 @@
+---
+import { SITUS } from '../../../lib/teks';
+interface Props { kelas?: number; mapel?: string; keterangan?: string }
+const { kelas, mapel, keterangan = SITUS.bukuKetUmum } = Astro.props;
+const href = 'https://luqmanulhakim.com/katalog/';
+---
+<aside class="book-cta">
+  <p>{SITUS.bukuJudul}<span>{keterangan}</span></p>
+  <a class="btn btn-pri" href={href}>{SITUS.bukuTombol}</a>
+</aside>

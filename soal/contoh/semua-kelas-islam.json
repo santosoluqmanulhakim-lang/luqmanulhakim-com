@@ -1,0 +1,56 @@
+{
+ "_catatan": "CONTOH format saja. Wawasan keislaman umum, berlaku untuk semua kelas.",
+ "kelas": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "mapel": "islam",
+ "soal": [
+  {
+   "id": "contoh-islam-01",
+   "tipe": "pg",
+   "level": "lots",
+   "pertanyaan": "Wahyu yang pertama kali diturunkan kepada Rasulullah ﷺ adalah…",
+   "opsi": {
+    "a": "QS. Al-Fatihah: 1–7",
+    "b": "QS. Al-'Alaq: 1–5",
+    "c": "QS. Al-Muddatstsir: 1–7",
+    "d": "QS. Al-Ikhlas: 1–4"
+   },
+   "kunci": "b"
+  },
+  {
+   "id": "contoh-islam-02",
+   "tipe": "bs",
+   "level": "lots",
+   "pertanyaan": "Hadits \"Menuntut ilmu itu wajib atas setiap muslim\" diriwayatkan oleh Ibnu Majah.",
+   "kunci": "benar"
+  },
+  {
+   "id": "contoh-islam-03",
+   "tipe": "pg",
+   "level": "hots",
+   "stimulus": "Guru kelas 5 ingin mengaitkan materi pembentukan hujan dengan ayat Al-Qur'an, tanpa memaksakan tafsir yang berlebihan.",
+   "pertanyaan": "Ayat yang paling tepat dirujuk karena menggambarkan awan yang digiring, dihimpun, ditumpuk, lalu turun hujan dari celah-celahnya adalah…",
+   "opsi": {
+    "a": "QS. An-Nur: 43",
+    "b": "QS. Al-Baqarah: 255",
+    "c": "QS. Al-Kautsar: 1",
+    "d": "QS. An-Nas: 1"
+   },
+   "kunci": "a"
+  },
+  {
+   "id": "contoh-islam-04",
+   "tipe": "bs",
+   "level": "mots",
+   "stimulus": "Seorang siswa bertanya: \"Kalau hujan terjadi karena penguapan, berarti bukan Allah yang menurunkan hujan, ya, Bu?\"",
+   "pertanyaan": "Jawaban yang tepat adalah menjelaskan bahwa proses penguapan dan pengembunan adalah sunnatullah, yaitu cara Allah menurunkan hujan, sehingga keduanya tidak bertentangan.",
+   "kunci": "benar"
+  }
+ ]
+}

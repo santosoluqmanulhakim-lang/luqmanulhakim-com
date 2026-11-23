@@ -1,0 +1,23 @@
+# Konfigurasi Cloudflare Pages + D1 untuk Tes Guru SDIT.
+# Bila repo luqmanulhakim.com sudah punya wrangler.toml, GABUNGKAN bagian [[d1_databases]] dan [vars] ke file itu.
+name = "luqmanulhakim"
+pages_build_output_dir = "./dist"
+compatibility_date = "2025-06-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tes-guru"
+database_id = "3679abe1-da65-448d-aa56-3c01d8276612"
+migrations_dir = "migrations"
+
+[vars]
+SOAL_PER_BAB = "2"       # tes materi: soal per bab (8 bab = 16 soal per mapel)
+SOAL_KOMPETENSI = "10"   # tes kompetensi: 10 pedagogis + 10 adab
+SOAL_PER_MAPEL = "16"    # cadangan bila bank materi tanpa nomor bab
+BATAS_MENGUASAI = "80"  # skor minimal tiap mapel untuk kalimat "menguasai"
+BATAS_SESI_HARIAN = "30" # sesi baru maksimal per IP per 24 jam
+KOMPOSISI_LEVEL = "lots:30,mots:40,hots:30" # komposisi level tes kompetensi (persen)
+MIN_PESERTA_PERSENTIL = "30" # di bawah ini, persentil dibandingkan dengan SKOR ACUAN (ditulis "skor acuan")
+ACUAN_SKOR = "75-90"          # rentang skor acuan
+ACUAN_JUMLAH = "50"           # jumlah skor acuan (sebaran rata)
+# IP_SALT jangan ditulis di sini: pasang sebagai secret (lihat README).

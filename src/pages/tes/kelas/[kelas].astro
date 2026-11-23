@@ -1,0 +1,25 @@
+---
+import TesLayout from '../../../layouts/TesLayout.astro';
+import BookCTA from '../../../components/tes/BookCTA.astro';
+
+export function getStaticPaths() {
+  return [1, 2, 3, 4, 5, 6].map((k) => ({ params: { kelas: String(k) } }));
+}
+const kelas = Number(Astro.params.kelas);
+---
+<TesLayout title={`Tes Guru SDIT Kelas ${kelas} — IPAS, MTK, B. Indonesia`}>
+  <main class="tes-wrap">
+    <div id="tes-app" data-kelas={kelas} aria-live="polite">
+      <p class="t-muted">Menyiapkan tes Kelas {kelas}…</p>
+      <noscript><p class="pesan">Tes ini memerlukan JavaScript.</p></noscript>
+    </div>
+    <div id="tes-buku" hidden>
+      <BookCTA kelas={kelas} keterangan={`Materi tes Kelas ${kelas} ada di buku SDIT terbitan Penerbit Luqmanulhakim.`} />
+    </div>
+  </main>
+</TesLayout>
+<script>
+  import { jalankanTes } from '../../../scripts/tes-app';
+  const el = document.getElementById('tes-app');
+  if (el) jalankanTes(el, Number(el.dataset.kelas), 'materi');
+</script>

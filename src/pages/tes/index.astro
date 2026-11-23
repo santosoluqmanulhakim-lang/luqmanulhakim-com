@@ -1,0 +1,44 @@
+---
+// Beranda Tes Guru SDIT — sengaja singkat: langsung ke pilihan tes.
+// Teks di halaman ini boleh diubah langsung di sini.
+import TesLayout from '../../layouts/TesLayout.astro';
+const kelas = [1, 2, 3, 4, 5, 6];
+---
+<TesLayout title="Uji Kemampuan — Ketahui sejauh mana Anda menguasai materi SDIT">
+  <main class="tes-wrap beranda">
+    <header class="beranda-hero">
+      <h1>Sejauh mana Anda menguasai materi SDIT?</h1>
+      <p>Gratis · ±5 menit per mapel · hasil bisa dibagikan</p>
+      <p class="bukti" id="bukti" hidden><span class="live" aria-hidden="true"></span><span id="bukti-teks"></span></p>
+    </header>
+
+    <div class="beranda-pilih">
+    <section class="pilih-tes" aria-labelledby="t-materi">
+      <h2 id="t-materi">Penguasaan Materi <small>IPAS · MTK · B. Indo</small></h2>
+      <nav class="ubin">
+        {kelas.map((k) => (
+          <a href={`/tes/kelas/${k}`}><span>Kelas</span><b>{k}</b></a>
+        ))}
+      </nav>
+    </section>
+
+    <section class="pilih-tes" aria-labelledby="t-komp">
+      <h2 id="t-komp">Kompetensi Guru <small>Pedagogis · Adab</small></h2>
+      <a class="tes-komp" href="/tes/kompetensi">
+        <span class="tk-ikon" aria-hidden="true">🎯</span>
+        <span class="tk-teks"><b>Tes Kompetensi Guru</b><span>20 soal · CP 2025 semua fase & adab guru (ringkasan Tadzkiratus Sami')</span></span>
+        <span class="tk-panah" aria-hidden="true">→</span>
+      </a>
+    </section>
+    </div>
+  </main>
+</TesLayout>
+<script>
+  // Bukti sosial: hanya tampil bila sudah cukup banyak peserta asli.
+  const MIN = 50;
+  fetch('/api/tes/statistik').then((r) => (r.ok ? r.json() : null)).then((d: { total: number } | null) => {
+    if (!d || d.total < MIN) return;
+    document.getElementById('bukti-teks')!.textContent = `${new Intl.NumberFormat('id-ID').format(d.total)} guru sudah mencoba`;
+    document.getElementById('bukti')!.hidden = false;
+  }).catch(() => {});
+</script>

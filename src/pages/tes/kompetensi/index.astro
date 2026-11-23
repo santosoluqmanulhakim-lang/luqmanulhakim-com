@@ -1,0 +1,22 @@
+---
+// Tes Kompetensi Guru: SATU tes untuk semua guru (pedagogis CP 2025 + adab guru), nilai terpisah dari tes materi.
+import TesLayout from '../../../layouts/TesLayout.astro';
+import BookCTA from '../../../components/tes/BookCTA.astro';
+---
+<TesLayout title="Tes Kompetensi Guru SDIT — Pedagogis & Adab Guru"
+  description="Uji kompetensi pedagogis (CP 2025 semua fase, pembelajaran mendalam, asesmen) dan adab guru. Gratis, hasil bisa dibagikan.">
+  <main class="tes-wrap">
+    <div id="tes-app" aria-live="polite">
+      <p class="t-muted">Menyiapkan Tes Kompetensi Guru…</p>
+      <noscript><p class="pesan">Tes ini memerlukan JavaScript.</p></noscript>
+    </div>
+    <div id="tes-buku" hidden>
+      <BookCTA keterangan="Panduan guru, CP, dan catatan untuk guru ada di buku SDIT terbitan Penerbit Luqmanulhakim." />
+    </div>
+  </main>
+</TesLayout>
+<script>
+  import { jalankanTes } from '../../../scripts/tes-app';
+  const el = document.getElementById('tes-app');
+  if (el) jalankanTes(el, 0, 'kompetensi');
+</script>

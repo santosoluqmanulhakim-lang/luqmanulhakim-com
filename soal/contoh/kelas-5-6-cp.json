@@ -1,0 +1,61 @@
+{
+ "_catatan": "CONTOH format saja. Soal CP harus dicocokkan dengan dokumen CP 2025 (BSKAP) sebelum dipakai.",
+ "kelas": [
+  5,
+  6
+ ],
+ "mapel": "cp",
+ "soal": [
+  {
+   "id": "contoh-cpC-01",
+   "tipe": "pg",
+   "level": "lots",
+   "pertanyaan": "Dalam Kurikulum Merdeka, kelas 5 dan 6 SD termasuk fase…",
+   "opsi": {
+    "a": "Fase A",
+    "b": "Fase B",
+    "c": "Fase C",
+    "d": "Fase D"
+   },
+   "kunci": "c",
+   "rujukan": "CP 2025 — pembagian fase"
+  },
+  {
+   "id": "contoh-cpC-02",
+   "tipe": "bs",
+   "level": "lots",
+   "pertanyaan": "Capaian Pembelajaran ditulis per fase, bukan per tahun ajaran, sehingga guru kelas 5 dan 6 berbagi satu rumusan CP untuk tiap mapel.",
+   "kunci": "benar",
+   "rujukan": "CP 2025"
+  },
+  {
+   "id": "contoh-cpC-03",
+   "tipe": "pg",
+   "level": "mots",
+   "pertanyaan": "Kegiatan siswa membuat poster hasil pengamatan lalu menyampaikannya di depan kelas paling sesuai dengan keterampilan proses IPAS…",
+   "opsi": {
+    "a": "mengamati",
+    "b": "mempertanyakan dan memprediksi",
+    "c": "mengomunikasikan hasil",
+    "d": "merencanakan penyelidikan"
+   },
+   "kunci": "c",
+   "rujukan": "CP IPAS — keterampilan proses"
+  },
+  {
+   "id": "contoh-cpC-04",
+   "tipe": "pg",
+   "level": "hots",
+   "stimulus": "Bu Fatimah merancang pembelajaran siklus air. Langkahnya: (1) menjelaskan tahapan siklus air di papan tulis, (2) siswa menyalin, (3) siswa mengerjakan 10 soal pilihan ganda.",
+   "pertanyaan": "Perbaikan yang PALING membuat rancangan ini sesuai tuntutan keterampilan proses dalam CP IPAS adalah…",
+   "opsi": {
+    "a": "Menambah jumlah soal latihan menjadi 20",
+    "b": "Mengawali dengan percobaan sederhana penguapan dan pengembunan, lalu siswa menyimpulkan tahapannya sendiri",
+    "c": "Meminta siswa menghafal istilah evaporasi, kondensasi, presipitasi",
+    "d": "Menayangkan video lalu langsung memberi kuis"
+   },
+   "kunci": "b",
+   "rujukan": "CP IPAS — keterampilan proses"
+  }
+ ]
+}

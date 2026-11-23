@@ -1,0 +1,10 @@
+---
+// Alamat lama per fase (/tes/kompetensi/1 … /6) dialihkan ke tes kompetensi tunggal.
+export function getStaticPaths() {
+  return [1, 2, 3, 4, 5, 6].map((k) => ({ params: { kelas: String(k) } }));
+}
+---
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8" /><meta http-equiv="refresh" content="0; url=/tes/kompetensi" />
+<link rel="canonical" href="/tes/kompetensi" /><meta name="robots" content="noindex" /><title>Tes Kompetensi Guru</title></head>
+<body><a href="/tes/kompetensi">Buka Tes Kompetensi Guru</a></body></html>

@@ -1,0 +1,103 @@
+{
+ "_catatan": "CONTOH format saja — bukan soal dari naskah. Ganti dengan soal dari naskah IPAS Kelas 5.",
+ "kelas": 5,
+ "mapel": "ipas",
+ "soal": [
+  {
+   "id": "contoh-k5-ipas-01",
+   "tipe": "pg",
+   "pertanyaan": "Zat hijau daun yang membantu tumbuhan membuat makanan disebut…",
+   "opsi": {
+    "a": "klorofil",
+    "b": "stomata",
+    "c": "kambium",
+    "d": "xilem"
+   },
+   "kunci": "a",
+   "rujukan": "contoh",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-ipas-02",
+   "tipe": "pg",
+   "pertanyaan": "Proses tumbuhan membuat makanan dengan bantuan cahaya matahari disebut…",
+   "opsi": {
+    "a": "respirasi",
+    "b": "fotosintesis",
+    "c": "transpirasi",
+    "d": "evaporasi"
+   },
+   "kunci": "b",
+   "rujukan": "contoh",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-ipas-03",
+   "tipe": "pg",
+   "pertanyaan": "Organ pernapasan utama pada manusia adalah…",
+   "opsi": {
+    "a": "jantung",
+    "b": "lambung",
+    "c": "paru-paru",
+    "d": "ginjal"
+   },
+   "kunci": "c",
+   "rujukan": "contoh",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-ipas-04",
+   "tipe": "bs",
+   "pertanyaan": "Air hujan berasal dari uap air yang mengembun di awan.",
+   "kunci": "benar",
+   "rujukan": "contoh",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-ipas-05",
+   "tipe": "bs",
+   "pertanyaan": "Bunyi dapat merambat di ruang hampa udara.",
+   "kunci": "salah",
+   "rujukan": "contoh",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-ipas-06",
+   "tipe": "pg",
+   "level": "mots",
+   "pertanyaan": "Daun tanaman di pot yang disimpan di dalam lemari gelap selama seminggu berubah pucat kekuningan. Penyebab paling tepat adalah…",
+   "opsi": {
+    "a": "tanaman kekurangan air",
+    "b": "klorofil tidak terbentuk karena tidak ada cahaya",
+    "c": "suhu di lemari terlalu dingin",
+    "d": "tanaman tidak mendapat pupuk"
+   },
+   "kunci": "b",
+   "rujukan": "contoh"
+  },
+  {
+   "id": "contoh-k5-ipas-07",
+   "tipe": "pg",
+   "level": "hots",
+   "stimulus": "Pak Hasan menanam kacang hijau di tiga gelas plastik yang sama:\nGelas A: kapas basah, di dekat jendela.\nGelas B: kapas kering, di dekat jendela.\nGelas C: kapas basah, di dalam kardus tertutup.\nSetelah lima hari, kecambah A tumbuh hijau dan tegak, B tidak tumbuh, C tumbuh tinggi kurus dan pucat.",
+   "pertanyaan": "Kesimpulan yang PALING didukung oleh percobaan Pak Hasan adalah…",
+   "opsi": {
+    "a": "Kacang hijau membutuhkan air untuk berkecambah, dan cahaya untuk tumbuh hijau dan kokoh",
+    "b": "Kacang hijau hanya membutuhkan cahaya untuk tumbuh",
+    "c": "Kecambah di tempat gelap pasti mati setelah lima hari",
+    "d": "Kapas basah membuat kecambah tumbuh lebih tinggi daripada tanah"
+   },
+   "kunci": "a",
+   "rujukan": "contoh"
+  },
+  {
+   "id": "contoh-k5-ipas-08",
+   "tipe": "bs",
+   "level": "hots",
+   "stimulus": "Seorang siswa berkata: \"Paru-paru ikan ada di insangnya, jadi ikan juga bernapas dengan paru-paru.\"",
+   "pertanyaan": "Pernyataan siswa tersebut tepat dan tidak perlu diluruskan oleh guru.",
+   "kunci": "salah",
+   "rujukan": "contoh"
+  }
+ ]
+}

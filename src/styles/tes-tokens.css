@@ -1,0 +1,60 @@
+/* v10: tema biru (adem–lembut–adem) untuk semua laman. */
+/* Tes Guru SDIT — token dari design system "Tes Guru SDIT" (tokens.json).
+   Dibatasi ke .tes-root supaya tidak bentrok dengan gaya situs utama. */
+.tes-root {
+  --surface-100: #f5f9fd;
+  --surface-200: #e8f2fa;
+  --surface-300: #d5e6f3;
+  --line: #b8d2e7;
+  --ink: #13304a;
+  --ink-muted: #4d6a80;
+  --brand: #1f6fa8;
+  --brand-strong: #164a6e;
+  --on-brand: #ffffff;
+  --gold: #e3a72f;
+  --ink-on-gold: #1b2a2f;
+  --gold-tint: #f7e6bd;
+  --subject-ipas: #2f9466;
+  --subject-mtk: #f0b44c;
+  --subject-bi: #a8355a;
+  --subject-cp: #3d6fb5;
+  --subject-islam: #7a5aa6;
+  --focus: #1f6fa8;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-10: 40px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(27,42,47,0.06), 0 8px 24px rgba(27,42,47,0.06);
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-arabic: "Amiri", "Noto Naskh Arabic", serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  .tes-root:not([data-theme="light"]) {
+    --surface-100: #0e1c27;
+    --surface-200: #142838;
+    --surface-300: #1d3547;
+    --line: #2c4a60;
+    --ink: #e6f0f8;
+    --ink-muted: #9fb6c8;
+    --brand: #7cc0ef;
+    --brand-strong: #a9d6f6;
+    --on-brand: #0b1a24;
+    --gold: #e8b44a;
+    --ink-on-gold: #121719;
+    --gold-tint: #3a3221;
+    --subject-ipas: #4cc48a;
+    --subject-mtk: #f2c46e;
+    --subject-bi: #e57a96;
+    --subject-cp: #7fa6e0;
+    --subject-islam: #b39ad9;
+    --focus: #a9d6f6;
+    --shadow-card: 0 1px 2px rgba(0,0,0,0.4);
+    color-scheme: dark;
+  }
+}

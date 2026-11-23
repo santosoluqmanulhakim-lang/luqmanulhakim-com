@@ -1,0 +1,54 @@
+{
+ "_catatan": "CONTOH format saja — bukan soal dari naskah.",
+ "kelas": 5,
+ "mapel": "bi",
+ "soal": [
+  {
+   "id": "contoh-k5-bi-01",
+   "tipe": "pg",
+   "pertanyaan": "Gagasan pokok sebuah paragraf biasanya terdapat pada…",
+   "opsi": {
+    "a": "kalimat utama",
+    "b": "kalimat penjelas",
+    "c": "judul bacaan",
+    "d": "tanda baca"
+   },
+   "kunci": "a",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-bi-02",
+   "tipe": "bs",
+   "pertanyaan": "Kata \"membaca\" merupakan kata kerja.",
+   "kunci": "benar",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-bi-03",
+   "tipe": "pg",
+   "level": "mots",
+   "pertanyaan": "Kalimat yang menggunakan huruf kapital dengan tepat adalah…",
+   "opsi": {
+    "a": "Kami shalat jumat di masjid Al-Ikhlas.",
+    "b": "Kami shalat Jumat di Masjid Al-Ikhlas.",
+    "c": "kami Shalat Jumat di masjid al-ikhlas.",
+    "d": "Kami Shalat jumat di Masjid al-Ikhlas."
+   },
+   "kunci": "b"
+  },
+  {
+   "id": "contoh-k5-bi-04",
+   "tipe": "pg",
+   "level": "hots",
+   "stimulus": "Setiap pagi, Aisyah menyiram tanaman di halaman sekolah. Awalnya ia melakukannya karena ditugaskan guru. Lama-kelamaan ia senang melihat bunga-bunga mekar. Ia teringat pesan ayahnya bahwa merawat tanaman juga termasuk sedekah.",
+   "pertanyaan": "Gagasan pokok yang paling tepat untuk paragraf tersebut adalah…",
+   "opsi": {
+    "a": "Aisyah ditugaskan guru menyiram tanaman",
+    "b": "Kebiasaan Aisyah merawat tanaman yang tumbuh menjadi kesenangan dan ibadah",
+    "c": "Bunga di halaman sekolah mekar setiap pagi",
+    "d": "Ayah Aisyah suka bersedekah"
+   },
+   "kunci": "b"
+  }
+ ]
+}

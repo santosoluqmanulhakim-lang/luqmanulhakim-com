@@ -1,0 +1,75 @@
+{
+ "_catatan": "CONTOH format saja — bukan soal dari naskah.",
+ "kelas": 5,
+ "mapel": "mtk",
+ "soal": [
+  {
+   "id": "contoh-k5-mtk-01",
+   "tipe": "pg",
+   "pertanyaan": "Hasil dari 3/4 + 1/8 adalah…",
+   "opsi": {
+    "a": "4/12",
+    "b": "7/8",
+    "c": "4/8",
+    "d": "1"
+   },
+   "kunci": "b",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-mtk-02",
+   "tipe": "bs",
+   "pertanyaan": "Volume kubus dengan rusuk 5 cm adalah 125 cm³.",
+   "kunci": "benar",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-mtk-03",
+   "tipe": "pg",
+   "pertanyaan": "Bentuk persen dari 0,25 adalah…",
+   "opsi": {
+    "a": "2,5%",
+    "b": "25%",
+    "c": "250%",
+    "d": "0,25%"
+   },
+   "kunci": "b",
+   "level": "lots"
+  },
+  {
+   "id": "contoh-k5-mtk-04",
+   "tipe": "pg",
+   "level": "mots",
+   "pertanyaan": "Sebuah bak mandi berisi 120 liter air. Air dialirkan keluar dengan debit 4 liter per menit. Bak akan kosong dalam waktu…",
+   "opsi": {
+    "a": "20 menit",
+    "b": "30 menit",
+    "c": "40 menit",
+    "d": "480 menit"
+   },
+   "kunci": "b"
+  },
+  {
+   "id": "contoh-k5-mtk-05",
+   "tipe": "pg",
+   "level": "hots",
+   "stimulus": "Masjid sekolah akan membagikan 36 kotak kurma dan 48 botol air mineral kepada beberapa kelompok jamaah. Setiap kelompok harus menerima jumlah kurma yang sama dan jumlah air yang sama, tanpa sisa.",
+   "pertanyaan": "Paling banyak berapa kelompok yang bisa menerima, dan berapa isi tiap paketnya?",
+   "opsi": {
+    "a": "12 kelompok; 3 kotak kurma dan 4 botol air",
+    "b": "6 kelompok; 6 kotak kurma dan 8 botol air",
+    "c": "144 kelompok; 1 kotak kurma dan 1 botol air",
+    "d": "4 kelompok; 9 kotak kurma dan 12 botol air"
+   },
+   "kunci": "a"
+  },
+  {
+   "id": "contoh-k5-mtk-06",
+   "tipe": "bs",
+   "level": "hots",
+   "stimulus": "Seorang siswa menjawab: 1/2 + 1/3 = 2/5, karena \"pembilang dijumlah, penyebut dijumlah\".",
+   "pertanyaan": "Cara yang tepat untuk meluruskan siswa itu adalah menunjukkan bahwa 2/5 lebih kecil dari 1/2, padahal hasil penjumlahan seharusnya lebih besar dari 1/2.",
+   "kunci": "benar"
+  }
+ ]
+}
