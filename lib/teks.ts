@@ -78,7 +78,7 @@ export const KALIMAT = {
 export const UI = {
   judulMateri: (kelas: number) => `Kelas ${kelas} · Penguasaan Materi`,
   judulKompetensi: 'Tes Kompetensi Guru',
-  sayaAdalah: 'Saya:',
+  sayaAdalah: 'Sebagai:',
   pilihMapel: 'Pilih mapel — tes langsung dimulai',
   infoMapel: (n: number) => `${n} soal · 2 dari setiap bab`,
   soalSegera: 'Fase A IPAS terintegrasi',
@@ -108,7 +108,7 @@ export const UI = {
   ulangi: '↻ Ulangi tes (soal baru)',
   ulangiYakin: 'Mulai tes baru dengan soal acak baru? Hasil sebelumnya tetap tersimpan di tautan yang sudah dibagikan.',
   ujiKompetensi: 'Tes Kompetensi Guru →',
-  ujiMateri: 'Tes penguasaan materi →',
+  ujiMateri: 'Tes Penguasaan Materi →',
   memuatSoal: (nama: string) => `Menyiapkan soal ${nama}…`,
   memuatKartu: 'Menyiapkan kartu hasil…',
   cobaLagi: 'Coba lagi',
@@ -122,10 +122,10 @@ export const UI = {
 
 // ---- Header, footer, kotak buku (semua halaman tes) -----------------------------------
 export const SITUS = {
-  nama: 'Uji Materi SDIT',
+  nama: 'Uji Kompetensi',
   penerbit: 'Penerbit Luqmanulhakim',
   tautanBuku: 'Lihat Materi',
-  footer: 'Uji Materi SDIT · Penerbit Luqmanulhakim · Kunci jawaban tidak ditampilkan agar tes tetap adil.',
+  footer: 'Uji Kompetensi · Penerbit Luqmanulhakim · Kunci jawaban tidak ditampilkan agar tes tetap adil.',
   bukuJudul: 'Ingin mendalami lebih lanjut? Ingin tahu jawabannya?',
   bukuKetUmum: 'Semua materi tes ini ada di buku SDIT terbitan Penerbit Luqmanulhakim.',
   bukuTombol: 'Lihat buku kami →',
