@@ -63,13 +63,14 @@ export function halamanHasil(d: DataHasil, id: string, asal: string): string {
   const judul = judulHasil(d);
   const deskripsi = `${saranHasil(d)} ${d.predikat}. ${komp(d) ? HASIL.deskripsiKompetensi : HASIL.deskripsiMateri} ${HASIL.ajakanKartu}`;
   const og = `${asal}/api/tes/og/${id}`;
+  const urlMapel = (m: Mapel) => komp(d) ? `/tes/kompetensi?mapel=${m}` : `/tes/kelas/${d.kelas}?mapel=${m}`;
   const barisHtml = (m: Mapel) => {
     const s = d.mapel[m];
     const pembanding = s?.persentilAcuan ? HASIL.skorAcuan : komp(d) ? HASIL.pesertaKompetensi(SINGKAT[m]) : HASIL.pesertaMateri(SINGKAT[m], d.kelas);
     return s
       ? `<div class="row"><span>${SINGKAT[m]}</span><div class="bar"><i style="width:${s.skor}%;background:${WARNA.mapel[m]}"></i></div><b>${s.skor}</b></div>${
           typeof s.persentil === 'number' && s.persentil >= 10 ? `<div class="pct">${e(HASIL.lebihTinggi(s.persentil, pembanding))}</div>` : ''}`
-      : `<div class="row todo"><span>${SINGKAT[m]}</span><em>${e(HASIL.belumDikerjakan)}</em></div>`;
+      : `<a class="row todo" href="${urlMapel(m)}"><span>${SINGKAT[m]}</span><em>${e(HASIL.belumDikerjakan)} <span aria-hidden="true">→</span></em></a>`;
   };
   const baris = `<h3 class="grp">${e(komp(d) ? HASIL.grupKompetensi : HASIL.grupMateri(d.kelas))}</h3>${bagianDari(d).map(barisHtml).join('')}`;
   const sisa = bagianDari(d).filter((m) => !d.mapel[m]);
@@ -127,6 +128,7 @@ main{max-width:480px;margin:0 auto;padding:16px 16px 170px;display:grid;gap:20px
 .row{display:grid;grid-template-columns:64px 1fr 36px;align-items:center;gap:8px;font-size:14px;font-weight:600}
 .row b{text-align:right}.bar{height:10px;background:${WARNA.surface300};border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;border-radius:999px}
 .todo{grid-template-columns:64px 1fr}.todo em{font-style:normal;font-size:13px;color:${WARNA.inkMuted};background:${WARNA.goldTint};border-radius:999px;padding:4px 12px;justify-self:start}
+a.row.todo{color:inherit;text-decoration:none}a.row.todo:hover em{text-decoration:underline}a.row.todo:focus-visible{outline:2px solid ${WARNA.brand};outline-offset:4px;border-radius:8px}
 .btns{display:grid;gap:8px}
 .btn{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:16px;font:inherit;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;border:2px solid transparent}
 .pri{background:${WARNA.brand};color:${WARNA.onBrand}}.pri:hover{background:${WARNA.brandStrong}}

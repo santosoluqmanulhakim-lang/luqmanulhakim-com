@@ -132,6 +132,7 @@ export function jalankanTes(root: HTMLElement, kelas: number, jenis: 'materi' | 
   const KOMP = jenis === 'kompetensi';
   const BAGIAN = KOMP ? KOMPETENSI : MATERI;
   const kunciSesi = `${jenis}-${kelas}`;
+  const mapelTujuan = BAGIAN.find((m) => m === new URLSearchParams(location.search).get('mapel'));
   if (new URLSearchParams(location.search).has('baru')) {
     simpan.hapus(kunciSesi);
     history.replaceState(null, '', location.pathname);
@@ -175,7 +176,9 @@ export function jalankanTes(root: HTMLElement, kelas: number, jenis: 'materi' | 
     try {
       sesi = await api<Sesi>('/api/tes/mulai', { kelas, jenis, sesiId: simpan.ambil(kunciSesi), persona });
       simpan.taruh(kunciSesi, sesi.sesiId);
-      if (KOMP) mulaiKompetensi(); else layarMateri();
+      const bisaLanjut = mapelTujuan && sesi.mapel[mapelTujuan]?.status !== 'selesai' && sesi.tersedia[mapelTujuan] > 0;
+      if (bisaLanjut) await mulaiMapel(mapelTujuan);
+      else if (KOMP) mulaiKompetensi(); else layarMateri();
     } catch (e) { galat(e, () => mulai(personaBaru)); }
   }
 
