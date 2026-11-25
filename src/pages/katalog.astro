@@ -3,15 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BackToHome from '../components/BackToHome.astro';
+import bukuHero from '../assets/buku-hero.png';
 
-const mapelSD = [
-  {
-    kode: 'ipas',
-    nama: 'Anak Islam Belajar IPAS',
-    icon: '🔬',
-    warna: 'hijau',
-    desc: 'Ilmu Pengetahuan Alam dan Sosial terintegrasi nilai-nilai Islam dan fakta sejarah keemasan Islam yang berkontribusi dalam ilmu pengetahuan',
-  },
+const mapelIpas = {
+  kode: 'ipas',
+  nama: 'Anak Islam Belajar IPAS',
+  icon: '🔬',
+  warna: 'hijau',
+  desc: 'Ilmu Pengetahuan Alam dan Sosial terintegrasi nilai-nilai Islam dan fakta sejarah keemasan Islam yang berkontribusi dalam ilmu pengetahuan',
+};
+
+const mapelSatuBuku = [
   {
     kode: 'mtk',
     nama: 'Anak Islam Belajar Matematika',
@@ -29,12 +31,13 @@ const mapelSD = [
 ];
 
 const kelasSD = [1, 2, 3, 4, 5, 6];
+const kelasIpas = [3, 4, 5, 6];
 const kelasTematik = [1, 2, 3, 4, 5, 6];
 ---
 
 <Layout 
   title="Katalog Buku — Penerbit Luqmanulhakim"
-  description="Katalog lengkap seri Anak Islam Belajar IPAS, Matematika, Bahasa Indonesia, dan Tematik Kurikulum Merdeka untuk SD/MI Kelas 1–6 SDIT dan PKBM Islam. Terintegrasi nilai-nilai Islam dan wawasan global."
+  description="Katalog seri Anak Islam Belajar: IPAS Kelas 3–6 Buku A dan B, Matematika serta Bahasa Indonesia Kelas 1–6 satu buku per kelas, dan Tematik. Terintegrasi nilai-nilai Islam."
 >
   <Header />
   <main>
@@ -43,11 +46,20 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
     <!-- Hero -->
     <div class="hero-strip">
       <div class="hero-inner">
-        <p class="hero-label">Produk Kami</p>
-        <h1>Katalog Buku Pelajaran untuk Sekolah Islam</h1>
+        <div class="hero-heading">
+          <p class="hero-label">Produk Kami</p>
+          <h1>Katalog Buku Pelajaran untuk Sekolah Islam</h1>
+        </div>
+        <img
+          src={bukuHero.src}
+          alt="Buku Anak Islam Belajar: Matematika, Bahasa Indonesia, dan IPAS"
+          class="hero-maskot"
+          loading="eager"
+        />
         <p class="hero-sub">
-        Seri Anak Islam Belajar — buku teks Kurikulum Merdeka CP 2025 untuk SD/MI, SDIT, MIN, dan PKBM Islam. 
-        Terintegrasi nilai-nilai islami: aqidah shahihah dan akhlakul karimah.        </p>
+          Seri Anak Islam Belajar — buku teks Kurikulum Merdeka CP 2025 untuk SD/MI, SDIT, MIN, dan PKBM Islam.
+          Terintegrasi nilai-nilai islami: aqidah shahihah dan akhlakul karimah.
+        </p>
       </div>
     </div>
 
@@ -58,7 +70,7 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
         <div class="seri-header">
           <div class="seri-label">Seri Utama</div>
           <h2 class="seri-title">SD, MI, SDIT, PKBM Islam — Kurikulum Merdeka</h2>
-          <p class="seri-desc">IPAS, Matematika, dan Bahasa Indonesia untuk Kelas 1–6. Tersedia semester 1 dan semester 2.</p>
+          <p class="seri-desc">IPAS tersedia untuk Kelas 3–6 dalam Buku A dan B. Matematika dan Bahasa Indonesia tersedia untuk Kelas 1–6, satu buku per kelas.</p>
         </div>
 
         {kelasSD.map((kelas) => (
@@ -66,21 +78,20 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
             <div class="kelas-header" data-toggle>
               <div class="kelas-title-wrap">
                 <span class="kelas-badge">Kelas {kelas}</span>
-                <span class="kelas-sub">IPAS, MTK, B. Indo · Semester 1 & 2</span>
+                <span class="kelas-sub">{kelasIpas.includes(kelas) ? 'IPAS A/B · ' : ''}Matematika & B. Indonesia · 1 buku per kelas</span>
               </div>
               <span class="kelas-arrow">▼</span>
             </div>
 
             <div class="kelas-body">
-              <!-- Semester 1 -->
-              <div class="sem-label">Semester 1</div>
+              <div class="sem-label">Matematika & Bahasa Indonesia · 1 buku per kelas</div>
               <div class="buku-row">
-                {mapelSD.map((mp) => (
+                {mapelSatuBuku.map((mp) => (
                   <div class="buku-card">
                     <div class="buku-ss">
                       <img
                         src={`/covers/${mp.kode}-${kelas}-1.jpg`}
-                        alt={`${mp.nama} Kelas ${kelas} Sem 1`}
+                        alt={`${mp.nama} Kelas ${kelas}`}
                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
                       />
                       <div class="ss-placeholder">
@@ -89,14 +100,15 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
                     </div>
                     <div class="buku-info">
                       <div class={`mapel-tag ${mp.warna}`}>{mp.nama}</div>
-                      <div class="buku-judul"> {mp.nama} {kelas}A</div>
-                      <div class="buku-meta">Kelas {kelas} · Semester 1</div>
+                      <div class="buku-judul">{mp.nama} {kelas}</div>
+                      <div class="buku-meta">Kelas {kelas} · 1 buku</div>
                       <button class="btn-detail"
-                        data-judul={` ${mp.nama} ${kelas}A`}
+                        data-judul={`${mp.nama} ${kelas}`}
                         data-mapel={mp.nama}
                         data-kelas={`Kelas ${kelas}`}
-                        data-sem="Semester 1"
+                        data-sem="1 buku"
                         data-desc={mp.desc}
+                        data-sample-base={`${mp.kode}-${kelas}-1`}
                         data-icon={mp.icon}>
                         Lihat Detail →
                       </button>
@@ -105,38 +117,67 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
                 ))}
               </div>
 
-              <!-- Semester 2 -->
-              <div class="sem-label">Semester 2</div>
-              <div class="buku-row">
-                {mapelSD.map((mp) => (
-                  <div class="buku-card">
-                    <div class="buku-ss">
-                      <img
-                        src={`/covers/${mp.kode}-${kelas}-2.jpg`}
-                        alt={`${mp.nama} Kelas ${kelas} Sem 2`}
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-                      />
-                      <div class="ss-placeholder">
-                        <span>{mp.icon}</span>
+              {kelasIpas.includes(kelas) && (
+                <div class="ipas-buku">
+                  <div class="sem-label">IPAS · Buku A · Semester 1</div>
+                  <div class="buku-row">
+                    <div class="buku-card">
+                      <div class="buku-ss">
+                        <img
+                          src={`/covers/ipas-${kelas}-1.jpg`}
+                          alt={`Anak Islam Belajar IPAS Kelas ${kelas}A`}
+                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                        />
+                        <div class="ss-placeholder"><span>{mapelIpas.icon}</span></div>
+                      </div>
+                      <div class="buku-info">
+                        <div class={`mapel-tag ${mapelIpas.warna}`}>{mapelIpas.nama}</div>
+                        <div class="buku-judul">{mapelIpas.nama} {kelas}A</div>
+                        <div class="buku-meta">Kelas {kelas} · Semester 1</div>
+                        <button class="btn-detail"
+                          data-judul={`${mapelIpas.nama} ${kelas}A`}
+                          data-mapel={mapelIpas.nama}
+                          data-kelas={`Kelas ${kelas}`}
+                          data-sem="Semester 1 · Buku A"
+                          data-desc={mapelIpas.desc}
+                          data-sample-base={`ipas-${kelas}-1`}
+                          data-icon={mapelIpas.icon}>
+                          Lihat Detail →
+                        </button>
                       </div>
                     </div>
-                    <div class="buku-info">
-                      <div class={`mapel-tag ${mp.warna}`}>{mp.nama}</div>
-                      <div class="buku-judul"> {mp.nama} {kelas}B</div>
-                      <div class="buku-meta">Kelas {kelas} · Semester 2</div>
-                      <button class="btn-detail"
-                        data-judul={` ${mp.nama} ${kelas}B`}
-                        data-mapel={mp.nama}
-                        data-kelas={`Kelas ${kelas}`}
-                        data-sem="Semester 2"
-                        data-desc={mp.desc}
-                        data-icon={mp.icon}>
-                        Lihat Detail →
-                      </button>
+                  </div>
+
+                  <div class="sem-label">IPAS · Buku B · Semester 2</div>
+                  <div class="buku-row">
+                    <div class="buku-card">
+                      <div class="buku-ss">
+                        <img
+                          src={`/covers/ipas-${kelas}-2.jpg`}
+                          alt={`Anak Islam Belajar IPAS Kelas ${kelas}B`}
+                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                        />
+                        <div class="ss-placeholder"><span>{mapelIpas.icon}</span></div>
+                      </div>
+                      <div class="buku-info">
+                        <div class={`mapel-tag ${mapelIpas.warna}`}>{mapelIpas.nama}</div>
+                        <div class="buku-judul">{mapelIpas.nama} {kelas}B</div>
+                        <div class="buku-meta">Kelas {kelas} · Semester 2</div>
+                        <button class="btn-detail"
+                          data-judul={`${mapelIpas.nama} ${kelas}B`}
+                          data-mapel={mapelIpas.nama}
+                          data-kelas={`Kelas ${kelas}`}
+                          data-sem="Semester 2 · Buku B"
+                          data-desc={mapelIpas.desc}
+                          data-sample-base={`ipas-${kelas}-2`}
+                          data-icon={mapelIpas.icon}>
+                          Lihat Detail →
+                        </button>
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -188,6 +229,7 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
                       data-kelas={`Kelas ${kelas}`}
                       data-sem="Semester 1"
                       data-desc="Buku tematik islami terintegrasi 3 mapel utama yang disesusikan dengan kurikulum merdeka berbasis nilai-nilai Islam."
+                      data-sample-base={`tematik-${kelas}-1`}
                       data-icon="📚">
                       Lihat Detail →
                     </button>
@@ -220,6 +262,7 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
                       data-kelas={`Kelas ${kelas}`}
                       data-sem="Semester 2"
                       data-desc="Buku tematik islami terintegrasi 3 mapel utama yang disesusikan dengan kurikulum merdeka berbasis nilai-nilai Islam."
+                      data-sample-base={`tematik-${kelas}-2`}
                       data-icon="📚">
                       Lihat Detail →
                     </button>
@@ -238,8 +281,8 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
       <div class="cta-inner">
         <h3>Ingin memesan atau bertanya tentang buku?</h3>
         <p>Hubungi kami langsung via WhatsApp untuk informasi harga dan pemesanan.</p>
-        <a href="https://wa.me/6287770010006" target="_blank" rel="noopener" class="btn-wa">
-          💬 Pesan via WhatsApp
+        <a href="https://pesan.luqmanulhakim.com" target="_blank" rel="noopener" class="btn-wa">
+          🛒 Pesan Sekarang
         </a>
       </div>
     </div>
@@ -248,22 +291,30 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
 
   <!-- Modal detail buku -->
   <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-box">
-      <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-icon" id="modalIcon"></div>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalJudul">
+      <button class="modal-close" id="modalClose" aria-label="Tutup detail buku">✕</button>
       <div class="modal-mapel" id="modalMapel"></div>
       <h3 class="modal-judul" id="modalJudul"></h3>
       <div class="modal-meta" id="modalMeta"></div>
-      <p class="modal-desc" id="modalDesc"></p>
-      <div class="modal-placeholder">
-        <span>📋</span>
-        <span>Untuk materi lengkap silahkan lihat e book</span>
+      <div class="modal-tabs" role="tablist" aria-label="Konten detail buku">
+        <button class="modal-tab active" id="tabDetail" type="button" role="tab" aria-selected="true" aria-controls="panelDetail">Detail</button>
+        <button class="modal-tab" id="tabSampel" type="button" role="tab" aria-selected="false" aria-controls="panelSampel">Sampel halaman</button>
       </div>
-      <div class="modal-actions">
-        <a href="https://luqmanulhakim.net/digital" target="_blank" rel="noopener" class="modal-btn-pesan">
-          📖 Lihat e book
-        </a>
-        <button class="modal-btn-tutup" id="modalTutup">Tutup</button>
+      <section class="modal-panel" id="panelDetail" role="tabpanel" aria-labelledby="tabDetail">
+        <p class="modal-desc" id="modalDesc"></p>
+      </section>
+      <section class="modal-panel" id="panelSampel" role="tabpanel" aria-labelledby="tabSampel" hidden>
+        <div class="sample-grid" id="sampleGrid">
+        {Array.from({ length: 15 }, (_, index) => index + 1).map((page) => (
+            <img class="sample-image" alt={`Contoh halaman ${page}`} loading="lazy" hidden />
+          ))}
+        </div>
+        <p class="sample-empty" id="sampleEmpty">Gambar sampel WebP akan ditampilkan di sini setelah diunggah.</p>
+        <p class="sample-caption" id="sampleCaption" hidden>Contoh halaman buku · klik gambar untuk memperbesar</p>
+      </section>
+      <div class="sample-lightbox" id="sampleLightbox" aria-label="Pratinjau gambar sampel">
+        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Tutup pratinjau">✕</button>
+        <img id="lightboxImage" alt="Pratinjau halaman buku" />
       </div>
     </div>
   </div>
@@ -274,11 +325,28 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
   /* Hero */
   .hero-strip {
     background: linear-gradient(160deg, #061f10 0%, #0d4a2a 60%, #155c35 100%);
-    padding: 3.5rem 2rem 3rem;
-    text-align: center;
+    padding: 2.25rem 2rem;
     color: #fff;
+    overflow: hidden;
   }
-  .hero-inner { max-width: 640px; margin: 0 auto; }
+  .hero-inner {
+    max-width: 960px;
+    min-height: 220px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "heading maskot"
+      "sub maskot";
+    align-items: center;
+    gap: 2rem;
+  }
+  .hero-heading {
+    grid-area: heading;
+    max-width: 650px;
+    align-self: end;
+  }
   .hero-label {
     font-size: 11px;
     font-weight: 600;
@@ -294,9 +362,19 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
     margin-bottom: 1rem;
   }
   .hero-sub {
+    grid-area: sub;
     font-size: 14px;
     color: rgba(255,255,255,0.75);
     line-height: 1.7;
+    align-self: start;
+  }
+  .hero-maskot {
+    grid-area: maskot;
+    width: 260px;
+    height: 220px;
+    object-fit: contain;
+    justify-self: end;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.18));
   }
 
   /* Katalog wrap */
@@ -503,28 +581,32 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
   .modal-box {
     background: var(--putih);
     border-radius: 16px;
-    padding: 2rem;
-    max-width: 420px;
+    padding: 1.75rem;
+    max-width: 620px;
     width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
     position: relative;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    animation: none;
   }
   .modal-close {
     position: absolute;
-    top: 1rem; right: 1rem;
+    top: 1rem;
+    right: 1rem;
     background: #f0f0f0;
     border: none;
-    width: 28px; height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 13px;
+    font-size: 15px;
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--text-sekunder);
     transition: background 0.2s;
   }
   .modal-close:hover { background: #e0e0e0; }
-  .modal-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
   .modal-mapel {
     font-size: 11px; font-weight: 700;
     color: var(--hijau); background: var(--hijau-muda);
@@ -535,49 +617,102 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
     font-size: 1.1rem; font-weight: 700;
     color: var(--text-utama); margin-bottom: 0.3rem;
     line-height: 1.35;
+    padding-right: 2.5rem;
   }
-  .modal-meta { font-size: 12px; color: var(--text-sekunder); margin-bottom: 0.75rem; }
-  .modal-desc { font-size: 13px; color: var(--text-sekunder); line-height: 1.6; margin-bottom: 0.75rem; }
-  .modal-placeholder {
-    background: var(--hijau-muda);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 12px;
-    color: var(--text-sekunder);
+  .modal-meta { font-size: 12px; color: var(--text-sekunder); margin-bottom: 1rem; }
+  .modal-tabs {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--batas);
+    margin-bottom: 1rem;
   }
-  .modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .modal-btn-pesan {
-    flex: 1;
-    background: #25D366;
-    color: #fff;
-    font-size: 13px; font-weight: 600;
-    padding: 0.65rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    text-align: center;
-    transition: opacity 0.2s;
-  }
-  .modal-btn-pesan:hover { opacity: 0.88; }
-  .modal-btn-tutup {
-    background: #f0f0f0;
+  .modal-tab {
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
     color: var(--text-sekunder);
-    font-size: 13px; font-weight: 600;
-    padding: 0.65rem 1rem;
-    border-radius: 8px;
-    border: none;
     cursor: pointer;
-    transition: background 0.2s;
-    font-family: inherit;
+    font: inherit;
+    font-size: 13px;
+    padding: 0.6rem 0.85rem;
   }
-  .modal-btn-tutup:hover { background: #e0e0e0; }
+  .modal-tab.active {
+    border-bottom-color: var(--hijau);
+    color: var(--hijau);
+    font-weight: 700;
+  }
+  .modal-panel[hidden] { display: none; }
+  .modal-panel {
+    min-height: 150px;
+  }
+  .modal-desc {
+    max-height: 48vh;
+    overflow-y: auto;
+    white-space: pre-line;
+    font-size: 14px;
+    color: var(--text-sekunder);
+    line-height: 1.75;
+  }
+  .sample-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .sample-image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
+    background: #f4f7f5;
+    border: 1px solid var(--batas);
+    border-radius: 8px;
+    cursor: zoom-in;
+  }
+  .sample-empty {
+    border: 1px dashed var(--batas);
+    border-radius: 8px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-sekunder);
+  }
+  .sample-caption {
+    margin-top: 0.75rem;
+    color: var(--text-sekunder);
+    font-size: 11px;
+  }
+  .sample-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.88);
+  }
+  .sample-lightbox.open { display: flex; }
+  .sample-lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--text-utama);
+    font-size: 17px;
+    cursor: pointer;
+  }
 
   @media (max-width: 480px) {
-    .modal-box { padding: 1.5rem; }
-    .modal-actions { flex-direction: column; }
+    .modal-box { padding: 1.5rem 1rem 1rem; max-height: 90vh; }
+    .sample-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   .cta-strip {
     background: var(--hijau-muda);
@@ -612,6 +747,28 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
 
   /* Responsive */
   @media (max-width: 640px) {
+    .hero-strip { padding: 2rem 1.25rem 1.25rem; }
+    .hero-inner {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0;
+    }
+    .hero-heading { max-width: 100%; }
+    .hero-label { margin-bottom: 0; }
+    .hero-strip h1 { font-size: 1.55rem; margin-bottom: 0; }
+    .hero-sub { font-size: 12px; }
+    .hero-maskot {
+      width: 80vw;
+      max-width: 240px;
+      height: auto;
+      margin: 0;
+      object-position: center bottom;
+    }
+  }
+  @media (max-width: 640px) {
     .buku-row { grid-template-columns: repeat(2, 1fr); }
     .buku-row.single { max-width: 100%; }
     .katalog-wrap { padding: 2rem 1rem; }
@@ -636,35 +793,92 @@ const kelasTematik = [1, 2, 3, 4, 5, 6];
   });
 
   // Modal
-  const overlay  = document.getElementById('modalOverlay')!;
+  const overlay = document.getElementById('modalOverlay')!;
   const modalClose = document.getElementById('modalClose')!;
-  const modalTutup = document.getElementById('modalTutup')!;
+  const tabDetail = document.getElementById('tabDetail')!;
+  const tabSampel = document.getElementById('tabSampel')!;
+  const panelDetail = document.getElementById('panelDetail')!;
+  const panelSampel = document.getElementById('panelSampel')!;
+  const sampleImages = [...document.querySelectorAll<HTMLImageElement>('.sample-image')];
+  const sampleEmpty = document.getElementById('sampleEmpty')!;
+  const sampleCaption = document.getElementById('sampleCaption')!;
+  const sampleLightbox = document.getElementById('sampleLightbox')!;
+  const lightboxImage = document.getElementById('lightboxImage') as HTMLImageElement;
+  const lightboxClose = document.getElementById('lightboxClose')!;
+  let activeTrigger: HTMLElement | null = null;
+
+  function showPage(page: 'detail' | 'sample') {
+    const showDetail = page === 'detail';
+    panelDetail.hidden = !showDetail;
+    panelSampel.hidden = showDetail;
+    tabDetail.classList.toggle('active', showDetail);
+    tabSampel.classList.toggle('active', !showDetail);
+    tabDetail.setAttribute('aria-selected', String(showDetail));
+    tabSampel.setAttribute('aria-selected', String(!showDetail));
+  }
 
   function openModal(btn: HTMLElement) {
-    (document.getElementById('modalIcon') as HTMLElement).textContent  = btn.dataset.icon || '';
+    activeTrigger = btn;
     (document.getElementById('modalMapel') as HTMLElement).textContent = btn.dataset.mapel || '';
     (document.getElementById('modalJudul') as HTMLElement).textContent = btn.dataset.judul || '';
-    (document.getElementById('modalMeta') as HTMLElement).textContent  =
-      `${btn.dataset.kelas} · ${btn.dataset.sem}`;
-    (document.getElementById('modalDesc') as HTMLElement).textContent  = btn.dataset.desc || '';
+    (document.getElementById('modalMeta') as HTMLElement).textContent = `${btn.dataset.kelas} · ${btn.dataset.sem}`;
+    (document.getElementById('modalDesc') as HTMLElement).textContent = btn.dataset.desc || '';
+
+    sampleEmpty.hidden = false;
+    sampleCaption.hidden = true;
+    const sampleBase = btn.dataset.sampleBase || '';
+    sampleImages.forEach((image, index) => {
+      image.hidden = true;
+      image.alt = `Contoh halaman ${index + 1} — ${btn.dataset.judul || 'buku'}`;
+      image.onload = () => {
+        image.hidden = false;
+        sampleEmpty.hidden = true;
+        sampleCaption.hidden = false;
+      };
+      image.onerror = () => {
+        image.hidden = true;
+        if (sampleImages.every(sample => sample.hidden)) sampleEmpty.hidden = false;
+      };
+      image.src = `/samples/${sampleBase}-${index + 1}.webp`;
+    });
+
+    showPage('detail');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    modalClose.focus();
   }
 
   function closeModal() {
+    sampleLightbox.classList.remove('open');
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    activeTrigger?.focus();
   }
 
   document.querySelectorAll('.btn-detail').forEach(btn => {
     btn.addEventListener('click', () => openModal(btn as HTMLElement));
   });
   modalClose.addEventListener('click', closeModal);
-  modalTutup.addEventListener('click', closeModal);
+  tabDetail.addEventListener('click', () => showPage('detail'));
+  tabSampel.addEventListener('click', () => showPage('sample'));
+  sampleImages.forEach(image => {
+    image.addEventListener('click', () => {
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt;
+      sampleLightbox.classList.add('open');
+    });
+  });
+  lightboxClose.addEventListener('click', () => sampleLightbox.classList.remove('open'));
+  sampleLightbox.addEventListener('click', event => {
+    if (event.target === sampleLightbox) sampleLightbox.classList.remove('open');
+  });
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeModal();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+      if (sampleLightbox.classList.contains('open')) sampleLightbox.classList.remove('open');
+      else if (overlay.classList.contains('open')) closeModal();
+    }
   });
 </script>

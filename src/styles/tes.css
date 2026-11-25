@@ -232,6 +232,12 @@ body.ada-bawah .tes-foot { padding-bottom: 150px; }
   background: transparent; color: var(--ink); cursor: pointer; min-height: 36px; }
 .chip-btn[aria-checked="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 .chip-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 420px) {
+  .chips { flex-wrap: nowrap; gap: 4px; }
+  .chips-label, .chip-btn { font-size: 12px; }
+  .chips-label { margin-right: 0; }
+  .chip-btn { padding: 4px 8px; min-height: 32px; }
+}
 .tautan-blok { display: block; width: 100%; text-align: center; padding: 14px; font: inherit; font-weight: 700; color: var(--brand); text-decoration: none;
   border: 2px dashed var(--line); border-radius: var(--radius-md); background: none; cursor: pointer; }
 .mapel-card { padding: var(--space-4); }
