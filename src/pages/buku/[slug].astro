@@ -1,0 +1,255 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { seoBookPages, type BookSeoPage } from '../../data/katalog';
+
+interface Props {
+  page: BookSeoPage;
+}
+
+export function getStaticPaths() {
+  return seoBookPages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const coverUrl = new URL(`/covers/${page.cover}`, Astro.site).toString();
+const sampleBase = `${page.code}-${page.grade}-${page.bookNumber}`;
+const samplePages = Array.from({ length: 15 }, (_, index) => index + 1)
+  .filter((number) => existsSync(join(process.cwd(), 'public', 'samples', `${sampleBase}-${number}.webp`)));
+const sections: { title: string; items: string[] }[] = [];
+
+for (const line of page.outline.split(/\r?\n/)) {
+  if (line === 'Semester 1' || line === 'Semester 2' || line === 'Karakter yang Ditanamkan') {
+    sections.push({ title: line, items: [] });
+  } else if (line.startsWith('- ') && sections.length > 0) {
+    sections[sections.length - 1].items.push(line.slice(2));
+  }
+}
+---
+
+<Layout title={page.title} description={page.metaDescription} image={coverUrl}>
+  <Header />
+  <main class="seo-book-page">
+    <div class="seo-book-wrap">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Beranda</a>
+        <span aria-hidden="true">/</span>
+        <a href="/katalog/">Katalog Buku</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{page.title}</span>
+      </nav>
+
+      <article>
+        <header class="book-header">
+          <img
+            class="book-cover"
+            src={`/covers/${page.cover}`}
+            alt={`Sampul ${page.title}`}
+            width="240"
+            height="320"
+            fetchpriority="high"
+          />
+          <div class="book-intro">
+            <p class="book-label">{page.bookLabel} · {page.semesterLabel}</p>
+            <h1>{page.title}</h1>
+            <p>
+              Materi buku disusun untuk pembelajaran SD/MI sesuai Kurikulum Merdeka CP 2025,
+              dengan nilai-nilai Islam yang dekat dengan kehidupan anak.
+            </p>
+            <a class="order-link" href="https://pesan.luqmanulhakim.com" target="_blank" rel="noopener noreferrer">
+              Pemesanan Buku
+            </a>
+          </div>
+        </header>
+
+        <section class="book-outline" aria-labelledby="outline-title">
+          <h2 id="outline-title">Daftar isi Buku</h2>
+          {sections.map((section) => (
+            <section class="outline-section">
+              <h3>{section.title}</h3>
+              <ul>
+                {section.items.map((item) => <li>{item}</li>)}
+              </ul>
+            </section>
+          ))}
+        </section>
+
+        {samplePages.length > 0 && (
+          <section class="book-samples" aria-labelledby="samples-title">
+            <h2 id="samples-title">Gambar Sampel</h2>
+            <div class="sample-grid">
+              {samplePages.map((number) => (
+                <figure>
+                  <img
+                    src={`/samples/${sampleBase}-${number}.webp`}
+                    alt={`Contoh ${number} — ${page.title}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>Contoh {number}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <a class="back-link" href="/katalog/">Kembali ke katalog buku</a>
+      </article>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .seo-book-page {
+    min-height: 60vh;
+    padding: 1.5rem 1rem 4rem;
+  }
+  .seo-book-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1.5rem;
+    color: var(--text-sekunder);
+    font-size: 0.85rem;
+  }
+  .breadcrumbs a,
+  .back-link {
+    color: var(--hijau);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .book-header {
+    display: grid;
+    grid-template-columns: minmax(150px, 240px) 1fr;
+    align-items: center;
+    gap: clamp(1.25rem, 4vw, 2.5rem);
+    padding: clamp(1rem, 4vw, 2rem);
+    border: 1px solid var(--batas);
+    border-radius: 16px;
+    background: var(--putih);
+  }
+  .book-cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .book-label {
+    margin-bottom: 0.5rem;
+    color: var(--hijau);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .book-intro h1 {
+    margin-bottom: 0.75rem;
+    color: var(--text-utama);
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    line-height: 1.2;
+  }
+  .book-intro > p:not(.book-label) {
+    color: var(--text-sekunder);
+  }
+  .order-link {
+    display: inline-flex;
+    margin-top: 1.25rem;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    background: var(--hijau);
+    color: var(--putih);
+    font-weight: 700;
+  }
+  .book-outline {
+    margin-top: 2rem;
+    padding: clamp(1rem, 4vw, 2rem);
+    border: 1px solid var(--batas);
+    border-radius: 16px;
+    background: var(--putih);
+  }
+  .book-outline h2 {
+    margin-bottom: 1.25rem;
+    color: var(--text-utama);
+    font-size: 1.5rem;
+  }
+  .outline-section + .outline-section {
+    margin-top: 1.5rem;
+  }
+  .outline-section h3 {
+    margin-bottom: 0.5rem;
+    color: var(--hijau);
+    font-size: 1.1rem;
+  }
+  .outline-section ul {
+    display: grid;
+    gap: 0.55rem;
+    padding-left: 1.25rem;
+    color: var(--text-sekunder);
+  }
+  .book-samples {
+    margin-top: 2rem;
+    padding: clamp(1rem, 4vw, 2rem);
+    border: 1px solid var(--batas);
+    border-radius: 16px;
+    background: var(--putih);
+  }
+  .book-samples h2 {
+    margin-bottom: 1rem;
+    color: var(--text-utama);
+    font-size: 1.5rem;
+  }
+  .sample-grid {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sample-grid figure {
+    flex: 0 0 clamp(140px, 22vw, 220px);
+    overflow: hidden;
+    border: 1px solid var(--batas);
+    border-radius: 8px;
+    background: #f7fbf8;
+    scroll-snap-align: start;
+  }
+  .sample-grid img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
+    background: #f4f7f5;
+  }
+  .sample-grid figcaption {
+    padding: 0.45rem 0.6rem;
+    color: var(--text-sekunder);
+    font-size: 0.8rem;
+  }
+  .back-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 560px) {
+    .book-header {
+      grid-template-columns: 1fr;
+    }
+    .book-cover {
+      width: min(60%, 220px);
+      margin: 0 auto;
+    }
+  }
+</style>

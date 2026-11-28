@@ -27,7 +27,9 @@ const buku = [
         {buku.map(b => (
           <div class="buku-card">
             <div class="buku-img-wrap">
-              <img src={b.img} alt={b.nama} class="buku-img" loading="lazy" />
+              <a href="/katalog" class="buku-img-link" aria-label={`Lihat katalog: ${b.nama}`}>
+                <img src={b.img} alt={b.nama} class="buku-img" loading="lazy" />
+              </a>
             </div>
             <div class="buku-nama">{b.nama}</div>
             <div class="buku-kelas">{b.kelas}</div>
@@ -114,6 +116,8 @@ const buku = [
   display: block;
   transition: transform 0.3s ease;
 }
+.buku-img-link { display: block; width: 100%; height: 100%; }
+.buku-img-link:focus-visible { outline: 3px solid var(--emas); outline-offset: -3px; }
 .buku-card:hover .buku-img { transform: scale(1.04); }
 
 /* teks di bawah gambar, beri padding di sini */

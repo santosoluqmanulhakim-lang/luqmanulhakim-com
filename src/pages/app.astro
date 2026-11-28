@@ -6,6 +6,18 @@ import BackToHome from '../components/BackToHome.astro';
 
 const apps = [
   {
+    id: 'tes',
+    icon: '🎯',
+    nama: 'Uji Kemampuan Guru SDIT',
+    tagline: 'Uji penguasaan materi dan kompetensi guru secara online',
+    desc: 'Tes gratis untuk mengukur penguasaan materi IPAS, Matematika, dan Bahasa Indonesia kelas 1–6, serta kompetensi pedagogis dan adab guru. Hasil tes dapat dibagikan.',
+    fitur: ['Penguasaan materi kelas 1–6', 'Tes kompetensi pedagogis & adab', 'Hasil langsung setelah tes', 'Akses via browser, tanpa install'],
+    status: 'live',
+    url: '/tes',
+    warna: 'hijau',
+    screenshot: '/screenshots/tes.png',
+  },
+  {
     id: 'latihan',
     icon: '✏️',
     nama: 'Latihan Interaktif',
@@ -58,7 +70,7 @@ const apps = [
 
 <Layout 
   title="Aplikasi Pendukung Buku — Penerbit Luqmanulhakim"
-  description="Aplikasi digital gratis untuk sekolah Islam: latihan interaktif, PPDB/SPMB online, ebook, dan asisten pendidik berbasis AI. Pendukung buku seri Anak Islam Belajar Kurikulum Merdeka."
+  description="Aplikasi digital gratis untuk sekolah Islam: tes guru, latihan interaktif, PPDB/SPMB online, ebook, dan asisten pendidik berbasis AI. Pendukung buku seri Anak Islam Belajar Kurikulum Merdeka."
 >
   <Header />
   <main>

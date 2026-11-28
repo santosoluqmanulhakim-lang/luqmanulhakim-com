@@ -1,9 +1,10 @@
 ---
 const apps = [
-  { img: '/screenshots/latihan.png', dot: 'hijau', name: 'Latihan Interaktif', desc: 'Soal online, langsung dari buku teks' },
-  { img: '/screenshots/ppdb.png',        dot: 'emas',  name: 'PPDB Online',        desc: 'Sistem penerimaan murid baru online' },
-  { img: '/screenshots/ebook.png',              dot: 'hijau', name: 'Ebook',              desc: 'Akses buku digital' },
-  { img: '/screenshots/asisten.png',   dot: 'emas',  name: 'Asisten Pendidik',   desc: 'Administrasi guru berbasis AI' },
+  { img: '/screenshots/tes.png',      dot: 'hijau', icon: '🎯', name: 'Uji Kemampuan Guru SDIT', desc: 'Tes penguasaan materi dan kompetensi guru' },
+  { img: '/screenshots/latihan.png',  dot: 'hijau', icon: '✏️', name: 'Latihan Interaktif', desc: 'Soal online, langsung dari buku teks' },
+  { img: '/screenshots/ppdb.png',     dot: 'emas',  icon: '📋', name: 'PPDB Online', desc: 'Sistem penerimaan murid baru online' },
+  { img: '/screenshots/ebook.png',    dot: 'hijau', icon: '📕', name: 'Ebook', desc: 'Akses buku digital' },
+  { img: '/screenshots/asisten.png',  dot: 'emas',  icon: '🤖', name: 'Asisten Pendidik', desc: 'Administrasi guru berbasis AI' },
 ];
 ---
 <div class="section" id="aplikasi">
@@ -15,7 +16,14 @@ const apps = [
     {apps.map(app => (
       <div class="app-card">
         <div class={`app-img-wrap ${app.dot}`}>
-          <img src={app.img} alt={app.name} class="app-img" loading="lazy" />
+          <img
+            src={app.img}
+            alt={app.name}
+            class="app-img"
+            loading="lazy"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          />
+          <div class="app-img-placeholder" aria-hidden="true">{app.icon}</div>
         </div>
         <div class="app-body">
           <div class="app-name">{app.name}</div>
@@ -59,6 +67,14 @@ const apps = [
   height: 100%;
   object-fit: cover;
   display: block;
+}
+.app-img-placeholder {
+  display: none;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
 }
 
 .app-body {
