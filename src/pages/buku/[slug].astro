@@ -68,7 +68,7 @@ for (const line of page.outline.split(/\r?\n/)) {
           </div>
         </header>
 
-        <section class="book-outline" aria-labelledby="outline-title">
+        <section class="book-outline protected-content" aria-labelledby="outline-title">
           <h2 id="outline-title">Daftar isi Buku</h2>
           {sections.map((section) => (
             <section class="outline-section">
@@ -178,6 +178,8 @@ for (const line of page.outline.split(/\r?\n/)) {
     border: 1px solid var(--batas);
     border-radius: 16px;
     background: var(--putih);
+    user-select: none;
+    -webkit-user-select: none;
   }
   .book-outline h2 {
     margin-bottom: 1.25rem;
@@ -253,3 +255,9 @@ for (const line of page.outline.split(/\r?\n/)) {
     }
   }
 </style>
+
+<script>
+  import { preventCopyFromProtectedContent } from '../../scripts/protect-copy';
+
+  preventCopyFromProtectedContent();
+</script>

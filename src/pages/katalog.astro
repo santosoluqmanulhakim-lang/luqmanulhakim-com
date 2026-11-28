@@ -192,6 +192,50 @@ const getAvailableSamples = (sampleBase: string) =>
 
       <div class="seri-divider"></div>
 
+      <!-- ====== MATERI PENDUKUNG ====== -->
+      <section class="seri-section" aria-labelledby="materi-pendukung-title">
+        <div class="seri-header">
+          <div class="seri-label">Materi Pendukung</div>
+          <h2 class="seri-title" id="materi-pendukung-title">Materi Pendukung Pembelajaran Mendalam</h2>
+          <p class="seri-desc">Referensi untuk guru dan pendidik dalam mendukung pembelajaran mendalam.</p>
+        </div>
+
+        <div class="materi-pendukung-grid">
+          <a class="materi-pendukung-card" href="https://drive.google.com/file/d/1VdGF0VxDW-o4H8OusDPhQ3ybZJRVyoIw/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+            <span class="materi-pendukung-format">PDF</span>
+            <span class="materi-pendukung-title">CP IPAS 2025</span> <p style="font-size: 0.7rem;">Capaian Pembelajaran IPAS</p>
+            <span class="materi-pendukung-link">Buka PDF ↗</span>
+          </a>
+          <a class="materi-pendukung-card" href="https://drive.google.com/file/d/18HOX1txAZO97bAOUxWEmB73ulPHP6ihe/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
+            <span class="materi-pendukung-format">PDF</span>
+            <span class="materi-pendukung-title">CP Matematika 2025</span> <p style="font-size: 0.7rem;">Capaian Pembelajaran MTK</p>
+            <span class="materi-pendukung-link">Buka PDF ↗</span>
+          </a>
+          <a class="materi-pendukung-card" href="https://drive.google.com/file/d/1x6fKALtyMNb5uaLTGr6M6RMM1_HYVQ3o/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
+            <span class="materi-pendukung-format">PDF</span>
+            <span class="materi-pendukung-title">CP Bahasa Indonesia 2025</span> <p style="font-size: 0.7rem;">Capaian Pembelajaran BI</p>
+            <span class="materi-pendukung-link">Buka PDF ↗</span>
+          </a>
+          <a class="materi-pendukung-card" href="https://drive.google.com/file/d/1DTwzWrqpfzoloYrxeAAZSe6e-nmBxRlr/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
+            <span class="materi-pendukung-format">PDF</span>
+            <span class="materi-pendukung-title">Ringkasan Tadzkirotus Sami</span> <p style="font-size: 0.7rem;">Ustadz Abu Asma Andre</p>
+            <span class="materi-pendukung-link">Buka PDF ↗</span>
+          </a>
+          <a class="materi-pendukung-card" href="https://drive.google.com/drive/folders/1nt1Pwa7d9Ez5CZwhQg1ezUvJvGSpz8kU?usp=drive_link" target="_blank" rel="noopener noreferrer">
+            <span class="materi-pendukung-format">PDF</span>
+            <span class="materi-pendukung-title">Panduan Pembelajaran</span> <p style="font-size: 0.7rem;">BSKAP & Pengenalan Pembelajaran</p>
+            <span class="materi-pendukung-link">Buka PDF ↗</span>
+          </a>
+          <a class="materi-pendukung-card" href="https://drive.google.com/file/d/1JaWL0fC5en6AJwWJTJuKgcTazBk0XeNd/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
+            <span class="materi-pendukung-format">PDF</span>
+            <span class="materi-pendukung-title">Daftar Materi Buku</span> <p style="font-size: 0.7rem;">Daftar lengkap materi dalam buku</p>
+            <span class="materi-pendukung-link">Buka PDF ↗</span>
+          </a>
+        </div>
+      </section>
+
+      <div class="seri-divider"></div>
+
       <!-- ====== SERI TEMATIK ====== -->
       <div class="seri-section">
         <div class="seri-header">
@@ -310,7 +354,7 @@ const getAvailableSamples = (sampleBase: string) =>
         <button class="modal-tab" id="tabSampel" type="button" role="tab" aria-selected="false" aria-controls="panelSampel">Gambar sampel</button>
       </div>
       <section class="modal-panel" id="panelDetail" role="tabpanel" aria-labelledby="tabDetail">
-        <p class="modal-desc" id="modalDesc"></p>
+        <p class="modal-desc protected-content" id="modalDesc"></p>
       </section>
       <section class="modal-panel" id="panelSampel" role="tabpanel" aria-labelledby="tabSampel" hidden>
         <div class="sample-grid" id="sampleGrid">
@@ -479,6 +523,52 @@ const getAvailableSamples = (sampleBase: string) =>
   .seri-divider {
     border-top: 2px solid var(--batas);
     margin: 3rem 0;
+  }
+  .materi-pendukung-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .materi-pendukung-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    min-height: 150px;
+    padding: 1rem;
+    border: 1px solid var(--batas);
+    border-radius: 10px;
+    background: #f7fbf8;
+    text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .materi-pendukung-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+  .materi-pendukung-card:focus-visible {
+    outline: 3px solid var(--hijau);
+    outline-offset: 3px;
+  }
+  .materi-pendukung-format {
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    color: var(--hijau);
+    background: var(--hijau-muda);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .materi-pendukung-title {
+    color: var(--text-utama);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .materi-pendukung-link {
+    margin-top: auto;
+    color: var(--hijau);
+    font-size: 12px;
+    font-weight: 700;
   }
 
   /* Accordion kelas */
@@ -737,6 +827,8 @@ const getAvailableSamples = (sampleBase: string) =>
     font-size: 14px;
     color: var(--text-sekunder);
     line-height: 1.75;
+    user-select: none;
+    -webkit-user-select: none;
   }
   .sample-grid {
     display: grid;
@@ -892,15 +984,21 @@ const getAvailableSamples = (sampleBase: string) =>
     .buku-row { grid-template-columns: repeat(2, 1fr); }
     .buku-row.single { max-width: 100%; }
     .ipas-buku { max-width: 100%; }
+    .materi-pendukung-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .katalog-wrap { padding: 2rem 1rem; }
   }
   @media (max-width: 400px) {
     .buku-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .materi-pendukung-grid { grid-template-columns: 1fr; }
     .kelas-title-wrap { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
   }
 </style>
 
 <script>
+  import { preventCopyFromProtectedContent } from '../scripts/protect-copy';
+
+  preventCopyFromProtectedContent();
+
   // Accordion
   document.querySelectorAll('[data-toggle]').forEach(header => {
     header.addEventListener('click', () => {
